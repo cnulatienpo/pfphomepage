@@ -5,29 +5,26 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title></title>
 
-  <!-- My hand-drawn frame primitives -->
+  <!-- Hand-drawn frame primitives -->
   <link rel="stylesheet" href="frames_theme/css/frames.css">
 
   <style>
     /* ===== PAGE & VIEWPORT ================================================= */
     :root{
-      /* small safe buffer so the whole photo is visible; adjust to taste */
-      --safe: 2vmin;
-      /* inner margin so content clears the wobbly strokes */
-      --content-pad: 1.25rem;
-      /* tiny gap between frame container and its stroke */
-      --pf-gap: 0.75vh;
+      --safe: 2vmin;          /* keep the entire photo visible */
+      --content-pad: 1.25rem; /* content margin inside frames */
+      --pf-gap: 0.75vh;       /* tiny buffer between frame and its stroke */
+      --pf-font: system-ui, sans-serif; /* replace with your handwritten font later */
     }
     html, body { height: 100%; margin: 0; background: #000; }
     .stage    { position: fixed; inset: 0; overflow: hidden; }
-    /* Everything lives inside this inset rectangle */
     .viewport { position: absolute; inset: var(--safe); overflow: hidden; }
 
-    /* Photo shows ENTIRE image (no cropping) inside the safe area */
+    /* Photo shows ENTIRE image (no crop) */
     #hero {
       position: absolute; inset: 0;
       width: 100%; height: 100%;
-      object-fit: contain;      /* key: show whole photo */
+      object-fit: contain;
       object-position: center;
       display: block;
       /* Uncomment to flip the photo:
@@ -36,42 +33,56 @@
     }
 
     /* ===== FREE-TRANSFORM FRAMES ========================================== */
-    /* Wrapper that we can rotate/scale/skew freely */
     .pf-warp {
       position: absolute;
       transform-origin: center;
-      /* transforms controlled by CSS variables */
       transform:
         translate(var(--tx, 0), var(--ty, 0))
         rotate(var(--rot, 0deg))
         skew(var(--skx, 0deg), var(--sky, 0deg))
         scale(var(--sx, 1), var(--sy, 1));
+      pointer-events: auto;
     }
-
-    /* The visible frame stroke sits inside .pf-warp, sized by width */
-    .pf-warp > .pf-frame {
-      position: relative;
-      width: 100%; /* height comes from aspect rules in frames.css */
-    }
-
-    /* Put a small inset so the stroke doesn’t touch the container edge */
+    .pf-warp > .pf-frame { position: relative; width: 100%; }
     .pf-warp > .pf-frame > .pf-stroke { inset: var(--pf-gap); }
 
-    /* Content auto-fits inside and stays UPRIGHT via inverse transform */
+    /* Content stays readable via INVERSE transform */
     .pf-warp > .pf-frame > .pf-content {
       position: absolute;
-      inset: var(--content-pad);         /* wider margin to avoid the wobbly edges */
+      inset: var(--content-pad);
       transform-origin: center;
-      /* inverse of the wrapper’s scale, skew, and rotate */
       transform:
         scale(calc(1 / var(--sx, 1)), calc(1 / var(--sy, 1)))
         skew(calc(0deg - var(--skx, 0deg)), calc(0deg - var(--sky, 0deg)))
         rotate(calc(0deg - var(--rot, 0deg)));
-      color: #fff; font: 14px/1.4 system-ui, sans-serif;
-      pointer-events: auto; /* this layer can be interactive */
+      color: #fff; font: 14px/1.4 var(--pf-font);
+      pointer-events: auto;
     }
 
-    /* Demo helper class to place multiple frames */
+    /* ===== LIVE STATE (hover highlight + pinned popup) ==================== */
+    .pf-warp.is-hot .pf-stroke {
+      filter: brightness(1.06) saturate(1.12);
+    }
+    .pf-popup {
+      position: absolute;
+      left: var(--pin-x, 50%);   /* percent inside content box */
+      top:  var(--pin-y, 0%);    /* e.g., 100% for bottom edge */
+      transform: translate(-50%, -100%); /* appear above the pin point */
+      background: rgba(0,0,0,0.82);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: .35rem .55rem;
+      font: 600 clamp(12px, 1.7vw, 18px)/1.2 var(--pf-font);
+      letter-spacing: .02em;
+      text-transform: none;
+      border-radius: 2px;
+      white-space: nowrap;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    .pf-popup:focus { outline: 2px solid #fff8; outline-offset: 2px; }
+
+    /* Demo helper */
     .abs { position: absolute; }
   </style>
 </head>
@@ -80,32 +91,24 @@
     <div class="viewport">
       <img id="hero" src="assets/front-page.webp" alt="" />
 
-      <!-- ===== OVERLAYS (examples) ======================================= -->
-
-      <!-- Example 1: horizontal rectangle, slight skew -->
+      <!-- ===== ONE LIVE FRAME (example) =================================== -->
+      <!-- Adjust width/position and the transform vars to fit the photo -->
       <div class="pf-warp abs"
-           style="left: 8%; top: 12%; width: 34%;
-                  --rot: -1.5deg; --skx: 2deg; --sx: 1.02; --sy: 0.98;">
+           data-live
+           data-label="My Project"
+           data-href="/project-1"
+           style="
+             left: 8%; top: 12%; width: 36%;
+             --rot: -1.5deg; --skx: 2deg; --sx: 1.02; --sy: 0.98;
+             --pin-x: 50%; --pin-y: 100%;  /* popup pinned to bottom-center */
+           ">
         <div class="pf-frame pf--rect-h">
-          <div class="pf-content">
-            <!-- content stays readable here -->
-            <!-- (buttons, links, whatever you add later) -->
-          </div>
-          <div class="pf-stroke"></div>
-        </div>
-      </div>
-
-      <!-- Example 2: circle, scaled taller -->
-      <div class="pf-warp abs"
-           style="left: 52%; top: 18%; width: 20%;
-                  --rot: 0deg; --skx: 0deg; --sx: 1; --sy: 1.12; transform: translate(-50%, 0);">
-        <div class="pf-frame pf--circle">
           <div class="pf-content"></div>
           <div class="pf-stroke"></div>
         </div>
       </div>
 
-      <!-- Example 3: vertical rectangle, rotated a bit -->
+      <!-- You can keep other non-live frames as static overlays if you like -->
       <div class="pf-warp abs"
            style="right: 8%; top: 48%; width: 16%;
                   --rot: 2.5deg; --skx: -1deg; --sx: 0.98; --sy: 1.05;">
@@ -115,8 +118,18 @@
         </div>
       </div>
 
+      <div class="pf-warp abs"
+           style="left: 52%; top: 18%; width: 20%;
+                  --rot: 0deg; --skx: 0deg; --sx: 1; --sy: 1.12; transform: translate(-50%, 0);">
+        <div class="pf-frame pf--circle">
+          <div class="pf-content"></div>
+          <div class="pf-stroke"></div>
+        </div>
+      </div>
       <!-- ================================================================== -->
     </div>
   </div>
+
+  <script type="module" src="/src/live.js"></script>
 </body>
 </html>
