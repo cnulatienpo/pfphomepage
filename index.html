@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title></title>
+  <meta name="description" content="A single photograph fills the entire page." />
+  <style>
+    /* Fill the window; no scrollbars or gutters */
+    html, body { height: 100%; margin: 0; background: #000; }
+    .stage { position: fixed; inset: 0; overflow: hidden; }
+
+    /* The photo IS the page */
+    #hero {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;        /* fill + crop, never letterbox */
+      object-position: center;  /* crop from center */
+      image-rendering: auto;
+      display: block;
+      /* If I want it upside-down, uncomment the next line */
+      /* transform: rotate(180deg); */
+    }
+
+    /* Optional: prevent selection/highlight flash on mobile */
+    * { -webkit-tap-highlight-color: transparent; }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <img
+      id="hero"
+      src="assets/front-page.webp"
+      alt="Full-screen photograph fills the page."
+      decoding="async"
+      fetchpriority="high"
+    />
+  </div>
+</body>
+</html>
