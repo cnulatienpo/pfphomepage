@@ -84,12 +84,66 @@
 
     /* Demo helper */
     .abs { position: absolute; }
+
+    /* === Rectangle Button =================================================== */
+    :root{
+      --btn-pad: .55rem .85rem;
+      --btn-bg: rgba(0,0,0,0.82);
+      --btn-fg: #fff;
+      --btn-border: 1px solid rgba(255,255,255,0.25);
+      --btn-radius: 3px;
+      --btn-font: 600 clamp(12px,1.8vw,18px)/1.2 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+
+    /* Stroke highlight on hover of THIS button frame only */
+    #rect-btn:hover .pf-stroke {
+      filter: brightness(1.06) saturate(1.12) drop-shadow(0 0 6px rgba(0,0,0,0.35));
+    }
+
+    /* The actual button element, placed inside .pf-content (stays upright) */
+    .btn-rect {
+      display: inline-block;
+      padding: var(--btn-pad);
+      background: var(--btn-bg);
+      color: var(--btn-fg);
+      border: var(--btn-border);
+      border-radius: var(--btn-radius);
+      font: var(--btn-font);
+      letter-spacing: .02em;
+      text-decoration: none;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-rect:hover  { filter: brightness(1.06); }
+    .btn-rect:active { transform: translateY(1px); }
+    .btn-rect:focus  { outline: 2px solid #ffffff88; outline-offset: 2px; }
   </style>
 </head>
 <body>
   <div class="stage">
     <div class="viewport">
       <img id="hero" src="assets/front-page.webp" alt="" />
+
+      <!-- Rectangle Button (align this to the pink lines) -->
+      <div id="rect-btn" class="pf-warp abs"
+           style="
+             left: 50%; top: 58%; width: 26%;
+             transform: translate(-50%, -50%);
+             /* TUNE these vars until the stroke hugs the pink lines */
+             --rot: -1.2deg;  /* rotate a hair */
+             --skx:  2deg;    /* skew to match perspective */
+             --sx:   1.02;    /* gentle horizontal scale */
+             --sy:   0.98;    /* gentle vertical scale */
+           ">
+        <div class="pf-frame pf--rect-h">
+          <div class="pf-content" style="display:flex; align-items:center; justify-content:center; min-height:48px;">
+            <a class="btn-rect" href="/rectangle" aria-label="rectangle">rectangle</a>
+          </div>
+          <div class="pf-stroke"></div>
+        </div>
+      </div>
 
       <!-- ===== ONE LIVE FRAME (example) =================================== -->
       <!-- Adjust width/position and the transform vars to fit the photo -->
