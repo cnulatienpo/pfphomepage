@@ -13,3 +13,4 @@ build
 
 # Node deps
 node_modules
+.venv/
