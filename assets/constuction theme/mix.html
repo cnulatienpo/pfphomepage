@@ -1,0 +1,457 @@
+<section class="container scaffold taped crack">
+  <article class="panel dim dim--x col-12 md-col-6 lg-col-4">
+    <h3 class="scribble">Project A</h3>
+    <p>Concrete poetry, literal concrete.</p>
+  </article>
+  <article class="panel col-12 md-col-6 lg-col-4">Project B</article>
+  <article class="panel col-12 md-col-12 lg-col-4">
+    <svg class="pipe" viewBox="0 0 400 200" aria-hidden="true">
+      <path d="M10 40 H200 V160 H390" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="8" stroke-linecap="round"/>
+      <path class="flow" d="M10 40 H200 V160 H390" fill="none" stroke="var(--color-primary,#e895c7)" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 10">
+        <animate attributeName="stroke-dashoffset" from="0" to="-64" dur="2s" repeatCount="indefinite"/>
+      </path>
+    </svg>
+  </article>
+</section>
+<div id="gate" aria-hidden="true"></div>
+<script>
+(function(){
+  const gate = document.getElementById('gate');
+  if(!gate) return;
+
+  // Cover current page before navigating
+  document.addEventListener('click', (e)=>{
+    const a = e.target.closest('a[href]');
+    if(!a || a.target || a.hasAttribute('download') || a.origin !== location.origin) return;
+    e.preventDefault();
+    gate.classList.remove('gate-out');
+    gate.classList.add('gate-in');
+    setTimeout(()=>{ location.href = a.href; }, parseInt(getComputedStyle(document.documentElement).getPropertyValue('--dur-page-out')) || 220);
+  }, true);
+
+  // Reveal new page when it loads
+  window.addEventListener('pageshow', ()=>{
+    gate.classList.remove('gate-in');
+    gate.classList.add('gate-out');
+  });
+})();
+</script>
+/* Transition shorthands */
+.t-all       { transition: all var(--dur-hover) var(--ease-steady); }
+.t-lift      { transition: transform var(--dur-hover) var(--ease-out-heavy), box-shadow var(--dur-hover) var(--ease-out-heavy); }
+.t-press-in  { transition: transform var(--dur-press-in) var(--ease-in-hard); }
+.t-press-out { transition: transform var(--dur-press-out) var(--ease-out-heavy); }
+
+/* Keyframe helpers */
+@keyframes clamp { 0%{transform:scale(.98)} 60%{transform:scale(1.008)} 100%{transform:scale(1)} }
+.clamp-in { animation: clamp 220ms var(--ease-snap) both; }
+:root{
+  --disabled-opacity: .55;
+  --focus-ring: 0 0 0 3px rgba(37,99,235,.45); /* adjust if your primary changes */
+  --dur-hover: 120ms;
+  --dur-press: 90ms;
+  --ease: cubic-bezier(.2,0,0,1);
+}.btn{
+  --btn-bg: var(--color-primary);
+  --btn-fg: var(--on-primary, #000);
+  --btn-border: transparent;
+
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  height:40px; padding:0 16px; border-radius:12px;
+  background: var(--btn-bg); color: var(--btn-fg);
+  border: 1px solid var(--btn-border);
+  font-weight: 700; letter-spacing: .01em;
+  transition: transform var(--dur-hover) var(--ease),
+             box-shadow var(--dur-hover) var(--ease),
+             filter var(--dur-hover) var(--ease);
+}
+
+/* Hover: subtle lift/brighten */
+.btn:hover:not(:disabled):not([aria-disabled="true"]){
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+}
+
+/* Focus: ring only when keyboard focusing */
+.btn:focus-visible{
+  outline: 2px solid transparent; box-shadow: var(--focus-ring);
+}
+
+/* Active/pressed */
+.btn:active{
+  transition-duration: var(--dur-press);
+  transform: translateY(0) scale(.985);
+  filter: brightness(.98);
+}
+
+/* Disabled */
+.btn:disabled,
+.btn[aria-disabled="true"]{
+  opacity: var(--disabled-opacity);
+  cursor: not-allowed;
+  transform: none; filter: none; box-shadow: none;
+  pointer-events: none;
+}
+
+/* Error version (e.g., destructive) */
+.btn--danger{
+  --btn-bg: var(--color-danger, #dc2626);
+  --btn-fg: #fff;
+}
+
+/* Loading */
+.btn.is-loading{ position: relative; pointer-events: none; }
+.btn.is-loading .spinner{
+  width:1em; height:1em; border-radius:50%;
+  border: 2px solid currentColor; border-right-color: transparent;
+  animation: spin 900ms linear infinite;
+}
+@keyframes spin{ to { transform: rotate(360deg); } }
+.input{
+  width:100%; height:40px; padding:10px 12px;
+  background: var(--surface-1, #12141a);
+  color: var(--text, #e6e8ec);
+  border: 1px solid var(--color-border, #2a2e37);
+  border-radius: 12px;
+  transition: border-color var(--dur-hover) var(--ease),
+             box-shadow var(--dur-hover) var(--ease),
+             background-color var(--dur-hover) var(--ease);
+}
+.input:hover{
+  border-color: color-mix(in srgb, var(--color-border, #2a2e37), #fff 12%);
+}
+.input:focus-visible{
+  outline: 2px solid transparent; box-shadow: var(--focus-ring);
+  border-color: color-mix(in srgb, var(--color-border, #2a2e37), var(--color-primary, #2563eb) 40%);
+}
+.input:disabled, .input[aria-disabled="true"]{
+  opacity: var(--disabled-opacity);
+  cursor: not-allowed;
+}
+
+/* Error (either container class or ARIA attr) */
+.field.is-error .input,
+.input[aria-invalid="true"]{
+  border-color: var(--color-danger, #dc2626);
+  box-shadow: 0 0 0 3px rgba(220,38,38,.25);
+}
+.field .help{
+  margin-top:6px; font-size:12px; color: var(--color-muted, #a3a9b7);
+}
+.field.is-error .help{
+  color: var(--color-danger, #dc2626);
+}
+
+/* Loading: inline shimmer */
+.input[aria-busy="true"]{
+  background-image: linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent);
+  background-size: 200% 100%;
+  animation: input-shimmer 1.2s linear infinite;
+}
+@keyframes input-shimmer{ to { background-position: -200% 0; } }
+.card{
+  background: var(--surface-1, #3a2d61);
+  color: var(--text, #fff);
+  border: 1px solid var(--color-border, #675c85);
+  border-radius: 12px;
+  padding: 16px;
+  transition: transform var(--dur-hover) var(--ease),
+             box-shadow var(--dur-hover) var(--ease),
+             border-color var(--dur-hover) var(--ease);
+}
+.card:hover{ transform: translateY(-1px); }
+.card:active{ transform: translateY(0); }
+.card:focus-within{ box-shadow: var(--focus-ring); }
+.card.is-disabled{
+  opacity: var(--disabled-opacity);
+  pointer-events: none;
+}
+.card.is-error{
+  border-color: var(--color-danger, #dc2626);
+}
+.alert{
+  display:flex; align-items:flex-start; gap:10px;
+  border-radius: 12px; padding:12px 14px;
+  border: 1px solid var(--color-border, #675c85);
+  background: color-mix(in srgb, var(--color-danger, #dc2626) 12%, var(--surface-1, #3a2d61));
+}
+.alert--danger{
+  border-color: var(--color-danger, #dc2626);
+}
+.alert__title{ font-weight:700; }
+.alert__msg{ opacity:.9; }
+.skeleton{
+  position: relative; overflow: hidden; border-radius: 8px;
+  background: color-mix(in srgb, var(--surface-1, #3a2d61) 85%, #ffffff 15%);
+}
+.skeleton::after{
+  content:""; position:absolute; inset:0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);
+  transform: translateX(-100%); animation: sweep 1.2s linear infinite;
+}
+@keyframes sweep{ to { transform: translateX(100%); } }
+
+.skeleton.text{ height: 1em; }
+.skeleton.block{ height: 140px; }
+/* Base line icon */
+.icon {
+  width: 24px; height: 24px; display: inline-block;
+  stroke: currentColor; fill: none;
+  stroke-width: var(--icon-stroke, 2);
+  stroke-linecap: round; stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Bold variant for emphasis/empty states */
+.icon--bold { --icon-stroke: 3; }
+
+/* “Plate” behind an icon (echoes concrete panel + seam gap) */
+.icon-plate {
+  --plate-bg: var(--surface-1, #3a2d61);
+  --plate-border: var(--color-border, #675c85);
+  --gap-len: 14px; /* missing border segment length */
+  display: inline-grid; place-items: center;
+  width: 32px; height: 32px; border-radius: 10px;
+  background: var(--plate-bg);
+  position: relative;
+  border: 1px solid var(--plate-border);
+}
+/* seam gap top-right */
+.icon-plate::before{
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:
+    linear-gradient(var(--plate-border),var(--plate-border)) top left/calc(100% - var(--gap-len)) 1px no-repeat,
+    linear-gradient(var(--plate-border),var(--plate-border)) bottom left/100% 1px no-repeat,
+    linear-gradient(var(--plate-border),var(--plate-border)) top left/1px 100% no-repeat,
+    linear-gradient(var(--plate-border),var(--plate-border)) bottom right/1px calc(100% - var(--gap-len)) no-repeat;
+  opacity:.9;
+}
+
+/* Small “port” ring with a gap (matches your circle motif) */
+.ring-gap{
+  --size: 12px; --thickness: 2px; --gap-deg: 48deg; --gap-angle: 30deg;
+  width: var(--size); height: var(--size); position:relative; display:inline-block;
+}
+.ring-gap::before{
+  content:""; position:absolute; inset:0; border-radius:50%;
+  background:
+    conic-gradient(from var(--gap-angle),
+      currentColor 0 calc(360deg - var(--gap-deg)), transparent 0 360deg);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(50% - var(--thickness)), #000 0);
+          mask: radial-gradient(farthest-side, transparent calc(50% - var(--thickness)), #000 0);
+}
+<!-- Line icon (inherits text color) -->
+<svg class="icon"><use href="#i-ruler"/></svg>
+
+<!-- Line icon with slight roughness -->
+<svg class="icon" style="filter:url(#rough-1)"><use href="#i-pipe"/></svg>
+
+<!-- Filled plate + line icon -->
+<span class="icon-plate">
+  <svg class="icon"><use href="#i-hat"/></svg>
+</span>
+
+<!-- Status dot using the ring gap -->
+<span class="ring-gap" style="color:var(--color-primary)"></span>
+<script>
+function luminance([r,g,b]){ r/=255; g/=255; b/=255;
+  const f=t=>t<=.03928? t/12.92 : Math.pow((t+.055)/1.055,2.4);
+  return 0.2126*f(r)+0.7152*f(g)+0.0722*f(b);
+}
+function hexToRgb(h){ const m=h.replace('#',''); const n=m.length===3? m.split('').map(x=>x+x).join('') : m;
+  return [parseInt(n.slice(0,2),16),parseInt(n.slice(2,4),16),parseInt(n.slice(4,6),16)];
+}
+function contrastRatio(fg,bg){
+  const L1=luminance(hexToRgb(fg)), L2=luminance(hexToRgb(bg));
+  const light=Math.max(L1,L2), dark=Math.min(L1,L2);
+  return ((light+0.05)/(dark+0.05)).toFixed(2);
+}
+// Example:
+console.log('Text on surface', contrastRatio('#e6e8ec', '#3a2d61')); // > 4.5 for body text
+</script>
+<script>
+const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+function stopJSAnimations(){
+  document.documentElement.classList.toggle('reduce-motion', mq.matches);
+  // …pause requestAnimationFrame loops, stop marquee effects, etc.
+}
+mq.addEventListener?.('change', stopJSAnimations);
+stopJSAnimations();
+</script>
+<button class="icon-btn hit-44" aria-label="Open menu" title="Open menu">
+  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+</button>
+.input{
+  border:1px solid var(--color-border); background: var(--surface-1); color: var(--text);
+  transition: border-color 140ms, box-shadow 140ms;
+}
+.input:focus-visible{
+  box-shadow: var(--focus-ring);
+  border-color: color-mix(in srgb, var(--color-border), var(--color-primary) 40%);
+}
+<section class="prose">
+  <p class="eyebrow">Project update</p>
+  <h1>Site plan for the north bay</h1>
+  <p>Body copy sits at 16px with 1.5 line-height for comfortable reading.</p>
+
+  <h2>Dimensions</h2>
+  <p class="num">Beam length: 2 430 mm</p>
+
+  <button class="btn">Primary action</button>
+  <small class="help">Helper text right here.</small>
+</section>
+:root{
+  --radius-m: 12px;
+  --stroke-1: 2px;         /* borders, lines */
+  --stroke-2: 4px;         /* pipes, heavy */
+  --gap-deg: 42deg;        /* ring missing arc */
+  --gap-angle: 28deg;      /* where the gap points */
+  --gap-len: 22px;         /* box seam length */
+  --shape: var(--color-border, #675c85);
+  --shape-strong: var(--color-accent, #0e3e99);
+  --face: var(--surface-1, #3a2d61);
+  --text: var(--text, #fff);
+}
+
+/* ----- port ring with gap (used by ports & status dots) ----- */
+.ring-gap{
+  --size: 48px; --thickness: var(--stroke-2);
+  width: var(--size); height: var(--size); position:relative; display:inline-block; color: var(--shape);
+}
+.ring-gap::before{
+  content:""; position:absolute; inset:0; border-radius:50%;
+  background:
+    conic-gradient(from var(--gap-angle), currentColor 0 calc(360deg - var(--gap-deg)), transparent 0 360deg);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(50% - var(--thickness)), #000 0);
+          mask: radial-gradient(farthest-side, transparent calc(50% - var(--thickness)), #000 0);
+}
+
+/* ----- panel plate with seam gap (boxes) ----- */
+.panel{
+  position:relative; padding:20px; border-radius: var(--radius-m);
+  background: var(--face); color: var(--text);
+  /* concrete speckle */
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.09) 0 50%, transparent 51%),
+    radial-gradient(1px 1px at 70% 60%, rgba(0,0,0,.25) 0 50%, transparent 51%);
+  background-blend-mode: overlay;
+}
+.panel::before{
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:
+    linear-gradient(var(--shape),var(--shape)) top left/calc(100% - var(--gap-len)) var(--stroke-1) no-repeat,
+    linear-gradient(var(--shape),var(--shape)) bottom left/100% var(--stroke-1) no-repeat,
+    linear-gradient(var(--shape),var(--shape)) top left/var(--stroke-1) 100% no-repeat,
+    linear-gradient(var(--shape),var(--shape)) bottom right/var(--stroke-1) calc(100% - var(--gap-len)) no-repeat;
+  opacity:.95;
+}
+
+/* optional washer mark near the seam */
+.panel--washer::after{
+  content:""; position:absolute; right:6px; top:6px; width:10px; height:10px; border-radius:50%;
+  box-shadow: inset 0 0 0 2px var(--shape);
+  background: radial-gradient(circle at 40% 40%, rgba(255,255,255,.25), transparent 60%);
+}
+
+/* ----- blueprint label ----- */
+.blue-label{
+  display:inline-block; font: 600 11px/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  text-transform: uppercase; letter-spacing:.08em;
+  color: #cfe1ff; background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 6px; padding: 2px 6px;
+}
+
+/* ----- chalk / scribble overlays ----- */
+.scribble{
+  --chalk: rgba(255,255,255,.75);
+  position: relative; isolation: isolate;
+}
+.scribble::after{
+  content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background-repeat:no-repeat;
+  background-image: var(--scribble-url, none);
+  background-size: contain;
+  background-position: var(--scribble-pos, 0 0);
+  filter: drop-shadow(0 0 1px rgba(0,0,0,.3));
+}
+
+/* quick preset: underline swoop */
+.scribble--underline{ --scribble-pos: left calc(100% - 8px); }
+
+/* ----- weld bead (CSS fallback for boxes) ----- */
+.weld-edge{
+  position: relative;
+}
+.weld-edge::after{
+  content:""; position:absolute; left:0; right: var(--gap-len); top:-2px; height:6px; pointer-events:none;
+  background:
+    radial-gradient(circle at 4px 3px, rgba(255,255,255,.45) 1.2px, transparent 1.2px),
+    radial-gradient(circle at 12px 3px, rgba(255,255,255,.35) 1.1px, transparent 1.1px);
+  background-size: 16px 6px; background-repeat: repeat-x; opacity:.9;
+}
+
+/* ----- dimension lines (from earlier) ----- */
+.dim{ position:relative; }
+.dim--x::before, .dim--x::after{ content:""; position:absolute; left:-14px; right:-14px; pointer-events:none; }
+.dim--x::before{ top:-12px; border-top:1.5px dashed rgba(255,255,255,.55); }
+.dim--x::after{
+  top:-14px; height:0;
+  background:
+    conic-gradient(from 45deg, transparent 0 25%, rgba(255,255,255,.8) 0 50%, transparent 0) left/10px 10px no-repeat,
+    conic-gradient(from 225deg, transparent 0 25%, rgba(255,255,255,.8) 0 50%, transparent 0) right/10px 10px no-repeat,
+    repeating-linear-gradient(90deg, rgba(255,255,255,.55) 0 2px, transparent 2px 16px) center/100% 1px no-repeat;
+}
+
+/* pipes look heavier than borders */
+.pipe{ filter: drop-shadow(0 3px 0 rgba(0,0,0,.45)); }
+.pipe .flow{ animation: flow 2000ms linear infinite; filter: drop-shadow(0 0 6px rgba(255,255,255,.35)); }
+@keyframes flow { to { stroke-dashoffset: -64; } }
+/* hand‑drawn underline svg; set as --scribble-url on any .scribble element */
+.scribble-underline{
+  --scribble-url: url("data:image/svg+xml;utf8,\
+  <svg xmlns='http://www.w3.org/2000/svg' width='320' height='36' viewBox='0 0 320 36'>\
+    <path d='M8 30 Q 90 6 160 22 T 312 24' fill='none' stroke='white' stroke-opacity='.8' stroke-width='3' stroke-linecap='round'/>\
+  </svg>");
+}
+<script>
+function makeScribblePath(w,h,seed=1,amp=6,steps=6){
+  const rng = (()=>{ let t=seed; return ()=> (t=Math.imul(48271, t)%2147483647)/2147483647; })();
+  const pts = []; const y = h*0.75;
+  for(let i=0;i<=steps;i++){
+    const x = (w/steps)*i;
+    const dy = (rng()-0.5)*amp*(1+i%2?1:0.6);
+    pts.push([x, y+dy]);
+  }
+  // simple smooth path
+  let d=`M ${pts[0][0]} ${pts[0][1]}`;
+  for(let i=1;i<pts.length;i++){
+    const [x,y] = pts[i], [px,py] = pts[i-1];
+    const cx = (px+x)/2;
+    d += ` Q ${cx} ${py} ${x} ${y}`;
+  }
+  return d;
+}
+function attachScribble(el,{stroke='rgba(255,255,255,.8)', width=3, seed=1}={}){
+  const r = el.getBoundingClientRect();
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('viewBox',`0 0 ${r.width} ${r.height}`);
+  svg.setAttribute('width', r.width); svg.setAttribute('height', r.height);
+  svg.style.position='absolute'; svg.style.inset='0'; svg.style.pointerEvents='none'; svg.style.zIndex='1';
+  const p = document.createElementNS(svg.namespaceURI,'path');
+  p.setAttribute('d', makeScribblePath(r.width, r.height, seed));
+  p.setAttribute('fill','none'); p.setAttribute('stroke', stroke); p.setAttribute('stroke-width', width);
+  p.setAttribute('stroke-linecap','round'); p.setAttribute('stroke-linejoin','round');
+  el.style.position = getComputedStyle(el).position==='static' ? 'relative' : getComputedStyle(el).position;
+  svg.appendChild(p); el.appendChild(svg);
+}
+</script>
+
+<!-- usage -->
+<h2 class="scribble">Gallery</h2>
+<script>attachScribble(document.querySelector('h2.scribble'), {seed: 7});</script>
+<div class="panel panel--washer dim dim--x" style="position:relative; width:340px; min-height:160px;">
+  <span class="blue-label" style="position:absolute; right:10px; top:10px;">A‑BAY 04</span>
+  <span class="ring-gap" style="--size:16px; --thickness:2px; position:absolute; right:-6px; top:-6px;"></span>
+  Marked up panel
+</div>

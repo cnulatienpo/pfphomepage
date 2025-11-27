@@ -1,0 +1,170 @@
+:root {
+  /* Core neutrals */
+  --white: #ffffff;
+  --black: #000000;
+
+  /* Brand hues from your image (300/500/700 = light/base/dark) */
+  --pink-300:    #f0badb;
+  --pink-500:    #e895c7;  /* primary */
+  --pink-700:    #ae7095;
+
+  --lavender-300:#9c8ec0;
+  --lavender-500:#67519e;  /* secondary */
+  --lavender-700:#4d3d76;
+
+  --royal-300:   #6282bd;
+  --royal-500:   #0e3e99;  /* accent / info */
+  --royal-700:   #0a2e73;
+
+  --navy-300:    #5b72a3;
+  --navy-500:    #032671;
+  --navy-700:    #021c55;
+
+  --orchid-300:  #d0a1cb;
+  --orchid-500:  #b76faf;
+  --orchid-700:  #895383;
+
+  --moss-300:    #b1b086;
+  --moss-500:    #878545;  /* success-ish */
+  --moss-700:    #656434;
+
+  /* Base / surfaces derived from deep indigo */
+  --bg:          #1f104b;  /* background */
+  --surface-1:   #3a2d61;  /* cards */
+  --surface-2:   #554976;  /* popovers/modals */
+  --border:      #675c85;  /* dividers */
+  --line-subtle: #473b6b;
+
+  /* Text */
+  --text:        #ffffff;
+  --text-muted:  #574c78;
+
+  /* Semantic map (tweak to taste) */
+  --color-primary:   var(--pink-500);
+  --color-secondary: var(--lavender-500);
+  --color-accent:    var(--royal-500);
+  --color-success:   var(--moss-500);
+
+  /* “On” colors for legible text over solids */
+  --on-primary:   #000000; /* pink is bright → black reads best */
+  --on-secondary: #ffffff; /* lavender → white passes contrast */
+  --on-accent:    #ffffff; /* royal blue → white passes contrast */
+  --on-success:   #000000; /* moss → black passes contrast */
+  --on-surface:   var(--text);
+}
+
+/* Example usage primitives */
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.28);
+}
+.btn {
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:8px; padding:10px 16px; border-radius:10px; font-weight:700;
+  border: 1px solid transparent; cursor:pointer;
+  transition: transform .06s ease, box-shadow .12s ease;
+}
+.btn--primary   { background: var(--color-primary); color: var(--on-primary); }
+.btn--secondary { background: var(--color-secondary); color: var(--on-secondary); }
+.btn--accent    { background: var(--color-accent);   color: var(--on-accent); }
+.btn--success   { background: var(--color-success);  color: var(--on-success); }
+.btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,.30); }
+
+.hr { height:0; border:none; border-top:1px solid var(--border); margin:24px 0; }
+.badge { display:inline-block; padding:2px 10px; border-radius:999px; font-size:12px; background: var(--surface-2); color:var(--text); border:1px solid var(--border); }
+
+/* Accessible focus ring shared by all controls */
+:where(a,button,input,select,textarea,[tabindex]):focus-visible {
+  outline: 2px solid var(--royal-300);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+:root{
+  --bg:#1f104b; --surface-1:#3a2d61; --surface-2:#554976; --text:#fff;
+  --shape:#675c85; --accent:#0e3e99;
+  --radius:12px; --stroke-1:2px; --stroke-2:4px;
+  --gap-angle:30deg; --gap-deg:42deg; --gap-len:24px;
+
+  --dur-hover:140ms; --ease: cubic-bezier(.2,0,0,1);
+  --focus-ring: 0 0 0 3px #9db5ff;
+}
+
+/* ring with a gap (ports, status) */
+.ring-gap{ --size:24px; --thickness:var(--stroke-2); width:var(--size); height:var(--size); position:relative; display:inline-block; color:var(--shape); }
+.ring-gap::before{
+  content:""; position:absolute; inset:0; border-radius:50%;
+  background: conic-gradient(from var(--gap-angle), currentColor 0 calc(360deg - var(--gap-deg)), transparent 0 360deg);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(50% - var(--thickness)), #000 0);
+          mask: radial-gradient(farthest-side, transparent calc(50% - var(--thickness)), #000 0);
+}
+
+/* seam‑boxed panel with concrete speckle */
+.panel{
+  position:relative; padding:20px; border-radius:var(--radius);
+  background: var(--surface-1); color:var(--text);
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.06) 50%, transparent 51%),
+    radial-gradient(1px 1px at 60% 70%, rgba(0,0,0,.35) 50%, transparent 51%),
+    radial-gradient(1px 1px at 80% 40%, rgba(255,255,255,.05) 50%, transparent 51%),
+    radial-gradient(1px 1px at 35% 80%, rgba(0,0,0,.30) 50%, transparent 51%);
+  background-size:180px 160px,220px 200px,260px 220px,200px 180px;
+  background-blend-mode: overlay;
+}
+.panel::before{
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:
+    linear-gradient(var(--shape),var(--shape)) top left/calc(100% - var(--gap-len)) var(--stroke-1) no-repeat,
+    linear-gradient(var(--shape),var(--shape)) bottom left/100% var(--stroke-1) no-repeat,
+    linear-gradient(var(--shape),var(--shape)) top left/var(--stroke-1) 100% no-repeat,
+    linear-gradient(var(--shape),var(--shape)) bottom right/var(--stroke-1) calc(100% - var(--gap-len)) no-repeat;
+  opacity:.95;
+}
+.panel--washer::after{ content:""; position:absolute; right:6px; top:6px; width:10px; height:10px; border-radius:50%; box-shadow: inset 0 0 0 2px var(--shape); background: radial-gradient(circle at 40% 40%, rgba(255,255,255,.25), transparent 60%); }
+
+/* weld beads */
+.weld{ position:relative; color:var(--shape); }
+.weld--top::after{ content:""; position:absolute; left:12px; right:12px; top:-3px; height:10px; pointer-events:none;
+  background: radial-gradient(circle at 5px 50%, currentColor 3px, #0000 3.2px) 0 0 / 14px 100% repeat-x; filter: drop-shadow(0 1px 0 rgba(255,255,255,.25)); opacity:.9; }
+.weld--right::after{ content:""; position:absolute; top:12px; bottom:12px; right:-3px; width:10px; pointer-events:none;
+  background: radial-gradient(circle at 50% 5px, currentColor 3px, #0000 3.2px) 0 0 / 100% 14px repeat-y; filter: drop-shadow(0 1px 0 rgba(255,255,255,.25)); opacity:.9; }
+.weld--bottom::after{ content:""; position:absolute; left:12px; right:12px; bottom:-3px; height:10px; pointer-events:none;
+  background: radial-gradient(circle at 5px 50%, currentColor 3px, #0000 3.2px) 0 0 / 14px 100% repeat-x; filter: drop-shadow(0 1px 0 rgba(255,255,255,.25)); opacity:.9; }
+.weld--left::after{ content:""; position:absolute; top:12px; bottom:12px; left:-3px; width:10px; pointer-events:none;
+  background: radial-gradient(circle at 50% 5px, currentColor 3px, #0000 3.2px) 0 0 / 100% 14px repeat-y; filter: drop-shadow(0 1px 0 rgba(255,255,255,.25)); opacity:.9; }
+
+/* blueprint label */
+.bp-label{
+  font: 600 11px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  text-transform: uppercase; letter-spacing:.08em;
+  padding:2px 6px; border-radius:6px;
+  background: rgba(0,0,0,.35); color:#fff; border:1px solid rgba(255,255,255,.25);
+}
+
+/* dimension line (x) */
+.dim{ position:relative; }
+.dim--x::before, .dim--x::after{ content:""; position:absolute; left:-14px; right:-14px; pointer-events:none; }
+.dim--x::before{ top:-12px; border-top:1.5px dashed rgba(255,255,255,.55); }
+.dim--x::after{
+  top:-14px; height:0;
+  background:
+    conic-gradient(from 45deg, transparent 0 25%, rgba(255,255,255,.8) 0 50%, transparent 0) left/10px 10px no-repeat,
+    conic-gradient(from 225deg, transparent 0 25%, rgba(255,255,255,.8) 0 50%, transparent 0) right/10px 10px no-repeat,
+    repeating-linear-gradient(90deg, rgba(255,255,255,.55) 0 2px, transparent 2px 16px) center/100% 1px no-repeat;
+}
+
+/* pipes */
+.pipe{ filter: drop-shadow(0 3px 0 rgba(0,0,0,.45)); }
+.pipe .flow{ animation: flow 2000ms linear infinite; filter: drop-shadow(0 0 6px rgba(255,255,255,.35)); }
+@keyframes flow{ to { stroke-dashoffset: -64; } }
+
+/* focus + hover motions */
+:where(a,button,[tabindex],.panel):focus-visible{ outline:2px solid transparent; box-shadow: var(--focus-ring); border-radius:10px; }
+.panel{ transition: transform var(--dur-hover) var(--ease), box-shadow var(--dur-hover) var(--ease); }
+.panel:hover{ transform: translateY(-1px); }
