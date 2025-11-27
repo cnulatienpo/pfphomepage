@@ -6,6 +6,11 @@ punctuation). It then re-crops and normalizes the selected glyphs.
 """
 from __future__ import annotations
 
+from env_guard_snippet import ensure_env_active
+ensure_env_active()
+from import_guard_snippet import verify_required_imports
+verify_required_imports()
+
 import argparse
 import csv
 from pathlib import Path
@@ -14,7 +19,7 @@ from typing import Dict, List, Tuple
 import cv2
 import numpy as np
 
-BLOCK_FONT_DIR = Path("Block Letter Font")
+BLOCK_FONT_DIR = Path("block letter font")
 TARGET_SIZE = 256
 CANVAS_MARGIN = 2
 RE_CROP_PADDING = 3

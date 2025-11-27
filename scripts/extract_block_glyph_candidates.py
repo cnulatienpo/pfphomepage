@@ -6,6 +6,11 @@ candidate images and writes metadata describing their origin and geometry.
 """
 from __future__ import annotations
 
+from env_guard_snippet import ensure_env_active
+ensure_env_active()
+from import_guard_snippet import verify_required_imports
+verify_required_imports()
+
 import argparse
 import csv
 from dataclasses import dataclass
@@ -312,8 +317,6 @@ def main() -> None:
     all_metadata: List[CandidateMetadata] = []
     for page_index, img_path in enumerate(image_files):
         if img_path.is_dir():
-            continue
-        if img_path.name.lower() == "curse of letters":
             continue
         metadata_rows = process_page(img_path, page_index, out_dir)
         all_metadata.extend(metadata_rows)

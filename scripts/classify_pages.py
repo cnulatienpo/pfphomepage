@@ -5,6 +5,11 @@ Classifies handwriting page images into print, cursive, or textures, computes me
 Usage:
     python scripts/classify_pages.py <pages_dir> <output_root> <metadata_csv>
 """
+from env_guard_snippet import ensure_env_active
+ensure_env_active()
+from import_guard_snippet import verify_required_imports
+verify_required_imports()
+
 import argparse
 import csv
 import cv2
