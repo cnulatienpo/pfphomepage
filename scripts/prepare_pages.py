@@ -1,8 +1,13 @@
 # scripts/prepare_pages.py
+from env_guard_snippet import ensure_env_active
+ensure_env_active()
+from import_guard_snippet import verify_required_imports
+verify_required_imports()
+
 from pathlib import Path
 from pdf2image import convert_from_path
 
-PDF_DIR = Path("pfp theme")          # put your uploaded PDFs here
+PDF_DIR = Path("block letters")          # put your uploaded PDFs here
 OUT_DIR = Path("data/pages")    # flat folder of page images
 
 def main():

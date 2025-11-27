@@ -9,6 +9,11 @@ parent dataset directory.
 """
 from __future__ import annotations
 
+from env_guard_snippet import ensure_env_active
+ensure_env_active()
+from import_guard_snippet import verify_required_imports
+verify_required_imports()
+
 import argparse
 import csv
 import sys
@@ -20,11 +25,12 @@ import numpy as np
 
 # Mapping of dataset labels to their root directories relative to the repo root.
 DATASETS: Dict[str, Path] = {
-    "block_font": Path("Block Letter Font"),
-    "cursive_letters": Path("Block Letter Font") / "Curse of Letters",
-    "cursive_samples": Path("Samples of Cursive"),
-    "shapes": Path("Shapes"),
-    "textures": Path("That's Texture"),
+    "block_font": Path("block letter font"),
+    "block_letters": Path("block letters"),
+    "cursive_letters": Path("cursive letters"),
+    "cursive_samples": Path("samples of cursive"),
+    "shapes": Path("shapes"),
+    "textures": Path("thats texture"),
 }
 
 # Supported image extensions for processing.

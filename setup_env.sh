@@ -12,7 +12,7 @@ else
 fi
 
 # shellcheck disable=SC1091
-. "$ENV_DIR/bin/activate"
+source "$ENV_DIR/bin/activate"
 
 python -m pip install --upgrade pip
 pip install --upgrade opencv-python-headless pillow numpy
