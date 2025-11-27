@@ -1,0 +1,46 @@
+/* Demo-only presentation layer. Core tokens and components come from theme.css. */
+
+#gate {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 2147482000;
+  transform: translateY(0);
+  transition: transform var(--dur-page-out) var(--ease);
+}
+
+#gate.gate-out { transform: translateY(-100%); }
+#gate.gate-in  { transform: translateY(0); }
+
+.scaffold { align-items: start; }
+
+.taped { position: relative; }
+.taped::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 18px;
+  width: 78px;
+  height: 18px;
+  background: rgba(255, 255, 255, .12);
+  border: 1px solid rgba(0, 0, 0, .15);
+  transform: rotate(-6deg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .28);
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  border-radius: 10px;
+  color: var(--text);
+  box-shadow: var(--focus-ring);
+}
+
+.hit-44 { min-width: 44px; min-height: 44px; }
+
+.prose { display: grid; gap: var(--space-3); margin-top: var(--space-5); }
+.eyebrow { text-transform: uppercase; letter-spacing: .08em; font: 600 12px/1 var(--font-mono); }
+.num { font: 700 18px/1 var(--font-mono); }
