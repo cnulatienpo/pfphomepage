@@ -1,0 +1,21 @@
+/* Color-driven helpers that rely on the palette tokens declared in theme.css. */
+
+body { background: var(--bg); color: var(--text); }
+
+.hr { height: 0; border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--royal-300);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
