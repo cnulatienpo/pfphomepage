@@ -23,6 +23,10 @@ declare module 'express' {
   namespace express {
     function Router(): Router
     const json: () => any
+
+    export function static(arg0: string): any {
+      throw new Error('Function not implemented.')
+    }
   }
   export = express
 }

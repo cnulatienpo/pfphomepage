@@ -27,6 +27,14 @@ type DayState = {
   updated: boolean
 }
 
+// Returns a static color for the facade, based on default values
+function getStaticColor(): PixelColor {
+  // Use the default 'QUIET' mode and average earth conditions
+  const baseColor = mapSpaceWeatherToColor('QUIET', 0.5)
+  const earthColor = mapEarthToColor(15, 50, 0.5) // tempC=15, cloudCover=50%, solar=0.5
+  return mix(earthColor, baseColor, 0.3)
+}
+
 type VisitorPixel = {
   color: PixelColor
   createdAt: string
