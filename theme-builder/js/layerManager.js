@@ -51,6 +51,8 @@ export class LayerManager {
       transform: partial.transform || defaultTransforms(),
       placeholder: partial.placeholder ?? true,
       sticker: partial.sticker || null,
+      classes: partial.classes || [],
+      markup: partial.markup || null,
     };
     this.layers.push(layer);
     this.activeId = layer.id;
