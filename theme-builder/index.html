@@ -12,6 +12,9 @@
   <link rel="stylesheet" href="css/blocks.css">
   <link rel="stylesheet" href="css/inspector.css">
   <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/gl-panels.css">
+  <link rel="stylesheet" href="css/motion-panels.css">
+  <link rel="stylesheet" href="css/playground.css">
 </head>
 <body>
   <header class="toolbelt">
@@ -52,6 +55,7 @@
 
     <section class="canvas-area">
       <div class="canvas-shell">
+        <canvas id="gl-canvas"></canvas>
         <canvas id="design-canvas" width="1280" height="720"></canvas>
         <div id="canvas-overlay" class="canvas-overlay"></div>
       </div>
@@ -92,6 +96,22 @@
       <div class="section">
         <h3>Type Blocks</h3>
         <div id="type-blocks" class="type-grid"></div>
+      </div>
+      <div class="section">
+        <h3>WebGL / FX</h3>
+        <div id="gl-panel" class="gl-panel"></div>
+        <div class="section">
+          <h3>Post FX</h3>
+          <div id="postfx-panel" class="gl-panel"></div>
+        </div>
+      </div>
+      <div class="section">
+        <h3>Motion</h3>
+        <div id="motion-panel" class="motion-panel"></div>
+      </div>
+      <div class="section">
+        <h3>Playground</h3>
+        <div id="playground-panel"></div>
       </div>
     </aside>
   </main>

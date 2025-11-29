@@ -6,8 +6,14 @@ export function exportToPNG(canvas) {
   link.click();
 }
 
-export function exportToJSON(layerManager) {
-  const data = JSON.stringify(layerManager.serialize(), null, 2);
+export function exportToJSON(layerManager, extras = {}) {
+  const payload = {
+    ...layerManager.serialize(),
+    gl: extras.gl || null,
+    motion: extras.motion || null,
+    playground: extras.playground || null,
+  };
+  const data = JSON.stringify(payload, null, 2);
   const blob = new Blob([data], { type: 'application/json' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);

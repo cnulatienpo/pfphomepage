@@ -51,6 +51,8 @@ export class LayerManager {
       transform: partial.transform || defaultTransforms(),
       placeholder: partial.placeholder ?? true,
       sticker: partial.sticker || null,
+      glScene: partial.glScene || null,
+      motion: partial.motion || null,
     };
     this.layers.push(layer);
     this.activeId = layer.id;

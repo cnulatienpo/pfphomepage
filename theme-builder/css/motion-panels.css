@@ -1,0 +1,51 @@
+.motion-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.motion-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--fp-border);
+  border-radius: 12px;
+  padding: 8px;
+  display: grid;
+  gap: 6px;
+}
+
+.motion-title {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.motion-desc {
+  color: var(--fp-muted);
+  font-size: 12px;
+}
+
+.motion-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.motion-preview {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 206, 0, 0.24), rgba(43, 125, 233, 0.28));
+  display: grid;
+  place-items: center;
+}
+
+.motion-preview .dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ff5757;
+}
+
+.motion-toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
