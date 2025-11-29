@@ -52,16 +52,19 @@ export class CanvasEngine {
   }
 
   _drawPlaceholder(ctx, layer) {
-    const gradient = ctx.createLinearGradient(0, 0, layer.width, layer.height);
-    gradient.addColorStop(0, '#ffce00');
-    gradient.addColorStop(1, '#ff5757');
-    ctx.fillStyle = gradient;
+    const background = layer.backgroundColor || '#ffce00';
+    const border = layer.borderColor || '#123055';
+    const textColor = layer.textColor || '#0f172a';
+    ctx.fillStyle = background;
     ctx.fillRect(-layer.width / 2, -layer.height / 2, layer.width, layer.height);
-    ctx.fillStyle = 'rgba(0,0,0,0.18)';
-    for (let x = -layer.width / 2; x < layer.width / 2; x += 18) {
-      ctx.fillRect(x, -layer.height / 2, 8, layer.height);
+    ctx.strokeStyle = border;
+    ctx.lineWidth = 6;
+    ctx.strokeRect(-layer.width / 2, -layer.height / 2, layer.width, layer.height);
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    for (let x = -layer.width / 2 + 10; x < layer.width / 2; x += 22) {
+      ctx.fillRect(x, -layer.height / 2, 6, layer.height);
     }
-    ctx.fillStyle = '#0f172a';
+    ctx.fillStyle = textColor;
     ctx.font = 'bold 20px Inter, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';

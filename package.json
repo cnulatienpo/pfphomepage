@@ -9,7 +9,9 @@
     "dev:server": "tsx watch server/index.ts",
     "build": "vite build && tsc -p tsconfig.server.json",
     "preview": "vite preview",
-    "server": "tsx server/index.ts"
+    "server": "tsx server/index.ts",
+    "postinstall": "node postinstall.js",
+    "test": "node --test ./tests/*.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -26,6 +28,7 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
+    "jsdom": "^23.2.0",
     "typescript": "^5.4.5",
     "vite": "^5.2.0"
   }

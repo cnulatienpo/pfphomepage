@@ -7,9 +7,9 @@ import { renderBehaviorBadges } from './js/behaviors.js';
 import { renderSnapControls } from './js/snapEngine.js';
 import { renderComponents } from './js/componentFactory.js';
 import { renderInspector } from './js/inspector.js';
-import { exportToHTML, exportToJSON, exportToPNG } from './js/exportTools.js';
+import { exportCSS, exportHTML, exportJSON, exportPNG, exportWordPress } from './js/exportTools.js';
 import { renderSpacingPreview } from './js/spacingBlocks.js';
-import { renderColorBuckets } from './js/colorBuckets.js';
+import { applyBucketToLayer, colorToRGBA, renderColorBuckets, resolveBucketDrag } from './js/colorBuckets.js';
 import { renderTypeBlocks } from './js/typeBlocks.js';
 import { loadLidarMetadata, getShotList } from './js/lidarEngine.js';
 import { createDepthLayersForShot } from './js/depthLayers.js';
@@ -86,8 +86,12 @@ async function buildAssets() {
     const data = e.dataTransfer.getData('text/plain');
     if (!data) return;
     try {
-      const asset = JSON.parse(data);
-      addAssetToCanvas(asset, e.offsetX / canvasEngine.zoom, e.offsetY / canvasEngine.zoom);
+      const payload = JSON.parse(data);
+      if (payload.type === 'component') {
+        addComponentToCanvas(payload, e.offsetX / canvasEngine.zoom, e.offsetY / canvasEngine.zoom);
+      } else {
+        addAssetToCanvas(payload, e.offsetX / canvasEngine.zoom, e.offsetY / canvasEngine.zoom);
+      }
     } catch (_) {
       /* ignore */
     }
@@ -109,14 +113,58 @@ function addAssetToCanvas(asset, x = 200, y = 200) {
   saveAutosave();
 }
 
+function addComponentToCanvas(component, x = 220, y = 220) {
+  layerManager.createLayer({
+    name: component.name,
+    src: component.src || '',
+    x,
+    y,
+    width: component.width || 320,
+    height: component.height || 220,
+    filter: defaultFilters(),
+    transform: defaultTransforms(),
+    placeholder: true,
+    classes: component.classes || [],
+    markup: component.markup || `<div class="construction-component ${
+      component.classes?.join(' ') || ''
+    }"></div>`,
+  });
+  saveAutosave();
+}
+
 function renderLayers() {
   layerPanel.innerHTML = '';
   layerManager.layers.forEach((layer) => {
     const row = document.createElement('div');
     row.className = `layer-row ${layer.id === layerManager.activeId ? 'active' : ''}`;
     row.addEventListener('click', () => layerManager.setActive(layer.id));
+    const backgroundTint = colorToRGBA(layer.backgroundColor || '#0b2144', 0.18);
+    row.style.background = `linear-gradient(135deg, ${backgroundTint}, rgba(255,255,255,0.04))`;
+    row.style.borderColor = layer.borderColor || '#123055';
+
+    row.addEventListener('dragover', (e) => {
+      if (e.dataTransfer?.types?.includes('application/pfp-color')) {
+        e.preventDefault();
+        row.classList.add('dropping');
+      }
+    });
+    row.addEventListener('dragleave', () => row.classList.remove('dropping'));
+    row.addEventListener('drop', (e) => {
+      const bucket = resolveBucketDrag(e);
+      row.classList.remove('dropping');
+      if (!bucket) return;
+      e.preventDefault();
+      const applied = applyBucketToLayer(layerManager, layer.id, bucket);
+      if (applied) {
+        canvasEngine.dirty = true;
+        saveAutosave();
+      }
+    });
     const thumb = document.createElement('div');
     thumb.className = 'layer-thumb';
+    thumb.style.background = layer.backgroundColor || '#ffce00';
+    thumb.style.borderColor = layer.borderColor || '#123055';
+    thumb.style.color = layer.textColor || '#0f172a';
     thumb.textContent = layer.name.slice(0, 2).toUpperCase();
     const meta = document.createElement('div');
     meta.className = 'layer-meta';
@@ -158,8 +206,8 @@ function buildBehaviors() {
 }
 
 function buildComponents() {
-  renderComponents(themeComponents, (component) => {
-    addAssetToCanvas({ name: component.name, src: '', placeholder: true }, 240, 240);
+  renderComponents(themeComponents, (componentLayer) => {
+    addComponentToCanvas(componentLayer, 240, 240);
     canvasEngine.dirty = true;
   });
 }
@@ -169,8 +217,11 @@ function buildSpacing() {
 }
 
 function buildColorBuckets() {
-  renderColorBuckets(colorBuckets, (bucket) => {
-    document.body.style.background = `radial-gradient(circle at 20% 20%, ${bucket.value}22, transparent 40%), #061225`;
+  renderColorBuckets(colorBuckets, layerManager, {
+    onSelect: (bucket) => {
+      const glow = colorToRGBA(bucket.value, 0.16);
+      document.body.style.background = `radial-gradient(circle at 20% 20%, ${glow}, transparent 40%), #061225`;
+    },
   });
 }
 
@@ -346,9 +397,16 @@ function bindToolbar() {
     input.click();
   });
 
-  document.querySelector('[data-action="export-html"]').addEventListener('click', () => exportToHTML(layerManager));
-  document.querySelector('[data-action="export-png"]').addEventListener('click', () => exportToPNG(canvas));
-  document.querySelector('[data-action="export-json"]').addEventListener('click', () => exportToJSON(layerManager));
+  const canvasState = () => layerManager.serialize();
+  document.querySelector('[data-action="export-html"]').addEventListener('click', () => exportHTML(canvasState()));
+  document.querySelector('[data-action="export-png"]').addEventListener('click', () => exportPNG(canvas));
+  document.querySelector('[data-action="export-json"]').addEventListener('click', () => exportJSON(canvasState()));
+
+  const cssButton = document.querySelector('[data-action="export-css"]');
+  if (cssButton) cssButton.addEventListener('click', () => exportCSS(canvasState().theme));
+
+  const wpButton = document.querySelector('[data-action="export-wordpress"]');
+  if (wpButton) wpButton.addEventListener('click', () => exportWordPress(canvasState()));
   document.querySelector('[data-action="toggle-grid"]').addEventListener('click', () => canvasEngine.toggleGrid());
   document.querySelector('[data-action="zoom-in"]').addEventListener('click', () => canvasEngine.setZoom(0.1));
   document.querySelector('[data-action="zoom-out"]').addEventListener('click', () => canvasEngine.setZoom(-0.1));
