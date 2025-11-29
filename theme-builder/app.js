@@ -7,7 +7,7 @@ import { renderBehaviorBadges } from './js/behaviors.js';
 import { renderSnapControls } from './js/snapEngine.js';
 import { renderComponents } from './js/componentFactory.js';
 import { renderInspector } from './js/inspector.js';
-import { exportToHTML, exportToJSON, exportToPNG } from './js/exportTools.js';
+import { exportCSS, exportHTML, exportJSON, exportPNG, exportWordPress } from './js/exportTools.js';
 import { renderSpacingPreview } from './js/spacingBlocks.js';
 import { renderColorBuckets } from './js/colorBuckets.js';
 import { renderTypeBlocks } from './js/typeBlocks.js';
@@ -199,9 +199,16 @@ function bindToolbar() {
     input.click();
   });
 
-  document.querySelector('[data-action="export-html"]').addEventListener('click', () => exportToHTML(layerManager));
-  document.querySelector('[data-action="export-png"]').addEventListener('click', () => exportToPNG(canvas));
-  document.querySelector('[data-action="export-json"]').addEventListener('click', () => exportToJSON(layerManager));
+  const canvasState = () => layerManager.serialize();
+  document.querySelector('[data-action="export-html"]').addEventListener('click', () => exportHTML(canvasState()));
+  document.querySelector('[data-action="export-png"]').addEventListener('click', () => exportPNG(canvas));
+  document.querySelector('[data-action="export-json"]').addEventListener('click', () => exportJSON(canvasState()));
+
+  const cssButton = document.querySelector('[data-action="export-css"]');
+  if (cssButton) cssButton.addEventListener('click', () => exportCSS(canvasState().theme));
+
+  const wpButton = document.querySelector('[data-action="export-wordpress"]');
+  if (wpButton) wpButton.addEventListener('click', () => exportWordPress(canvasState()));
   document.querySelector('[data-action="toggle-grid"]').addEventListener('click', () => canvasEngine.toggleGrid());
   document.querySelector('[data-action="zoom-in"]').addEventListener('click', () => canvasEngine.setZoom(0.1));
   document.querySelector('[data-action="zoom-out"]').addEventListener('click', () => canvasEngine.setZoom(-0.1));
