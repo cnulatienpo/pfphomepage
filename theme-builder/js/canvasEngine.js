@@ -9,6 +9,7 @@ export class CanvasEngine {
     this.zoom = 1;
     this.dirty = true;
     this.showGrid = true;
+    this.parallaxIntensity = 0;
     this._startLoop();
   }
 
@@ -31,13 +32,14 @@ export class CanvasEngine {
     ctx.fillStyle = '#0b2144';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    this.layerManager.layers.forEach((layer) => {
+    this.layerManager.layers.forEach((layer, index) => {
       if (!layer.visible) return;
       ctx.save();
       ctx.globalCompositeOperation = layer.blendMode;
       ctx.globalAlpha = layer.filter.opacity / 100;
       applyFilters(ctx, layer.filter);
-      ctx.translate(layer.x + layer.transform.x, layer.y + layer.transform.y);
+      const parallaxShift = this._parallaxOffset(index);
+      ctx.translate(layer.x + layer.transform.x + parallaxShift.x, layer.y + layer.transform.y + parallaxShift.y);
       ctx.rotate((layer.transform.rotation * Math.PI) / 180);
       ctx.scale(layer.transform.scale, layer.transform.scale);
       this._drawPlaceholder(ctx, layer);
@@ -52,16 +54,19 @@ export class CanvasEngine {
   }
 
   _drawPlaceholder(ctx, layer) {
-    const gradient = ctx.createLinearGradient(0, 0, layer.width, layer.height);
-    gradient.addColorStop(0, '#ffce00');
-    gradient.addColorStop(1, '#ff5757');
-    ctx.fillStyle = gradient;
+    const background = layer.backgroundColor || '#ffce00';
+    const border = layer.borderColor || '#123055';
+    const textColor = layer.textColor || '#0f172a';
+    ctx.fillStyle = background;
     ctx.fillRect(-layer.width / 2, -layer.height / 2, layer.width, layer.height);
-    ctx.fillStyle = 'rgba(0,0,0,0.18)';
-    for (let x = -layer.width / 2; x < layer.width / 2; x += 18) {
-      ctx.fillRect(x, -layer.height / 2, 8, layer.height);
+    ctx.strokeStyle = border;
+    ctx.lineWidth = 6;
+    ctx.strokeRect(-layer.width / 2, -layer.height / 2, layer.width, layer.height);
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    for (let x = -layer.width / 2 + 10; x < layer.width / 2; x += 22) {
+      ctx.fillRect(x, -layer.height / 2, 6, layer.height);
     }
-    ctx.fillStyle = '#0f172a';
+    ctx.fillStyle = textColor;
     ctx.font = 'bold 20px Inter, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -108,5 +113,19 @@ export class CanvasEngine {
     this.zoom = Math.max(0.25, Math.min(3, this.zoom + delta));
     document.getElementById('zoom-level').textContent = `${Math.round(this.zoom * 100)}%`;
     this.dirty = true;
+  }
+
+  setParallaxIntensity(value) {
+    this.parallaxIntensity = Math.max(0, Math.min(1, value));
+    this.dirty = true;
+  }
+
+  _parallaxOffset(index) {
+    if (!this.parallaxIntensity) return { x: 0, y: 0 };
+    const depth = this.layerManager.layers.length <= 1 ? 0.5 : index / Math.max(1, this.layerManager.layers.length - 1);
+    const centered = depth - 0.5;
+    const wobble = Math.sin(Date.now() / 600 + index) * 0.2;
+    const scalar = this.parallaxIntensity * 28;
+    return { x: (centered + wobble) * scalar, y: (centered - wobble) * scalar * 0.6 };
   }
 }

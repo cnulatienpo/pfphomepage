@@ -9,7 +9,9 @@
     "dev:server": "tsx watch server/index.ts",
     "build": "vite build && tsc -p tsconfig.server.json",
     "preview": "vite preview",
-    "server": "tsx server/index.ts"
+    "server": "tsx server/index.ts",
+    "postinstall": "node postinstall.js",
+    "test": "node --test ./tests/*.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -21,12 +23,14 @@
     "postcss": "^8.5.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "sharp": "^0.33.4",
     "skia-canvas": "^1.0.6",
     "tsx": "^4.16.2",
     "ws": "^8.18.0"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
+    "jsdom": "^23.2.0",
     "typescript": "^5.4.5",
     "vite": "^5.2.0"
   }
