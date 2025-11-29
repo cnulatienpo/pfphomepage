@@ -1,0 +1,57 @@
+.layer-panel {
+  margin-top: 10px;
+  background: #0b1220;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  height: 220px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+}
+
+.layer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.layer-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  background: #0f172a;
+}
+
+.layer-item.active {
+  border-left: 3px solid var(--accent);
+  background: #0c172c;
+}
+
+.layer-controls {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.layer-controls button {
+  padding: 4px 6px;
+  font-size: 11px;
+}
+
+.layer-name {
+  color: var(--text);
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.layer-opacity {
+  width: 120px;
+}

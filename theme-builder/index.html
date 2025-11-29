@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Construction Theme Builder</title>
+  <link rel="stylesheet" href="css/panel.css">
+  <link rel="stylesheet" href="css/toolbar.css">
+  <link rel="stylesheet" href="css/layers.css">
+  <link rel="stylesheet" href="css/canvas.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="toolbar">
+    <div class="logo">Construction Theme Builder</div>
+    <div class="toolbar-actions">
+      <button data-action="new">New</button>
+      <button data-action="open">Open</button>
+      <button data-action="save">Save</button>
+      <button data-action="export-html">Export HTML/CSS</button>
+      <button data-action="export-png">Export PNG</button>
+      <button data-action="export-json">Export JSON</button>
+      <button data-action="toggle-grid">Grid</button>
+      <div class="zoom-control">
+        <button data-action="zoom-out">-</button>
+        <span id="zoom-level">100%</span>
+        <button data-action="zoom-in">+</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="panel assets-panel">
+      <h2>Assets</h2>
+      <div id="asset-list" class="asset-list"></div>
+    </aside>
+
+    <section class="canvas-shell">
+      <div class="canvas-wrapper">
+        <canvas id="design-canvas" width="1200" height="720"></canvas>
+        <div id="canvas-overlay" class="canvas-overlay"></div>
+      </div>
+      <div class="layer-panel" id="layer-panel"></div>
+    </section>
+
+    <aside class="panel properties-panel">
+      <h2>Properties</h2>
+      <div id="properties"></div>
+      <h3>Filters</h3>
+      <div id="filter-controls" class="filter-controls"></div>
+      <h3>Transforms</h3>
+      <div id="transform-controls" class="transform-controls"></div>
+      <h3>Theme Components</h3>
+      <div id="theme-components" class="theme-components"></div>
+    </aside>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
