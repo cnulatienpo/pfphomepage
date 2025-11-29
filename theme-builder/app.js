@@ -7,13 +7,21 @@ import { renderBehaviorBadges } from './js/behaviors.js';
 import { renderSnapControls } from './js/snapEngine.js';
 import { renderComponents } from './js/componentFactory.js';
 import { renderInspector } from './js/inspector.js';
-import { exportToHTML, exportToJSON, exportToPNG } from './js/exportTools.js';
+import { exportCSS, exportHTML, exportJSON, exportPNG, exportWordPress } from './js/exportTools.js';
 import { renderSpacingPreview } from './js/spacingBlocks.js';
-import { renderColorBuckets } from './js/colorBuckets.js';
+import { applyBucketToLayer, colorToRGBA, renderColorBuckets, resolveBucketDrag } from './js/colorBuckets.js';
 import { renderTypeBlocks } from './js/typeBlocks.js';
-import { initPureDataUI } from './js/pureDataUI.js';
-import { setMappingContext, triggerThemeEvent, loadMappingsFromJSON, serializeMappings } from './js/pureDataMappings.js';
-import { connectToPureData } from './js/pureDataEngine.js';
+import { loadLidarMetadata, getShotList } from './js/lidarEngine.js';
+import { createDepthLayersForShot } from './js/depthLayers.js';
+import { attachParallaxToShot } from './js/parallaxDepth.js';
+import { applyDepthShading, applyDepthOfField, applyDepthEmboss, applyDepthColorRamp } from './js/depthEffects.js';
+import {
+  createHeroCardFromShot,
+  addScribblesBehindSubject,
+  autoScaffoldFromDepthEdges,
+  groupLayersByDepth,
+  applySubjectSpotlight,
+} from './js/depthLayoutTools.js';
 
 const canvas = document.getElementById('design-canvas');
 const overlay = document.getElementById('canvas-overlay');
@@ -34,13 +42,15 @@ const layerManager = new LayerManager();
 const canvasEngine = new CanvasEngine(canvas, overlay, layerManager);
 
 async function init() {
+  window.layerManager = layerManager;
+  window.canvasEngine = canvasEngine;
   await buildAssets();
   buildBehaviors();
   buildComponents();
   buildSpacing();
   buildColorBuckets();
   buildTypeBlocks();
-  setupPureData();
+  await buildLidarTools();
   bindToolbar();
   layerManager.subscribe(renderLayers);
   layerManager.subscribe(() => renderInspector(properties, layerManager));
@@ -78,8 +88,12 @@ async function buildAssets() {
     const data = e.dataTransfer.getData('text/plain');
     if (!data) return;
     try {
-      const asset = JSON.parse(data);
-      addAssetToCanvas(asset, e.offsetX / canvasEngine.zoom, e.offsetY / canvasEngine.zoom);
+      const payload = JSON.parse(data);
+      if (payload.type === 'component') {
+        addComponentToCanvas(payload, e.offsetX / canvasEngine.zoom, e.offsetY / canvasEngine.zoom);
+      } else {
+        addAssetToCanvas(payload, e.offsetX / canvasEngine.zoom, e.offsetY / canvasEngine.zoom);
+      }
     } catch (_) {
       /* ignore */
     }
@@ -102,17 +116,58 @@ function addAssetToCanvas(asset, x = 200, y = 200) {
   saveAutosave();
 }
 
+function addComponentToCanvas(component, x = 220, y = 220) {
+  layerManager.createLayer({
+    name: component.name,
+    src: component.src || '',
+    x,
+    y,
+    width: component.width || 320,
+    height: component.height || 220,
+    filter: defaultFilters(),
+    transform: defaultTransforms(),
+    placeholder: true,
+    classes: component.classes || [],
+    markup: component.markup || `<div class="construction-component ${
+      component.classes?.join(' ') || ''
+    }"></div>`,
+  });
+  saveAutosave();
+}
+
 function renderLayers() {
   layerPanel.innerHTML = '';
   layerManager.layers.forEach((layer, index) => {
     const row = document.createElement('div');
     row.className = `layer-row ${layer.id === layerManager.activeId ? 'active' : ''}`;
-    row.addEventListener('click', () => {
-      layerManager.setActive(layer.id);
-      triggerThemeEvent('layer_focus', layerManager.layers.length ? index / layerManager.layers.length : 0);
+    row.addEventListener('click', () => layerManager.setActive(layer.id));
+    const backgroundTint = colorToRGBA(layer.backgroundColor || '#0b2144', 0.18);
+    row.style.background = `linear-gradient(135deg, ${backgroundTint}, rgba(255,255,255,0.04))`;
+    row.style.borderColor = layer.borderColor || '#123055';
+
+    row.addEventListener('dragover', (e) => {
+      if (e.dataTransfer?.types?.includes('application/pfp-color')) {
+        e.preventDefault();
+        row.classList.add('dropping');
+      }
+    });
+    row.addEventListener('dragleave', () => row.classList.remove('dropping'));
+    row.addEventListener('drop', (e) => {
+      const bucket = resolveBucketDrag(e);
+      row.classList.remove('dropping');
+      if (!bucket) return;
+      e.preventDefault();
+      const applied = applyBucketToLayer(layerManager, layer.id, bucket);
+      if (applied) {
+        canvasEngine.dirty = true;
+        saveAutosave();
+      }
     });
     const thumb = document.createElement('div');
     thumb.className = 'layer-thumb';
+    thumb.style.background = layer.backgroundColor || '#ffce00';
+    thumb.style.borderColor = layer.borderColor || '#123055';
+    thumb.style.color = layer.textColor || '#0f172a';
     thumb.textContent = layer.name.slice(0, 2).toUpperCase();
     const meta = document.createElement('div');
     meta.className = 'layer-meta';
@@ -154,8 +209,8 @@ function buildBehaviors() {
 }
 
 function buildComponents() {
-  renderComponents(themeComponents, (component) => {
-    addAssetToCanvas({ name: component.name, src: '', placeholder: true }, 240, 240);
+  renderComponents(themeComponents, (componentLayer) => {
+    addComponentToCanvas(componentLayer, 240, 240);
     canvasEngine.dirty = true;
   });
 }
@@ -165,8 +220,11 @@ function buildSpacing() {
 }
 
 function buildColorBuckets() {
-  renderColorBuckets(colorBuckets, (bucket) => {
-    document.body.style.background = `radial-gradient(circle at 20% 20%, ${bucket.value}22, transparent 40%), #061225`;
+  renderColorBuckets(colorBuckets, layerManager, {
+    onSelect: (bucket) => {
+      const glow = colorToRGBA(bucket.value, 0.16);
+      document.body.style.background = `radial-gradient(circle at 20% 20%, ${glow}, transparent 40%), #061225`;
+    },
   });
 }
 
@@ -174,10 +232,137 @@ function buildTypeBlocks() {
   renderTypeBlocks(typeBlocks);
 }
 
-function setupPureData() {
-  setMappingContext({ canvasEngine, layerManager, overlay });
-  initPureDataUI(pdRoom, { statusElement: pdChip, defaultUrl: 'ws://localhost:8082' });
-  connectToPureData({});
+async function buildLidarTools() {
+  const assetsColumn = document.querySelector('.assets-column');
+  if (!assetsColumn) return;
+  const section = document.createElement('div');
+  section.className = 'section';
+  const title = document.createElement('h3');
+  title.textContent = 'LiDAR Depth Lab';
+  const hint = document.createElement('p');
+  hint.className = 'hint';
+  hint.textContent = 'Drop LiDAR shots into /assets/lidar-shots and run lidar-generate-assets.js to populate depth metadata locally.';
+
+  const select = document.createElement('select');
+  select.id = 'lidar-shot-select';
+  select.style.width = '100%';
+  select.style.marginBottom = '6px';
+
+  const status = document.createElement('div');
+  status.className = 'hint';
+
+  const refreshShots = async () => {
+    await loadLidarMetadata();
+    const shots = await getShotList();
+    select.innerHTML = '';
+    if (!shots.length) {
+      const option = document.createElement('option');
+      option.textContent = 'No LiDAR shots found';
+      option.disabled = true;
+      select.appendChild(option);
+      status.textContent = 'Awaiting local LiDAR assets...';
+      return;
+    }
+    shots.forEach((shot) => {
+      const option = document.createElement('option');
+      option.value = shot.id;
+      option.textContent = `${shot.id} (${shot.width}×${shot.height})`;
+      select.appendChild(option);
+    });
+    status.textContent = `${shots.length} LiDAR capture(s) ready.`;
+  };
+
+  const toolbar = document.createElement('div');
+  toolbar.className = 'asset-toolbar';
+
+  const actionButton = (label, handler, primary = false) => {
+    const btn = document.createElement('button');
+    btn.textContent = label;
+    if (primary) btn.classList.add('primary');
+    btn.addEventListener('click', async () => {
+      const shotId = select.value;
+      if (!shotId) {
+        alert('Scan LiDAR shots first.');
+        return;
+      }
+      await handler(shotId);
+      canvasEngine.dirty = true;
+    });
+    return btn;
+  };
+
+  toolbar.append(
+    actionButton('Import LiDAR Shot', refreshShots, true),
+    actionButton('Make Depth Stack', (shotId) => createDepthLayersForShot(shotId, { layerManager })),
+    actionButton('Add Parallax', (shotId) => attachParallaxToShot(shotId, canvas, { layerManager })),
+  );
+
+  const fxRow = document.createElement('div');
+  fxRow.className = 'asset-toolbar';
+  fxRow.append(
+    actionButton('Hero Card from Depth', (shotId) => createHeroCardFromShot(shotId, { layerManager })),
+    actionButton('Highlight Subject', (shotId) => applySubjectSpotlight(shotId, { layerManager })),
+    actionButton('Scribbles Behind Subject', (shotId) => addScribblesBehindSubject(shotId, { layerManager })),
+  );
+
+  const shadingRow = document.createElement('div');
+  shadingRow.className = 'asset-toolbar';
+  shadingRow.append(
+    actionButton('Depth Shading', (shotId) => applyDepthShading(shotId, { layerManager, intensity: 18 })),
+    actionButton('Depth Blur', (shotId) => applyDepthOfField(shotId, { layerManager, strength: 22 })),
+    actionButton('Depth Emboss', (shotId) => applyDepthEmboss(shotId, { layerManager })),
+    actionButton('Depth Color Ramp', (shotId) => applyDepthColorRamp(shotId, { layerManager })),
+  );
+
+  const scaffoldingRow = document.createElement('div');
+  scaffoldingRow.className = 'asset-toolbar';
+  scaffoldingRow.append(
+    actionButton('Auto Scaffold', (shotId) => autoScaffoldFromDepthEdges(shotId, { layerManager })),
+    actionButton('Depth Stack Sort', (shotId) => groupLayersByDepth(shotId, { layerManager })),
+  );
+
+  section.append(title, hint, select, status, toolbar, fxRow, shadingRow, scaffoldingRow);
+  assetsColumn.appendChild(section);
+
+  injectToolbeltActions(select, refreshShots);
+  await refreshShots();
+}
+
+function injectToolbeltActions(select, refreshShots) {
+  const belt = document.querySelector('.toolbelt-actions');
+  if (!belt || belt.querySelector('.lidar-chip')) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'lidar-chip';
+  wrap.style.display = 'flex';
+  wrap.style.gap = '6px';
+  wrap.style.flexWrap = 'wrap';
+  const button = (label, handler) => {
+    const btn = document.createElement('button');
+    btn.textContent = label;
+    btn.addEventListener('click', async () => {
+      if (label === 'Import LiDAR Shot') {
+        await refreshShots();
+        return;
+      }
+      const shotId = select.value;
+      if (!shotId) {
+        alert('Choose a LiDAR capture first.');
+        return;
+      }
+      await handler(shotId);
+      canvasEngine.dirty = true;
+    });
+    return btn;
+  };
+  wrap.append(
+    button('Import LiDAR Shot', () => {}),
+    button('Make Depth Stack', (shotId) => createDepthLayersForShot(shotId, { layerManager })),
+    button('Add Parallax', (shotId) => attachParallaxToShot(shotId, canvas, { layerManager })),
+    button('Hero Card from Depth', (shotId) => createHeroCardFromShot(shotId, { layerManager })),
+    button('Highlight Subject', (shotId) => applySubjectSpotlight(shotId, { layerManager })),
+    button('Scribbles Behind Subject', (shotId) => addScribblesBehindSubject(shotId, { layerManager })),
+  );
+  belt.appendChild(wrap);
 }
 
 function bindToolbar() {
@@ -224,19 +409,17 @@ function bindToolbar() {
     input.click();
   });
 
-  document.querySelector('[data-action="export-html"]').addEventListener('click', () => exportToHTML(layerManager));
-  document.querySelector('[data-action="export-png"]').addEventListener('click', () => {
-    exportToPNG(canvas);
-    triggerThemeEvent('export', 1);
-  });
-  document.querySelector('[data-action="export-json"]').addEventListener('click', () => {
-    exportToJSON(layerManager);
-    triggerThemeEvent('export', 0.8);
-  });
-  document.querySelector('[data-action="toggle-grid"]').addEventListener('click', () => {
-    canvasEngine.toggleGrid();
-    triggerThemeEvent('grid_toggle', canvasEngine.showGrid ? 1 : 0);
-  });
+  const canvasState = () => layerManager.serialize();
+  document.querySelector('[data-action="export-html"]').addEventListener('click', () => exportHTML(canvasState()));
+  document.querySelector('[data-action="export-png"]').addEventListener('click', () => exportPNG(canvas));
+  document.querySelector('[data-action="export-json"]').addEventListener('click', () => exportJSON(canvasState()));
+
+  const cssButton = document.querySelector('[data-action="export-css"]');
+  if (cssButton) cssButton.addEventListener('click', () => exportCSS(canvasState().theme));
+
+  const wpButton = document.querySelector('[data-action="export-wordpress"]');
+  if (wpButton) wpButton.addEventListener('click', () => exportWordPress(canvasState()));
+  document.querySelector('[data-action="toggle-grid"]').addEventListener('click', () => canvasEngine.toggleGrid());
   document.querySelector('[data-action="zoom-in"]').addEventListener('click', () => canvasEngine.setZoom(0.1));
   document.querySelector('[data-action="zoom-out"]').addEventListener('click', () => canvasEngine.setZoom(-0.1));
 
