@@ -24,6 +24,7 @@ import {
 } from './js/depthLayoutTools.js';
 
 const canvas = document.getElementById('design-canvas');
+const glCanvas = document.getElementById('gl-canvas');
 const overlay = document.getElementById('canvas-overlay');
 const layerPanel = document.getElementById('layer-panel');
 const filterControls = document.getElementById('filter-controls');
