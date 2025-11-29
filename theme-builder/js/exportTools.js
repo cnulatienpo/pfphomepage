@@ -23,7 +23,10 @@ export function exportPureDataMappings() {
   return serializeMappings();
 }
 
-export function exportToHTML(layerManager) {
+export function exportToHTML(layerManager, touchDesigner = null) {
+  const tdBlob = touchDesigner
+    ? `<script type="application/json" id="touchdesigner-config">${JSON.stringify(touchDesigner)}</script>`
+    : '';
   const html = `<!DOCTYPE html><html><head><style>${runtimeCSS()}</style></head><body>${layerManager.layers
     .map(
       (layer) =>
