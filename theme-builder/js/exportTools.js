@@ -1,98 +1,31 @@
-export function exportToJSON(layerManager) {
-  const data = JSON.stringify(layerManager.serialize(), null, 2);
-  downloadText(data, 'theme-builder-project.json');
-}
-
 export function exportToPNG(canvas) {
   const url = canvas.toDataURL('image/png');
   const link = document.createElement('a');
   link.href = url;
-  link.download = 'theme-layout.png';
+  link.download = 'construction-theme.png';
+  link.click();
+}
+
+export function exportToJSON(layerManager) {
+  const data = JSON.stringify(layerManager.serialize(), null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'construction-theme.json';
   link.click();
 }
 
 export function exportToHTML(layerManager) {
-  const { html, css, assetMap } = generateHTML(layoutFromLayers(layerManager.layers));
-  downloadText(html, 'index.html');
-  downloadText(css, 'theme.css');
-  downloadText(JSON.stringify(assetMap, null, 2), 'asset-map.json');
-}
-
-function layoutFromLayers(layers) {
-  return layers.map((layer) => ({
-    ...layer,
-    filter: layer.filter,
-    transform: layer.transform,
-  }));
-}
-
-function generateHTML(layers) {
-  const assetMap = {};
-  const body = layers
-    .map((layer) => {
-      const style = [
-        `position:absolute`,
-        `left:${layer.x}px`,
-        `top:${layer.y}px`,
-        `width:${layer.width}px`,
-        `height:${layer.height}px`,
-        `opacity:${layer.opacity}`,
-        `transform: skew(${layer.transform.skewX}deg, ${layer.transform.skewY}deg) rotate(${layer.transform.rotation}deg) scale(${layer.transform.scaleX * (layer.transform.flipX ? -1 : 1)}, ${layer.transform.scaleY * (layer.transform.flipY ? -1 : 1)})`,
-        `mix-blend-mode:${layer.blendMode}`,
-        `filter:${layer.visible ? cssFilter(layer.filter) : 'none'}`,
-        `display:${layer.visible ? 'block' : 'none'}`,
-      ].join(';');
-
-      if (layer.type === 'image') {
-        assetMap[layer.name] = layer.src;
-        return `<img src="${layer.src}" alt="${layer.name}" style="${style}" data-layer="${layer.id}" />`;
-      }
-      if (layer.type === 'text') {
-        return `<div style="${style}" data-layer="${layer.id}" class="text-layer">${layer.content}</div>`;
-      }
-      return `<div style="${style}" class="${layer.classes.join(' ')}" data-layer="${layer.id}">${layer.name}</div>`;
-    })
-    .join('\n');
-
-  const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="theme.css" />
-  <title>Exported Construction Theme</title>
-</head>
-<body>
-  <div class="theme-stage">${body}</div>
-</body>
-</html>`;
-
-  const css = `.theme-stage { position: relative; width: 1200px; height: 720px; background: #0f172a; overflow: hidden; }
-.text-layer { color: #f8fafc; font-family: 'Inter', sans-serif; }
-`;
-
-  return { html, css, assetMap };
-}
-
-function cssFilter(filter) {
-  return [
-    `brightness(${filter.brightness}%)`,
-    `contrast(${filter.contrast}%)`,
-    `saturate(${filter.saturation}%)`,
-    `hue-rotate(${filter.hue}deg)`,
-    `blur(${filter.blur}px)`,
-    `grayscale(${filter.grayscale}%)`,
-    `sepia(${filter.sepia}%)`,
-    `invert(${filter.invert}%)`,
-  ].join(' ');
-}
-
-function downloadText(text, filename) {
-  const blob = new Blob([text], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
+  const html = `<!DOCTYPE html><html><head><style>${runtimeCSS()}</style></head><body>${layerManager.layers
+    .map((layer) => `<div class="layer" style="width:${layer.width}px;height:${layer.height}px;transform:translate(${layer.x}px,${layer.y}px) rotate(${layer.transform.rotation}deg) scale(${layer.transform.scale});mix-blend-mode:${layer.blendMode};opacity:${layer.filter.opacity / 100}"><div class="placeholder">${layer.name}</div></div>`)
+    .join('')}</body></html>`;
+  const blob = new Blob([html], { type: 'text/html' });
   const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
+  link.href = URL.createObjectURL(blob);
+  link.download = 'construction-theme.html';
   link.click();
-  URL.revokeObjectURL(url);
+}
+
+function runtimeCSS() {
+  return `.layer{position:absolute;border:3px solid #123055;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#ffce00,#ff5757);box-shadow:0 10px 20px rgba(0,0,0,0.25);}body{background:#0b2144;min-height:100vh;position:relative;font-family:Inter,sans-serif;margin:0;padding:20px;} .placeholder{display:grid;place-items:center;height:100%;color:#0f172a;font-weight:900;letter-spacing:0.05em;text-transform:uppercase;}`;
 }

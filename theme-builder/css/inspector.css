@@ -1,0 +1,9 @@
+.inspector { display: flex; flex-direction: column; gap: 8px; max-height: 220px; overflow-y: auto; padding-right: 6px; }
+.property-field { display: grid; grid-template-columns: 1fr 120px; align-items: center; gap: 8px; background: rgba(255,255,255,0.03); border: 1px solid #123055; border-radius: 12px; padding: 8px 10px; }
+.property-field label { font-weight: 700; }
+.property-field input,
+.property-field select,
+.property-field textarea { width: 100%; background: #0b1b33; border: 1px solid #123055; color: #f8fafc; padding: 6px 8px; border-radius: 10px; }
+.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; border: 1px dashed #123055; border-radius: 10px; }
+.control-grid .filter-pill { display: grid; grid-template-columns: 1fr 70px; gap: 6px; align-items: center; background: rgba(255,255,255,0.04); border: 1px solid #123055; padding: 8px; border-radius: 12px; }
+.control-grid input { width: 100%; }
