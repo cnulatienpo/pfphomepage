@@ -9,7 +9,7 @@ import { renderComponents } from './js/componentFactory.js';
 import { renderInspector } from './js/inspector.js';
 import { exportToHTML, exportToJSON, exportToPNG } from './js/exportTools.js';
 import { renderSpacingPreview } from './js/spacingBlocks.js';
-import { renderColorBuckets } from './js/colorBuckets.js';
+import { applyBucketToLayer, colorToRGBA, renderColorBuckets, resolveBucketDrag } from './js/colorBuckets.js';
 import { renderTypeBlocks } from './js/typeBlocks.js';
 
 const canvas = document.getElementById('design-canvas');
@@ -101,8 +101,33 @@ function renderLayers() {
     const row = document.createElement('div');
     row.className = `layer-row ${layer.id === layerManager.activeId ? 'active' : ''}`;
     row.addEventListener('click', () => layerManager.setActive(layer.id));
+    const backgroundTint = colorToRGBA(layer.backgroundColor || '#0b2144', 0.18);
+    row.style.background = `linear-gradient(135deg, ${backgroundTint}, rgba(255,255,255,0.04))`;
+    row.style.borderColor = layer.borderColor || '#123055';
+
+    row.addEventListener('dragover', (e) => {
+      if (e.dataTransfer?.types?.includes('application/pfp-color')) {
+        e.preventDefault();
+        row.classList.add('dropping');
+      }
+    });
+    row.addEventListener('dragleave', () => row.classList.remove('dropping'));
+    row.addEventListener('drop', (e) => {
+      const bucket = resolveBucketDrag(e);
+      row.classList.remove('dropping');
+      if (!bucket) return;
+      e.preventDefault();
+      const applied = applyBucketToLayer(layerManager, layer.id, bucket);
+      if (applied) {
+        canvasEngine.dirty = true;
+        saveAutosave();
+      }
+    });
     const thumb = document.createElement('div');
     thumb.className = 'layer-thumb';
+    thumb.style.background = layer.backgroundColor || '#ffce00';
+    thumb.style.borderColor = layer.borderColor || '#123055';
+    thumb.style.color = layer.textColor || '#0f172a';
     thumb.textContent = layer.name.slice(0, 2).toUpperCase();
     const meta = document.createElement('div');
     meta.className = 'layer-meta';
@@ -155,8 +180,11 @@ function buildSpacing() {
 }
 
 function buildColorBuckets() {
-  renderColorBuckets(colorBuckets, (bucket) => {
-    document.body.style.background = `radial-gradient(circle at 20% 20%, ${bucket.value}22, transparent 40%), #061225`;
+  renderColorBuckets(colorBuckets, layerManager, {
+    onSelect: (bucket) => {
+      const glow = colorToRGBA(bucket.value, 0.16);
+      document.body.style.background = `radial-gradient(circle at 20% 20%, ${glow}, transparent 40%), #061225`;
+    },
   });
 }
 
