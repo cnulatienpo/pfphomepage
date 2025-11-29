@@ -1,0 +1,36 @@
+.toolbelt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: linear-gradient(180deg, #1f4ea3, #123a7a);
+  border-bottom: 4px solid #0d2653;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.toolbelt .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.toolbelt .peg {
+  width: 32px;
+  height: 32px;
+  border-radius: 12px;
+  background: radial-gradient(circle at 30% 30%, #fff5c2, #ffb347 60%, #f78764);
+  border: 2px solid rgba(0,0,0,0.25);
+  box-shadow: inset 0 4px 0 rgba(255,255,255,0.6), 0 3px 0 rgba(0,0,0,0.25);
+}
+
+.toolbelt .title { font-size: 18px; }
+
+.toolbelt-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.zoom-control { display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.08); padding: 6px 10px; border-radius: 999px; border: 1px solid #0d2653; }
+.zoom-control span { font-weight: 700; }

@@ -1,26 +1,34 @@
-export function applyTransforms(ctx, layer) {
-  ctx.translate(layer.x + layer.transform.translateX, layer.y + layer.transform.translateY);
-  ctx.transform(1, Math.tan((layer.transform.skewY * Math.PI) / 180), Math.tan((layer.transform.skewX * Math.PI) / 180), 1, 0, 0);
-  ctx.rotate((layer.transform.rotation * Math.PI) / 180);
-  const scaleX = layer.transform.scaleX * (layer.transform.flipX ? -1 : 1);
-  const scaleY = layer.transform.scaleY * (layer.transform.flipY ? -1 : 1);
-  ctx.scale(scaleX, scaleY);
-}
+export const transformDefs = [
+  { key: 'rotation', label: 'Rotation', min: -180, max: 180, step: 1 },
+  { key: 'scale', label: 'Scale', min: 0.2, max: 3, step: 0.05 },
+  { key: 'x', label: 'Offset X', min: -400, max: 400, step: 5 },
+  { key: 'y', label: 'Offset Y', min: -400, max: 400, step: 5 },
+];
 
-export function buildTransformControls(config) {
-  const container = document.createElement('div');
-  config.forEach((item) => {
+export function buildTransformUI(container, layerManager, onChange) {
+  container.innerHTML = '';
+  const active = layerManager.layers.find((l) => l.id === layerManager.activeId);
+  if (!active) {
+    container.textContent = 'Select a layer to transform';
+    return;
+  }
+  transformDefs.forEach((def) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'filter-pill';
     const label = document.createElement('label');
-    label.textContent = item.label;
+    label.textContent = def.label;
     const input = document.createElement('input');
     input.type = 'range';
-    input.min = item.min;
-    input.max = item.max;
-    input.step = item.step;
-    input.value = item.value;
-    input.addEventListener('input', (e) => item.onChange(Number(e.target.value)));
-    label.appendChild(input);
-    container.appendChild(label);
+    input.min = def.min;
+    input.max = def.max;
+    input.step = def.step;
+    input.value = active.transform[def.key];
+    input.addEventListener('input', (e) => {
+      const value = Number(e.target.value);
+      layerManager.updateLayer(active.id, { transform: { ...active.transform, [def.key]: value } });
+      onChange();
+    });
+    wrapper.append(label, input);
+    container.appendChild(wrapper);
   });
-  return container;
 }
