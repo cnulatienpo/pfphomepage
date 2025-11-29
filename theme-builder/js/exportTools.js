@@ -19,6 +19,10 @@ export function exportJSON(canvasState) {
   triggerBlobDownload(blob, 'construction-theme.json');
 }
 
+export function exportPureDataMappings() {
+  return serializeMappings();
+}
+
 export function exportToHTML(layerManager) {
   const html = `<!DOCTYPE html><html><head><style>${runtimeCSS()}</style></head><body>${layerManager.layers
     .map(

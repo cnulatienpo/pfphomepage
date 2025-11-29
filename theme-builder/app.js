@@ -35,6 +35,8 @@ const badgeGrid = document.getElementById('behavior-badges');
 const spacingPreview = document.getElementById('spacing-preview');
 const colorBuckets = document.getElementById('color-buckets');
 const typeBlocks = document.getElementById('type-blocks');
+const pdRoom = document.getElementById('pure-data-room');
+const pdChip = document.querySelector('[data-role="pd-chip"]');
 
 const layerManager = new LayerManager();
 const canvasEngine = new CanvasEngine(canvas, overlay, layerManager);
@@ -110,6 +112,7 @@ function addAssetToCanvas(asset, x = 200, y = 200) {
     transform: defaultTransforms(),
     placeholder: true,
   });
+  triggerThemeEvent('asset_drop', 1);
   saveAutosave();
 }
 
@@ -134,7 +137,7 @@ function addComponentToCanvas(component, x = 220, y = 220) {
 
 function renderLayers() {
   layerPanel.innerHTML = '';
-  layerManager.layers.forEach((layer) => {
+  layerManager.layers.forEach((layer, index) => {
     const row = document.createElement('div');
     row.className = `layer-row ${layer.id === layerManager.activeId ? 'active' : ''}`;
     row.addEventListener('click', () => layerManager.setActive(layer.id));
@@ -366,17 +369,20 @@ function bindToolbar() {
   document.querySelector('[data-action="new"]').addEventListener('click', () => {
     if (confirm('Start a new project? Current work will be replaced.')) {
       layerManager.load({ layers: [], activeId: null });
+      loadMappingsFromJSON({ mappings: [] });
+      triggerThemeEvent('toolbar_click', 1);
       saveAutosave();
     }
   });
 
   document.querySelector('[data-action="save"]').addEventListener('click', () => {
-    const data = JSON.stringify(layerManager.serialize(), null, 2);
+    const data = JSON.stringify(collectProjectState(), null, 2);
     const blob = new Blob([data], { type: 'application/json' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = 'project.json';
     link.click();
+    triggerThemeEvent('toolbar_click', 0.2);
   });
 
   document.querySelector('[data-action="open"]').addEventListener('click', () => {
@@ -389,7 +395,13 @@ function bindToolbar() {
       const reader = new FileReader();
       reader.onload = (evt) => {
         const parsed = JSON.parse(evt.target.result);
-        layerManager.load(parsed);
+        if (parsed.project || parsed.pureData) {
+          layerManager.load(parsed.project || { layers: [], activeId: null });
+          loadMappingsFromJSON(parsed.pureData);
+        } else {
+          layerManager.load(parsed);
+        }
+        triggerThemeEvent('toolbar_click', 0.5);
         saveAutosave();
       };
       reader.readAsText(file);
@@ -421,7 +433,7 @@ function autosave() {
 }
 
 function saveAutosave() {
-  const snapshot = JSON.stringify(layerManager.serialize());
+  const snapshot = JSON.stringify(collectProjectState());
   localStorage.setItem('construction-builder', snapshot);
   const history = JSON.parse(localStorage.getItem('construction-history') || '[]');
   history.unshift({ ts: Date.now(), data: snapshot });
@@ -432,12 +444,22 @@ function loadAutosave() {
   const data = localStorage.getItem('construction-builder');
   if (data) {
     try {
-      layerManager.load(JSON.parse(data));
+      const parsed = JSON.parse(data);
+      if (parsed.project || parsed.pureData) {
+        layerManager.load(parsed.project || { layers: [], activeId: null });
+        loadMappingsFromJSON(parsed.pureData);
+      } else {
+        layerManager.load(parsed);
+      }
     } catch (error) {
       console.warn('Unable to load autosave', error);
     }
   }
   autosave();
+}
+
+function collectProjectState() {
+  return { project: layerManager.serialize(), pureData: serializeMappings() };
 }
 
 init();
