@@ -17,7 +17,12 @@ export function exportToJSON(layerManager) {
 
 export function exportToHTML(layerManager) {
   const html = `<!DOCTYPE html><html><head><style>${runtimeCSS()}</style></head><body>${layerManager.layers
-    .map((layer) => `<div class="layer" style="width:${layer.width}px;height:${layer.height}px;transform:translate(${layer.x}px,${layer.y}px) rotate(${layer.transform.rotation}deg) scale(${layer.transform.scale});mix-blend-mode:${layer.blendMode};opacity:${layer.filter.opacity / 100}"><div class="placeholder">${layer.name}</div></div>`)
+    .map(
+      (layer) =>
+        `<div class="layer" style="width:${layer.width}px;height:${layer.height}px;transform:translate(${layer.x}px,${layer.y}px) rotate(${layer.transform.rotation}deg) scale(${layer.transform.scale});mix-blend-mode:${layer.blendMode};opacity:${layer.filter.opacity / 100}">${
+          layer.markup || `<div class=\"placeholder\">${layer.name}</div>`
+        }</div>`,
+    )
     .join('')}</body></html>`;
   const blob = new Blob([html], { type: 'text/html' });
   const link = document.createElement('a');

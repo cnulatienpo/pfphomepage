@@ -72,8 +72,12 @@ async function buildAssets() {
     const data = e.dataTransfer.getData('text/plain');
     if (!data) return;
     try {
-      const asset = JSON.parse(data);
-      addAssetToCanvas(asset, e.offsetX / canvasEngine.zoom, e.offsetY / canvasEngine.zoom);
+      const payload = JSON.parse(data);
+      if (payload.type === 'component') {
+        addComponentToCanvas(payload, e.offsetX / canvasEngine.zoom, e.offsetY / canvasEngine.zoom);
+      } else {
+        addAssetToCanvas(payload, e.offsetX / canvasEngine.zoom, e.offsetY / canvasEngine.zoom);
+      }
     } catch (_) {
       /* ignore */
     }
@@ -91,6 +95,25 @@ function addAssetToCanvas(asset, x = 200, y = 200) {
     filter: defaultFilters(),
     transform: defaultTransforms(),
     placeholder: true,
+  });
+  saveAutosave();
+}
+
+function addComponentToCanvas(component, x = 220, y = 220) {
+  layerManager.createLayer({
+    name: component.name,
+    src: component.src || '',
+    x,
+    y,
+    width: component.width || 320,
+    height: component.height || 220,
+    filter: defaultFilters(),
+    transform: defaultTransforms(),
+    placeholder: true,
+    classes: component.classes || [],
+    markup: component.markup || `<div class="construction-component ${
+      component.classes?.join(' ') || ''
+    }"></div>`,
   });
   saveAutosave();
 }
@@ -169,8 +192,8 @@ function buildBehaviors() {
 }
 
 function buildComponents() {
-  renderComponents(themeComponents, (component) => {
-    addAssetToCanvas({ name: component.name, src: '', placeholder: true }, 240, 240);
+  renderComponents(themeComponents, (componentLayer) => {
+    addComponentToCanvas(componentLayer, 240, 240);
     canvasEngine.dirty = true;
   });
 }

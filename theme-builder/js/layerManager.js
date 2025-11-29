@@ -66,9 +66,8 @@ export class LayerManager {
       transform: partial.transform || defaultTransforms(),
       placeholder: partial.placeholder ?? true,
       sticker: partial.sticker || null,
-      backgroundColor: partial.backgroundColor || defaultColors.backgroundColor,
-      borderColor: partial.borderColor || defaultColors.borderColor,
-      textColor: partial.textColor || defaultColors.textColor,
+      classes: partial.classes || [],
+      markup: partial.markup || null,
     };
     this.layers.push(layer);
     this.activeId = layer.id;
