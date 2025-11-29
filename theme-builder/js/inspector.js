@@ -1,4 +1,5 @@
 import { defaultTransforms, defaultFilters } from './layerManager.js';
+import { updateInspectorForLayer } from './lidarInspector.js';
 
 export function renderInspector(container, layerManager) {
   container.innerHTML = '';
@@ -15,6 +16,10 @@ export function renderInspector(container, layerManager) {
     toggleRow('Locked', active.locked, () => layerManager.toggleLock(active.id)),
     toggleRow('Visible', active.visible, () => layerManager.toggleVisibility(active.id)),
   );
+
+  if (active.depthMeta) {
+    updateInspectorForLayer(active.id, container, layerManager);
+  }
 }
 
 function textField(label, value, onChange) {
