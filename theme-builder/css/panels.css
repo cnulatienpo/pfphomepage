@@ -2,7 +2,7 @@
   background: linear-gradient(180deg, rgba(10, 46, 93, 0.95), rgba(5, 26, 56, 0.98));
   border: 2px solid #123055;
   border-radius: 18px;
-  padding: 14px;
+  padding: calc(14px * var(--pd-spacing-scale, 1));
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;

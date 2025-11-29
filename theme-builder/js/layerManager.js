@@ -20,6 +20,21 @@ export function defaultTransforms() {
   };
 }
 
+const defaultColors = {
+  backgroundColor: '#ffce00',
+  borderColor: '#123055',
+  textColor: '#0f172a',
+};
+
+function withDefaultColors(layer) {
+  return {
+    ...layer,
+    backgroundColor: layer.backgroundColor || defaultColors.backgroundColor,
+    borderColor: layer.borderColor || defaultColors.borderColor,
+    textColor: layer.textColor || defaultColors.textColor,
+  };
+}
+
 export class LayerManager {
   constructor() {
     this.layers = [];
@@ -51,8 +66,8 @@ export class LayerManager {
       transform: partial.transform || defaultTransforms(),
       placeholder: partial.placeholder ?? true,
       sticker: partial.sticker || null,
-      glScene: partial.glScene || null,
-      motion: partial.motion || null,
+      classes: partial.classes || [],
+      markup: partial.markup || null,
     };
     this.layers.push(layer);
     this.activeId = layer.id;
@@ -108,7 +123,7 @@ export class LayerManager {
   }
 
   load(data) {
-    this.layers = data.layers || [];
+    this.layers = (data.layers || []).map((layer) => withDefaultColors(layer));
     this.activeId = data.activeId || null;
     this.notify();
   }
