@@ -6,8 +6,12 @@ export function exportToPNG(canvas) {
   link.click();
 }
 
-export function exportToJSON(layerManager) {
-  const data = JSON.stringify(layerManager.serialize(), null, 2);
+export function exportToJSON(layerManager, touchDesigner = null) {
+  const payload = {
+    ...layerManager.serialize(),
+    ...(touchDesigner ? { touchDesigner } : {}),
+  };
+  const data = JSON.stringify(payload, null, 2);
   const blob = new Blob([data], { type: 'application/json' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
@@ -15,10 +19,13 @@ export function exportToJSON(layerManager) {
   link.click();
 }
 
-export function exportToHTML(layerManager) {
+export function exportToHTML(layerManager, touchDesigner = null) {
+  const tdBlob = touchDesigner
+    ? `<script type="application/json" id="touchdesigner-config">${JSON.stringify(touchDesigner)}</script>`
+    : '';
   const html = `<!DOCTYPE html><html><head><style>${runtimeCSS()}</style></head><body>${layerManager.layers
     .map((layer) => `<div class="layer" style="width:${layer.width}px;height:${layer.height}px;transform:translate(${layer.x}px,${layer.y}px) rotate(${layer.transform.rotation}deg) scale(${layer.transform.scale});mix-blend-mode:${layer.blendMode};opacity:${layer.filter.opacity / 100}"><div class="placeholder">${layer.name}</div></div>`)
-    .join('')}</body></html>`;
+    .join('')}${tdBlob}<script>try{const td=JSON.parse(document.getElementById('touchdesigner-config')?.textContent||'{}');console.log('TouchDesigner config',td);}catch(e){console.warn('No TouchDesigner config',e);}</script></body></html>`;
   const blob = new Blob([html], { type: 'text/html' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
