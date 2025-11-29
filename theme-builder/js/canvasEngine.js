@@ -9,6 +9,7 @@ export class CanvasEngine {
     this.zoom = 1;
     this.dirty = true;
     this.showGrid = true;
+    this.parallaxIntensity = 0;
     this._startLoop();
   }
 
@@ -31,13 +32,14 @@ export class CanvasEngine {
     ctx.fillStyle = '#0b2144';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    this.layerManager.layers.forEach((layer) => {
+    this.layerManager.layers.forEach((layer, index) => {
       if (!layer.visible) return;
       ctx.save();
       ctx.globalCompositeOperation = layer.blendMode;
       ctx.globalAlpha = layer.filter.opacity / 100;
       applyFilters(ctx, layer.filter);
-      ctx.translate(layer.x + layer.transform.x, layer.y + layer.transform.y);
+      const parallaxShift = this._parallaxOffset(index);
+      ctx.translate(layer.x + layer.transform.x + parallaxShift.x, layer.y + layer.transform.y + parallaxShift.y);
       ctx.rotate((layer.transform.rotation * Math.PI) / 180);
       ctx.scale(layer.transform.scale, layer.transform.scale);
       this._drawPlaceholder(ctx, layer);
@@ -108,5 +110,19 @@ export class CanvasEngine {
     this.zoom = Math.max(0.25, Math.min(3, this.zoom + delta));
     document.getElementById('zoom-level').textContent = `${Math.round(this.zoom * 100)}%`;
     this.dirty = true;
+  }
+
+  setParallaxIntensity(value) {
+    this.parallaxIntensity = Math.max(0, Math.min(1, value));
+    this.dirty = true;
+  }
+
+  _parallaxOffset(index) {
+    if (!this.parallaxIntensity) return { x: 0, y: 0 };
+    const depth = this.layerManager.layers.length <= 1 ? 0.5 : index / Math.max(1, this.layerManager.layers.length - 1);
+    const centered = depth - 0.5;
+    const wobble = Math.sin(Date.now() / 600 + index) * 0.2;
+    const scalar = this.parallaxIntensity * 28;
+    return { x: (centered + wobble) * scalar, y: (centered - wobble) * scalar * 0.6 };
   }
 }

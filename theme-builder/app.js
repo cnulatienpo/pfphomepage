@@ -11,6 +11,9 @@ import { exportToHTML, exportToJSON, exportToPNG } from './js/exportTools.js';
 import { renderSpacingPreview } from './js/spacingBlocks.js';
 import { renderColorBuckets } from './js/colorBuckets.js';
 import { renderTypeBlocks } from './js/typeBlocks.js';
+import { initPureDataUI } from './js/pureDataUI.js';
+import { setMappingContext, triggerThemeEvent, loadMappingsFromJSON, serializeMappings } from './js/pureDataMappings.js';
+import { connectToPureData } from './js/pureDataEngine.js';
 
 const canvas = document.getElementById('design-canvas');
 const overlay = document.getElementById('canvas-overlay');
@@ -24,6 +27,8 @@ const badgeGrid = document.getElementById('behavior-badges');
 const spacingPreview = document.getElementById('spacing-preview');
 const colorBuckets = document.getElementById('color-buckets');
 const typeBlocks = document.getElementById('type-blocks');
+const pdRoom = document.getElementById('pure-data-room');
+const pdChip = document.querySelector('[data-role="pd-chip"]');
 
 const layerManager = new LayerManager();
 const canvasEngine = new CanvasEngine(canvas, overlay, layerManager);
@@ -35,6 +40,7 @@ async function init() {
   buildSpacing();
   buildColorBuckets();
   buildTypeBlocks();
+  setupPureData();
   bindToolbar();
   layerManager.subscribe(renderLayers);
   layerManager.subscribe(() => renderInspector(properties, layerManager));
@@ -92,15 +98,19 @@ function addAssetToCanvas(asset, x = 200, y = 200) {
     transform: defaultTransforms(),
     placeholder: true,
   });
+  triggerThemeEvent('asset_drop', 1);
   saveAutosave();
 }
 
 function renderLayers() {
   layerPanel.innerHTML = '';
-  layerManager.layers.forEach((layer) => {
+  layerManager.layers.forEach((layer, index) => {
     const row = document.createElement('div');
     row.className = `layer-row ${layer.id === layerManager.activeId ? 'active' : ''}`;
-    row.addEventListener('click', () => layerManager.setActive(layer.id));
+    row.addEventListener('click', () => {
+      layerManager.setActive(layer.id);
+      triggerThemeEvent('layer_focus', layerManager.layers.length ? index / layerManager.layers.length : 0);
+    });
     const thumb = document.createElement('div');
     thumb.className = 'layer-thumb';
     thumb.textContent = layer.name.slice(0, 2).toUpperCase();
@@ -164,21 +174,30 @@ function buildTypeBlocks() {
   renderTypeBlocks(typeBlocks);
 }
 
+function setupPureData() {
+  setMappingContext({ canvasEngine, layerManager, overlay });
+  initPureDataUI(pdRoom, { statusElement: pdChip, defaultUrl: 'ws://localhost:8082' });
+  connectToPureData({});
+}
+
 function bindToolbar() {
   document.querySelector('[data-action="new"]').addEventListener('click', () => {
     if (confirm('Start a new project? Current work will be replaced.')) {
       layerManager.load({ layers: [], activeId: null });
+      loadMappingsFromJSON({ mappings: [] });
+      triggerThemeEvent('toolbar_click', 1);
       saveAutosave();
     }
   });
 
   document.querySelector('[data-action="save"]').addEventListener('click', () => {
-    const data = JSON.stringify(layerManager.serialize(), null, 2);
+    const data = JSON.stringify(collectProjectState(), null, 2);
     const blob = new Blob([data], { type: 'application/json' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = 'project.json';
     link.click();
+    triggerThemeEvent('toolbar_click', 0.2);
   });
 
   document.querySelector('[data-action="open"]').addEventListener('click', () => {
@@ -191,7 +210,13 @@ function bindToolbar() {
       const reader = new FileReader();
       reader.onload = (evt) => {
         const parsed = JSON.parse(evt.target.result);
-        layerManager.load(parsed);
+        if (parsed.project || parsed.pureData) {
+          layerManager.load(parsed.project || { layers: [], activeId: null });
+          loadMappingsFromJSON(parsed.pureData);
+        } else {
+          layerManager.load(parsed);
+        }
+        triggerThemeEvent('toolbar_click', 0.5);
         saveAutosave();
       };
       reader.readAsText(file);
@@ -200,9 +225,18 @@ function bindToolbar() {
   });
 
   document.querySelector('[data-action="export-html"]').addEventListener('click', () => exportToHTML(layerManager));
-  document.querySelector('[data-action="export-png"]').addEventListener('click', () => exportToPNG(canvas));
-  document.querySelector('[data-action="export-json"]').addEventListener('click', () => exportToJSON(layerManager));
-  document.querySelector('[data-action="toggle-grid"]').addEventListener('click', () => canvasEngine.toggleGrid());
+  document.querySelector('[data-action="export-png"]').addEventListener('click', () => {
+    exportToPNG(canvas);
+    triggerThemeEvent('export', 1);
+  });
+  document.querySelector('[data-action="export-json"]').addEventListener('click', () => {
+    exportToJSON(layerManager);
+    triggerThemeEvent('export', 0.8);
+  });
+  document.querySelector('[data-action="toggle-grid"]').addEventListener('click', () => {
+    canvasEngine.toggleGrid();
+    triggerThemeEvent('grid_toggle', canvasEngine.showGrid ? 1 : 0);
+  });
   document.querySelector('[data-action="zoom-in"]').addEventListener('click', () => canvasEngine.setZoom(0.1));
   document.querySelector('[data-action="zoom-out"]').addEventListener('click', () => canvasEngine.setZoom(-0.1));
 
@@ -216,7 +250,7 @@ function autosave() {
 }
 
 function saveAutosave() {
-  const snapshot = JSON.stringify(layerManager.serialize());
+  const snapshot = JSON.stringify(collectProjectState());
   localStorage.setItem('construction-builder', snapshot);
   const history = JSON.parse(localStorage.getItem('construction-history') || '[]');
   history.unshift({ ts: Date.now(), data: snapshot });
@@ -227,12 +261,22 @@ function loadAutosave() {
   const data = localStorage.getItem('construction-builder');
   if (data) {
     try {
-      layerManager.load(JSON.parse(data));
+      const parsed = JSON.parse(data);
+      if (parsed.project || parsed.pureData) {
+        layerManager.load(parsed.project || { layers: [], activeId: null });
+        loadMappingsFromJSON(parsed.pureData);
+      } else {
+        layerManager.load(parsed);
+      }
     } catch (error) {
       console.warn('Unable to load autosave', error);
     }
   }
   autosave();
+}
+
+function collectProjectState() {
+  return { project: layerManager.serialize(), pureData: serializeMappings() };
 }
 
 init();

@@ -1,3 +1,5 @@
+import { serializeMappings } from './pureDataMappings.js';
+
 export function exportToPNG(canvas) {
   const url = canvas.toDataURL('image/png');
   const link = document.createElement('a');
@@ -7,12 +9,16 @@ export function exportToPNG(canvas) {
 }
 
 export function exportToJSON(layerManager) {
-  const data = JSON.stringify(layerManager.serialize(), null, 2);
+  const data = JSON.stringify({ project: layerManager.serialize(), pureData: serializeMappings() }, null, 2);
   const blob = new Blob([data], { type: 'application/json' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
   link.download = 'construction-theme.json';
   link.click();
+}
+
+export function exportPureDataMappings() {
+  return serializeMappings();
 }
 
 export function exportToHTML(layerManager) {
