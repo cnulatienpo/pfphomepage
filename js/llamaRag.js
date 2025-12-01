@@ -1,65 +1,51 @@
-import { LlamaRagResponses } from './llamaRag-responses.js';
+export function getLlamaRagResponse(inputString = "") {
+  const text = inputString.toLowerCase();
 
-const CATEGORY_KEYWORDS = [
-  { category: 'colors', keywords: ['color', 'palette', 'fill', 'tint', 'shade', 'hue'] },
-  {
-    category: 'layout',
-    keywords: [
-      'layout',
-      'align',
-      'grid',
-      'row',
-      'column',
-      'header',
-      'footer',
-      'section',
-      'stack',
-      'spacing',
-      'margin',
-      'padding',
-    ],
-  },
-  { category: 'sizing', keywords: ['size', 'width', 'height', 'scale', 'resize', 'bigger', 'smaller'] },
-  { category: 'layers', keywords: ['layer', 'z-index', 'front', 'behind', 'stacking', 'order'] },
-  { category: 'backgrounds', keywords: ['background', 'texture', 'gradient', 'canvas', 'wallpaper'] },
-  { category: 'typography', keywords: ['font', 'typography', 'typeface', 'letters', 'letter weight', 'line spacing'] },
-  { category: 'motion', keywords: ['motion', 'animation', 'animate', 'move', 'bounce', 'slide', 'fade', 'speed', 'preset'] },
-  { category: 'random', keywords: ['random', 'shuffle', 'surprise', 'try'] },
-  { category: 'problems', keywords: ['problem', 'issue', 'wrong', 'messy', 'why', 'broken', 'empty', 'lost', 'bother'] },
-  { category: 'export', keywords: ['export', 'theme', 'zip', 'download', 'file'] },
-];
+  const routes = [
+    {
+      keywords: ["size", "width", "height", "bigger", "smaller", "scale"],
+      response: () =>
+        "Size runs on sliders. Push right to widen, left to narrow. Nothing fancy.",
+    },
+    {
+      keywords: ["color", "paint", "tint", "hue", "shade"],
+      response: () => "Color is paint. Pick a bucket, coat the part, move on.",
+    },
+    {
+      keywords: ["layer", "stack", "order", "front", "back"],
+      response: () =>
+        "Layers are the stack. Move a piece up to sit on top. Drop it to send it behind.",
+    },
+    {
+      keywords: ["motion", "animate", "move", "cycle", "loop", "preset"],
+      response: () => "Motion runs off presets. Pick a cycle and keep the range tight.",
+    },
+    {
+      keywords: ["depth", "3d", "distance", "z-index", "ahead", "behind"],
+      response: () => "Depth is front and back cuts. Choose where it sits in the lane.",
+    },
+    {
+      keywords: ["sound", "audio", "volume", "loud", "quiet"],
+      response: () => "Sound is numbers pushing parts. Feed numbers, watch output, adjust.",
+    },
+    {
+      keywords: ["error", "broken", "fail", "bug", "jam"],
+      response: () =>
+        "When it jams, follow procedure. Reset the unit, check cables, reload, test again.",
+    },
+  ];
 
-function pickCategoryFromText(inputText) {
-  const text = (inputText || '').toLowerCase();
-  for (const entry of CATEGORY_KEYWORDS) {
-    const hit = entry.keywords.some((keyword) => text.includes(keyword));
-    if (hit) return entry.category;
+  for (const route of routes) {
+    if (route.keywords.some((keyword) => text.includes(keyword))) {
+      return route.response();
+    }
   }
-  return 'unknown';
-}
 
-function pickResponseForCategory(category) {
-  const bucket = LlamaRagResponses[category] || LlamaRagResponses.unknown;
-  if (!bucket.length) return '';
-  const index = Math.floor(Math.random() * bucket.length);
-  return bucket[index];
-}
+  const neutralResponses = [
+    "It does the job. Adjust what you need and keep moving.",
+    "This panel takes input and spits output. Set it and go.",
+    "You press the control, it responds. That is the whole story.",
+  ];
 
-export function detectLlamaRagCategory(inputText) {
-  return pickCategoryFromText(inputText);
-}
-
-export function getLlamaRagResponse(inputText) {
-  const category = pickCategoryFromText(inputText);
-  const response = pickResponseForCategory(category);
-  return { category, response };
-}
-
-export function renderLlamaRagResponse(inputText, targetElement) {
-  const { category, response } = getLlamaRagResponse(inputText);
-  if (targetElement) {
-    targetElement.dataset.llamaCategory = category;
-    targetElement.textContent = response;
-  }
-  return response;
+  return neutralResponses[Math.floor(Math.random() * neutralResponses.length)];
 }
