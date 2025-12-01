@@ -307,6 +307,11 @@ export function initLayoutShell() {
   initTopBar(topBarContainer);
   bindTopBarInteractions(topBarContainer);
 
+  const topBarActions = document.createElement("div");
+  topBarActions.className = "top-bar-actions";
+  topBarActions.appendChild(createThemePlayButton());
+  topBarContainer.appendChild(topBarActions);
+
   const workspace = document.createElement("div");
   workspace.className = "workspace";
 
