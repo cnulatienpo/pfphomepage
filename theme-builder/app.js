@@ -23,6 +23,45 @@ import {
   applySubjectSpotlight,
 } from './js/depthLayoutTools.js';
 
+function markGoal(goalId) {
+  if (!goalId) return;
+  window.dispatchEvent(
+    new CustomEvent('themeplay:markGoal', {
+      detail: { goalId },
+    }),
+  );
+}
+
+function setupThemeplayBridges() {
+  if (!window.randomizeSomethingInBuilder) {
+    window.randomizeSomethingInBuilder = function () {};
+  }
+  if (!window.openPreviewMode) {
+    window.openPreviewMode = function () {};
+  }
+  if (!window.exportCurrentTheme) {
+    window.exportCurrentTheme = function () {};
+  }
+
+  window.addEventListener('themeplay:randomize', () => {
+    if (window.randomizeSomethingInBuilder) {
+      window.randomizeSomethingInBuilder();
+    }
+  });
+
+  window.addEventListener('themeplay:preview', () => {
+    if (window.openPreviewMode) {
+      window.openPreviewMode();
+    }
+  });
+
+  window.addEventListener('themeplay:export', () => {
+    if (window.exportCurrentTheme) {
+      window.exportCurrentTheme();
+    }
+  });
+}
+
 const canvas = document.getElementById('design-canvas');
 const glCanvas = document.getElementById('gl-canvas');
 const overlay = document.getElementById('canvas-overlay');
@@ -41,6 +80,8 @@ const pdChip = document.querySelector('[data-role="pd-chip"]');
 
 const layerManager = new LayerManager();
 const canvasEngine = new CanvasEngine(canvas, overlay, layerManager);
+
+setupThemeplayBridges();
 
 async function init() {
   window.layerManager = layerManager;
@@ -114,6 +155,7 @@ function addAssetToCanvas(asset, x = 200, y = 200) {
     placeholder: true,
   });
   triggerThemeEvent('asset_drop', 1);
+  markGoal('goal-drag-one');
   saveAutosave();
 }
 
@@ -133,6 +175,7 @@ function addComponentToCanvas(component, x = 220, y = 220) {
       component.classes?.join(' ') || ''
     }"></div>`,
   });
+  markGoal('goal-drag-one');
   saveAutosave();
 }
 

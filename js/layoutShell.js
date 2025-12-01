@@ -80,4 +80,34 @@ export function initLayoutShell() {
   app.appendChild(shell);
 }
 
+if (!window.randomizeSomethingInBuilder) {
+  window.randomizeSomethingInBuilder = function () {};
+}
+
+if (!window.openPreviewMode) {
+  window.openPreviewMode = function () {};
+}
+
+if (!window.exportCurrentTheme) {
+  window.exportCurrentTheme = function () {};
+}
+
+window.addEventListener("themeplay:randomize", () => {
+  if (window.randomizeSomethingInBuilder) {
+    window.randomizeSomethingInBuilder();
+  }
+});
+
+window.addEventListener("themeplay:preview", () => {
+  if (window.openPreviewMode) {
+    window.openPreviewMode();
+  }
+});
+
+window.addEventListener("themeplay:export", () => {
+  if (window.exportCurrentTheme) {
+    window.exportCurrentTheme();
+  }
+});
+
 window.onload = initLayoutShell;

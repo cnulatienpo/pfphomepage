@@ -7,7 +7,16 @@
     <link rel="stylesheet" href="css/layout-shell.css" />
   </head>
   <body>
+    <button id="open-llama-rag" type="button">Talk To Llama Rag</button>
     <div id="app"></div>
     <script type="module" src="js/layoutShell.js"></script>
+    <script type="module">
+      const ragButton = document.getElementById("open-llama-rag");
+      if (ragButton) {
+        ragButton.addEventListener("click", () => {
+          window.open("llama-rag-window.html", "_blank", "width=430,height=620");
+        });
+      }
+    </script>
   </body>
 </html>

@@ -1,0 +1,84 @@
+:root {
+  --panel-bg: #d9d9d9;
+  --panel-border: #333;
+  --text-color: #111;
+}
+
+body {
+  margin: 0;
+  background: var(--panel-bg);
+  color: var(--text-color);
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+header {
+  padding: 12px 14px;
+  border-bottom: 4px solid var(--panel-border);
+  background: #e5e5e5;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.chat-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 10px;
+  gap: 10px;
+}
+
+.chat-log {
+  flex: 1;
+  border: 3px solid var(--panel-border);
+  background: #f1f1f1;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chat-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  border: 2px solid var(--panel-border);
+  background: #fff;
+}
+
+.chat-row.user {
+  background: #e2e8f0;
+}
+
+.chat-row.llama {
+  background: #fef08a;
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 3px solid var(--panel-border);
+  background: #fff;
+  color: var(--text-color);
+}
+
+button {
+  padding: 10px 14px;
+  border: 3px solid var(--panel-border);
+  background: #f4f4f4;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+button:hover {
+  background: #e2e2e2;
+}
