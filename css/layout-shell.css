@@ -63,6 +63,12 @@ body {
   box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.12);
 }
 
+.top-button--themeplay {
+  background: linear-gradient(180deg, #fff6d7, #ffd86b);
+  border-color: #f2b12c;
+  box-shadow: 0 4px 0 #c38b1e;
+}
+
 .workspace {
   display: grid;
   grid-template-columns: 260px 1fr 260px;
@@ -101,6 +107,8 @@ body {
   gap: 12px;
   align-items: flex-start;
   justify-content: flex-start;
+  position: relative;
+  overflow: hidden;
 }
 
 .area-title {
@@ -122,6 +130,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .panel-heading {
@@ -133,4 +142,151 @@ body {
 .placeholder-text {
   font-size: 15px;
   color: var(--muted);
+}
+
+.drop-hint {
+  font-size: 13px;
+  color: #3a3e49;
+  padding: 10px 12px;
+  background: #fff2c2;
+  border: 2px dashed #f2b12c;
+  border-radius: 12px;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.placed-block {
+  background: linear-gradient(180deg, #ffe29f, #ffc857);
+  border: 3px solid #c38b1e;
+  color: #2c2c38;
+  font-weight: 800;
+  border-radius: 16px;
+  padding: 12px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+}
+
+.placed-block:hover {
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.12);
+}
+
+.placed-block.is-selected {
+  border-color: #5c68ff;
+  box-shadow: 0 8px 0 rgba(92, 104, 255, 0.35);
+}
+
+.placed-block.card-look {
+  background: linear-gradient(180deg, #fff7e6, #ffe29f);
+  border-style: dashed;
+}
+
+.snap-line {
+  position: absolute;
+  background: #7cd1ff;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.snap-line--x {
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+.snap-line--y {
+  top: 0;
+  bottom: 0;
+  width: 2px;
+}
+
+.show-snaps .snap-line {
+  opacity: 0.25;
+}
+
+.snap-line.is-visible {
+  opacity: 0.9;
+  box-shadow: 0 0 8px rgba(124, 209, 255, 0.6);
+}
+
+.dragging-block {
+  opacity: 0.92;
+  cursor: grabbing;
+}
+
+.tick-pulse {
+  animation: tickPulse 0.22s ease;
+}
+
+@keyframes tickPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 204, 77, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgba(255, 204, 77, 0);
+  }
+}
+
+.motion-float {
+  animation: floaty 4s ease-in-out infinite;
+}
+
+.motion-bounce {
+  animation: bouncey 2.6s ease infinite;
+}
+
+.motion-pulse {
+  animation: pulsey 1.6s ease-in-out infinite;
+}
+
+.motion-slide {
+  animation: slidey 3s ease-in-out infinite;
+}
+
+@keyframes floaty {
+  0%, 100% {
+    transform: translate(var(--tx, 0), var(--ty, 0)) rotate(var(--rot, 0deg));
+  }
+  50% {
+    transform: translate(var(--tx, 0), calc(var(--ty, 0) - 10px)) rotate(var(--rot, 0deg));
+  }
+}
+
+@keyframes bouncey {
+  0%, 100% {
+    transform: translate(var(--tx, 0), var(--ty, 0)) rotate(var(--rot, 0deg));
+  }
+  40% {
+    transform: translate(var(--tx, 0), calc(var(--ty, 0) - 12px)) rotate(var(--rot, 0deg));
+  }
+}
+
+@keyframes pulsey {
+  0%, 100% {
+    transform: translate(var(--tx, 0), var(--ty, 0)) rotate(var(--rot, 0deg)) scale(1);
+  }
+  50% {
+    transform: translate(var(--tx, 0), var(--ty, 0)) rotate(var(--rot, 0deg)) scale(1.03);
+  }
+}
+
+@keyframes slidey {
+  0% {
+    transform: translate(calc(var(--tx, 0) - 6px), var(--ty, 0)) rotate(var(--rot, 0deg));
+  }
+  50% {
+    transform: translate(calc(var(--tx, 0) + 6px), var(--ty, 0)) rotate(var(--rot, 0deg));
+  }
+  100% {
+    transform: translate(calc(var(--tx, 0) - 6px), var(--ty, 0)) rotate(var(--rot, 0deg));
+  }
+}
+
+.bottom-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  flex-wrap: wrap;
 }
