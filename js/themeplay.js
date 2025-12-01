@@ -1,121 +1,101 @@
-// ThemePlay game engine: tracks goals, progress, and completion.
-// No binaries, no external dependencies.
+const goalList = [
+  { id: "goal-palette", label: "Pick a color palette.", actions: ["color-change", "palette"] },
+  { id: "goal-header", label: "Place a header.", actions: ["drop-header", "place-header"] },
+  { id: "goal-three", label: "Place three elements on the page.", actions: ["place-element"] , count:3},
+  { id: "goal-background", label: "Try a background.", actions: ["background"] },
+  { id: "goal-motion", label: "Try a motion effect.", actions: ["motion-change", "motion-test"] },
+  { id: "goal-random", label: "Use one randomizer.", actions: ["randomizer"] },
+  { id: "goal-card", label: "Make a card look nice.", actions: ["card-styled"] },
+  { id: "goal-title", label: "Add a title.", actions: ["place-title"] },
+  { id: "goal-preview", label: "Preview your theme.", actions: ["preview"] },
+  { id: "goal-export", label: "Export your theme.", actions: ["export"] }
+];
 
-import { ThemePlayGoals } from "./themeplay-goals.js";
+let currentGoal = goalList[0].id;
+let completedGoals = new Set();
+let playSessionActive = false;
+let actionCounts = new Map();
+const feedbackLines = ["Nice. Keep going.", "You tried something.", "Next toy unlocked."];
 
-const STORAGE_KEY = "themeplay_progress_v1";
-
-let progress = {};     // { [goalId]: true }
-let sessionActive = false;
-
-// Load saved progress from localStorage
-function loadProgress() {
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return {};
-    const parsed = JSON.parse(raw);
-    if (parsed && typeof parsed === "object") return parsed;
-  } catch (e) {
-    console.warn("ThemePlay: failed to load progress", e);
-  }
-  return {};
+function emit(eventName, detail) {
+  document.dispatchEvent(new CustomEvent(eventName, { detail }));
 }
 
-// Save progress to localStorage
-function saveProgress() {
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-  } catch (e) {
-    console.warn("ThemePlay: failed to save progress", e);
-  }
+function resetCounters() {
+  actionCounts = new Map();
 }
 
-// Ensure progress contains only known goals
-function normalizeProgress() {
-  const normalized = {};
-  const validIds = new Set(ThemePlayGoals.map(g => g.id));
-  Object.keys(progress).forEach(id => {
-    if (validIds.has(id) && progress[id]) normalized[id] = true;
-  });
-  progress = normalized;
-}
-
-// Public API: initialize ThemePlay
 export function initThemePlay() {
-  progress = loadProgress();
-  normalizeProgress();
-  sessionActive = true;
+  resetCounters();
+  completedGoals = new Set();
+  currentGoal = goalList[0].id;
+  playSessionActive = false;
+  emit("themeplay:init", getProgress());
 }
 
-// Public API: start a play session
 export function startPlaySession() {
-  if (!sessionActive) initThemePlay();
-  sessionActive = true;
+  playSessionActive = true;
+  emit("themeplay:started", getProgress());
 }
 
-// Public API: complete a goal by id
-export function completeGoal(goalId) {
-  if (!goalId) return;
-
-  // Ignore unknown ids silently
-  const exists = ThemePlayGoals.some(g => g.id === goalId);
-  if (!exists) return;
-
-  if (!progress[goalId]) {
-    progress[goalId] = true;
-    saveProgress();
-
-    // Fire an event so other parts of the app can react
-    window.dispatchEvent(
-      new CustomEvent("themeplay:goalCompleted", { detail: { goalId } })
-    );
-
-    // If everything is done, fire a completion event
-    if (allGoalsComplete()) {
-      window.dispatchEvent(new CustomEvent("themeplay:allGoalsComplete"));
-    }
-  }
-}
-
-// Public API: get current progress map (copy)
-export function getProgress() {
-  return { ...progress };
-}
-
-// Public API: check if all goals are complete
-export function allGoalsComplete() {
-  if (!ThemePlayGoals || ThemePlayGoals.length === 0) return false;
-  return ThemePlayGoals.every(goal => progress[goal.id]);
-}
-
-// Public API: get the next incomplete goal, or null
 export function getCurrentGoal() {
-  for (const goal of ThemePlayGoals) {
-    if (!progress[goal.id]) return goal;
+  return currentGoal;
+}
+
+export function getProgress() {
+  return {
+    currentGoal,
+    completedGoals: Array.from(completedGoals),
+    goals: goalList.map((goal) => ({
+      ...goal,
+      complete: completedGoals.has(goal.id),
+    })),
+    playSessionActive,
+  };
+}
+
+export function completeGoal(goalId) {
+  if (!goalId || completedGoals.has(goalId)) return;
+  completedGoals.add(goalId);
+  currentGoal = goalList.find((goal) => !completedGoals.has(goal.id))?.id || null;
+  const feedback = feedbackLines[Math.floor(Math.random() * feedbackLines.length)];
+  emit("themeplay:goalComplete", { goalId, feedback, progress: getProgress() });
+  if (!currentGoal) {
+    emit("themeplay:allComplete", { message: "Ready to Export Your Theme", progress: getProgress() });
   }
-  return null;
 }
 
-// Public API: reset everything
-export function resetPlay() {
-  progress = {};
-  saveProgress();
-  sessionActive = false;
-  window.dispatchEvent(new CustomEvent("themeplay:reset"));
+function maybeCompleteByCount(goal, actionType) {
+  if (!goal.count) return false;
+  const prev = actionCounts.get(goal.id) || 0;
+  const next = prev + 1;
+  actionCounts.set(goal.id, next);
+  if (next >= goal.count) {
+    completeGoal(goal.id);
+    return true;
+  }
+  return false;
 }
 
-// Optional helper: mark first matching goal by text search
-// Useful if you do not want to hardcode ids in some places.
-export function completeGoalByTextFragment(fragment) {
-  if (!fragment) return;
-  const lower = fragment.toLowerCase();
-  const match = ThemePlayGoals.find(g =>
-    g.text.toLowerCase().includes(lower)
+export function onAction(actionType) {
+  if (!playSessionActive) return;
+  const matchingGoals = goalList.filter(
+    (goal) => !completedGoals.has(goal.id) && goal.actions.includes(actionType)
   );
-  if (match) completeGoal(match.id);
+  matchingGoals.forEach((goal) => {
+    if (!goal.count) {
+      completeGoal(goal.id);
+    } else {
+      maybeCompleteByCount(goal, actionType);
+    }
+  });
 }
 
-// Auto-init when this module is loaded in a browser context
-if (typeof window !== "undefined") {
+export function resetPlay() {
   initThemePlay();
+  emit("themeplay:reset", getProgress());
+}
+
+export function getGoals() {
+  return goalList.map((goal) => ({ ...goal, complete: completedGoals.has(goal.id) }));
 }
