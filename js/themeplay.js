@@ -1,83 +1,101 @@
-import { ThemePlayGoals } from "./themeplay-goals.js";
+const goalList = [
+  { id: "goal-palette", label: "Pick a color palette.", actions: ["color-change", "palette"] },
+  { id: "goal-header", label: "Place a header.", actions: ["drop-header", "place-header"] },
+  { id: "goal-three", label: "Place three elements on the page.", actions: ["place-element"] , count:3},
+  { id: "goal-background", label: "Try a background.", actions: ["background"] },
+  { id: "goal-motion", label: "Try a motion effect.", actions: ["motion-change", "motion-test"] },
+  { id: "goal-random", label: "Use one randomizer.", actions: ["randomizer"] },
+  { id: "goal-card", label: "Make a card look nice.", actions: ["card-styled"] },
+  { id: "goal-title", label: "Add a title.", actions: ["place-title"] },
+  { id: "goal-preview", label: "Preview your theme.", actions: ["preview"] },
+  { id: "goal-export", label: "Export your theme.", actions: ["export"] }
+];
 
-export const THEMEPLAY_PROGRESS_KEY = "themeplay-progress";
+let currentGoal = goalList[0].id;
+let completedGoals = new Set();
+let playSessionActive = false;
+let actionCounts = new Map();
+const feedbackLines = ["Nice. Keep going.", "You tried something.", "Next toy unlocked."];
 
-const actionGoalMap = new Map();
-ThemePlayGoals.forEach((goal) => {
-  if (goal.action) {
-    actionGoalMap.set(goal.action, goal.id);
-  }
-});
-
-function emptyProgress() {
-  const base = {};
-  ThemePlayGoals.forEach((goal) => {
-    base[goal.id] = false;
-  });
-  return base;
+function emit(eventName, detail) {
+  document.dispatchEvent(new CustomEvent(eventName, { detail }));
 }
 
-function loadProgress() {
-  try {
-    const stored = localStorage.getItem(THEMEPLAY_PROGRESS_KEY);
-    if (!stored) return emptyProgress();
-    const parsed = JSON.parse(stored);
-    return { ...emptyProgress(), ...parsed };
-  } catch (error) {
-    console.warn("ThemePlay progress could not be loaded", error);
-    return emptyProgress();
-  }
+function resetCounters() {
+  actionCounts = new Map();
 }
 
-function persistProgress(progress) {
-  localStorage.setItem(THEMEPLAY_PROGRESS_KEY, JSON.stringify(progress));
+export function initThemePlay() {
+  resetCounters();
+  completedGoals = new Set();
+  currentGoal = goalList[0].id;
+  playSessionActive = false;
+  emit("themeplay:init", getProgress());
+}
+
+export function startPlaySession() {
+  playSessionActive = true;
+  emit("themeplay:started", getProgress());
+}
+
+export function getCurrentGoal() {
+  return currentGoal;
 }
 
 export function getProgress() {
-  return loadProgress();
+  return {
+    currentGoal,
+    completedGoals: Array.from(completedGoals),
+    goals: goalList.map((goal) => ({
+      ...goal,
+      complete: completedGoals.has(goal.id),
+    })),
+    playSessionActive,
+  };
 }
 
 export function completeGoal(goalId) {
-  const progress = loadProgress();
-  if (!progress[goalId]) {
-    progress[goalId] = true;
-    persistProgress(progress);
+  if (!goalId || completedGoals.has(goalId)) return;
+  completedGoals.add(goalId);
+  currentGoal = goalList.find((goal) => !completedGoals.has(goal.id))?.id || null;
+  const feedback = feedbackLines[Math.floor(Math.random() * feedbackLines.length)];
+  emit("themeplay:goalComplete", { goalId, feedback, progress: getProgress() });
+  if (!currentGoal) {
+    emit("themeplay:allComplete", { message: "Ready to Export Your Theme", progress: getProgress() });
   }
 }
 
-export function allGoalsComplete() {
-  const progress = loadProgress();
-  return ThemePlayGoals.every((goal) => progress[goal.id]);
+function maybeCompleteByCount(goal, actionType) {
+  if (!goal.count) return false;
+  const prev = actionCounts.get(goal.id) || 0;
+  const next = prev + 1;
+  actionCounts.set(goal.id, next);
+  if (next >= goal.count) {
+    completeGoal(goal.id);
+    return true;
+  }
+  return false;
+}
+
+export function onAction(actionType) {
+  if (!playSessionActive) return;
+  const matchingGoals = goalList.filter(
+    (goal) => !completedGoals.has(goal.id) && goal.actions.includes(actionType)
+  );
+  matchingGoals.forEach((goal) => {
+    if (!goal.count) {
+      completeGoal(goal.id);
+    } else {
+      maybeCompleteByCount(goal, actionType);
+    }
+  });
 }
 
 export function resetPlay() {
-  const progress = emptyProgress();
-  persistProgress(progress);
+  initThemePlay();
+  emit("themeplay:reset", getProgress());
 }
 
-function recordAction(actionId) {
-  const goalId = actionGoalMap.get(actionId);
-  if (goalId) {
-    completeGoal(goalId);
-  }
+export function getGoals() {
+  return goalList.map((goal) => ({ ...goal, complete: completedGoals.has(goal.id) }));
 }
-
-export function notifyThemePlayAction(actionId) {
-  window.dispatchEvent(
-    new CustomEvent("themeplay:action", { detail: actionId, bubbles: false })
-  );
-}
-
-window.addEventListener("themeplay:action", (event) => {
-  const detail = event.detail;
-  if (!detail) return;
-
-  if (typeof detail === "string") {
-    recordAction(detail);
-    return;
-  }
-
-  if (detail.action) {
-    recordAction(detail.action);
-  }
-});

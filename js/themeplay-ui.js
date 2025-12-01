@@ -1,134 +1,146 @@
-import { ThemePlayGoals } from "./themeplay-goals.js";
 import {
-  completeGoal,
-  getProgress,
-  allGoalsComplete,
+  initThemePlay,
+  startPlaySession,
+  getGoals,
+  onAction,
   resetPlay,
-  notifyThemePlayAction,
-  THEMEPLAY_PROGRESS_KEY,
 } from "./themeplay.js";
+import { openLlamaRagWindow } from "./llama-rag-ui.js";
+import { randomizeColors, randomizeLayout, randomizeMotion } from "./randomizers.js";
 
-const goalListEl = document.getElementById("themeplay-goal-list");
-const rewardPanel = document.getElementById("themeplay-reward-panel");
-const btnRandomize = document.getElementById("tp-randomize");
-const btnPreview = document.getElementById("tp-preview");
-const btnHelp = document.getElementById("tp-help");
-const btnExport = document.getElementById("tp-export");
-const btnReplay = document.getElementById("tp-replay");
+let panelRoot = null;
+let goalsContainer = null;
+let feedbackContainer = null;
+let open = false;
 
-function broadcast(eventName, detail) {
-  const event = new CustomEvent(eventName, { detail });
-  window.dispatchEvent(event);
-
-  if (window.opener && !window.opener.closed) {
-    try {
-      window.opener.dispatchEvent(new CustomEvent(eventName, { detail }));
-    } catch (error) {
-      console.warn("ThemePlay broadcast failed", error);
-    }
+function createGoalItem(goal) {
+  const item = document.createElement("div");
+  item.className = "themeplay-goal";
+  item.dataset.goalId = goal.id;
+  item.textContent = goal.label;
+  if (goal.complete) {
+    item.classList.add("is-complete");
   }
+  return item;
 }
 
-function broadcastAction(actionId) {
-  notifyThemePlayAction(actionId);
-  if (window.opener && !window.opener.closed) {
-    try {
-      window.opener.dispatchEvent(
-        new CustomEvent("themeplay:action", { detail: actionId })
-      );
-    } catch (error) {
-      console.warn("ThemePlay action broadcast failed", error);
-    }
-  }
+function updateGoals() {
+  if (!goalsContainer) return;
+  goalsContainer.innerHTML = "";
+  getGoals().forEach((goal) => {
+    goalsContainer.appendChild(createGoalItem(goal));
+  });
 }
 
-// Draw all goals
-function renderGoals() {
-  goalListEl.innerHTML = "";
-  const progress = getProgress();
+function sparkle(goalId) {
+  const item = goalsContainer?.querySelector(`[data-goal-id="${goalId}"]`);
+  if (!item) return;
+  item.classList.add("sparkle");
+  setTimeout(() => item.classList.remove("sparkle"), 900);
+}
 
-  ThemePlayGoals.forEach((goal) => {
-    const div = document.createElement("div");
-    div.className = "tp-goal";
-    if (progress[goal.id]) div.classList.add("completed");
+function setFeedback(text) {
+  if (!feedbackContainer) return;
+  feedbackContainer.textContent = text;
+  feedbackContainer.classList.add("pop-feedback");
+  setTimeout(() => feedbackContainer.classList.remove("pop-feedback"), 500);
+}
 
-    const textEl = document.createElement("div");
-    textEl.className = "tp-goal-text";
-    textEl.textContent = goal.text;
+async function loadPanel() {
+  if (panelRoot) return panelRoot;
+  const html = await fetch("./themeplay-window.html").then((res) => res.text());
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = html.trim();
+  panelRoot = wrapper.firstElementChild;
+  panelRoot.classList.add("themeplay-overlay", "is-hidden");
+  goalsContainer = panelRoot.querySelector(".themeplay-goals");
+  feedbackContainer = panelRoot.querySelector(".themeplay-feedback");
 
-    div.appendChild(textEl);
-
-    div.addEventListener("click", () => {
-      completeGoal(goal.id);
-      animateGoal(div);
-      renderGoals();
-      checkFinish();
-    });
-
-    goalListEl.appendChild(div);
+  panelRoot.querySelector(".themeplay-close").addEventListener("click", hideThemePlayPanel);
+  panelRoot.querySelector(".themeplay-help").addEventListener("click", () => {
+    openLlamaRagWindow();
+    onAction("help");
+  });
+  panelRoot.querySelector(".themeplay-randomize").addEventListener("click", () => {
+    const randomizer = [randomizeColors, randomizeLayout, randomizeMotion][Math.floor(Math.random() * 3)];
+    randomizer(document);
+  });
+  panelRoot.querySelector(".themeplay-preview").addEventListener("click", () => {
+    document.body.classList.toggle("preview-mode");
+    onAction("preview");
   });
 
-  checkFinish();
+  updateGoals();
+  document.body.appendChild(panelRoot);
+  return panelRoot;
 }
 
-function animateGoal(el) {
-  el.style.animation = "goalShimmer 0.8s ease";
-  setTimeout(() => {
-    el.style.animation = "";
-  }, 800);
+function showThemePlayPanel() {
+  if (!panelRoot) return;
+  open = true;
+  panelRoot.classList.remove("is-hidden");
+  panelRoot.classList.add("is-open");
+  startPlaySession();
 }
 
-function checkFinish() {
-  if (allGoalsComplete()) {
-    rewardPanel.classList.remove("hidden");
+export async function toggleThemePlayPanel() {
+  await loadPanel();
+  if (open) {
+    hideThemePlayPanel();
   } else {
-    rewardPanel.classList.add("hidden");
+    showThemePlayPanel();
   }
 }
 
-// Button: Randomize Something
-btnRandomize.addEventListener("click", () => {
-  broadcast("themeplay:randomize");
-});
-
-// Button: Preview Mode
-btnPreview.addEventListener("click", () => {
-  broadcast("themeplay:preview");
-  broadcastAction("preview");
-});
-
-// Button: Talk To Llama Rag
-btnHelp.addEventListener("click", () => {
-  broadcastAction("ask-llama");
-  window.open("llama-rag-window.html", "_blank", "width=420,height=600");
-});
-
-// Button: Export theme
-if (btnExport) {
-  btnExport.addEventListener("click", () => {
-    broadcast("themeplay:export");
-    broadcastAction("export");
-  });
+export async function attachThemePlayUI() {
+  await loadPanel();
 }
 
-// Button: Play Again
-if (btnReplay) {
-  btnReplay.addEventListener("click", () => {
+export function hideThemePlayPanel() {
+  if (!panelRoot) return;
+  open = false;
+  panelRoot.classList.remove("is-open");
+  panelRoot.classList.add("is-hidden");
+}
+
+function markCompletion(detail) {
+  if (!detail?.goalId) return;
+  sparkle(detail.goalId);
+  setFeedback(detail.feedback);
+  updateGoals();
+}
+
+function handleAllComplete(detail) {
+  const reward = document.createElement("div");
+  reward.className = "themeplay-reward";
+  reward.innerHTML = `
+    <div class="themeplay-reward__title">Your Theme Is Ready</div>
+    <div class="themeplay-reward__actions">
+      <button class="themeplay-btn reward-export">Make My Theme</button>
+      <button class="themeplay-btn reward-preview">Preview Theme</button>
+      <button class="themeplay-btn reward-reset">Play Again</button>
+    </div>
+  `;
+  reward.querySelector(".reward-export").addEventListener("click", () => {
+    document.dispatchEvent(new CustomEvent("ui:exportTheme"));
+    onAction("export");
+  });
+  reward.querySelector(".reward-preview").addEventListener("click", () => {
+    document.body.classList.toggle("preview-mode");
+    onAction("preview");
+  });
+  reward.querySelector(".reward-reset").addEventListener("click", () => {
     resetPlay();
-    rewardPanel.classList.add("hidden");
-    renderGoals();
+    updateGoals();
+    reward.remove();
   });
+  panelRoot?.appendChild(reward);
+  setFeedback(detail?.message || "Ready to Export Your Theme");
 }
 
-// Sync when another window updates progress
-window.addEventListener("storage", (event) => {
-  if (event.key === THEMEPLAY_PROGRESS_KEY) {
-    renderGoals();
-  }
-});
+initThemePlay();
 
-// Initialize on load
-window.addEventListener("DOMContentLoaded", () => {
-  renderGoals();
-  broadcastAction("open-themeplay");
-});
+if (typeof document !== "undefined") {
+  document.addEventListener("themeplay:goalComplete", (event) => markCompletion(event.detail));
+  document.addEventListener("themeplay:allComplete", (event) => handleAllComplete(event.detail));
+}

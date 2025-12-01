@@ -1,33 +1,51 @@
-import { LlamaRagResponses } from "./llamaRag-responses.js";
+export function getLlamaRagResponse(inputString = "") {
+  const text = inputString.toLowerCase();
 
-function normalize(text) {
-  return text.toLowerCase();
-}
+  const routes = [
+    {
+      keywords: ["size", "width", "height", "bigger", "smaller", "scale"],
+      response: () =>
+        "Size runs on sliders. Push right to widen, left to narrow. Nothing fancy.",
+    },
+    {
+      keywords: ["color", "paint", "tint", "hue", "shade"],
+      response: () => "Color is paint. Pick a bucket, coat the part, move on.",
+    },
+    {
+      keywords: ["layer", "stack", "order", "front", "back"],
+      response: () =>
+        "Layers are the stack. Move a piece up to sit on top. Drop it to send it behind.",
+    },
+    {
+      keywords: ["motion", "animate", "move", "cycle", "loop", "preset"],
+      response: () => "Motion runs off presets. Pick a cycle and keep the range tight.",
+    },
+    {
+      keywords: ["depth", "3d", "distance", "z-index", "ahead", "behind"],
+      response: () => "Depth is front and back cuts. Choose where it sits in the lane.",
+    },
+    {
+      keywords: ["sound", "audio", "volume", "loud", "quiet"],
+      response: () => "Sound is numbers pushing parts. Feed numbers, watch output, adjust.",
+    },
+    {
+      keywords: ["error", "broken", "fail", "bug", "jam"],
+      response: () =>
+        "When it jams, follow procedure. Reset the unit, check cables, reload, test again.",
+    },
+  ];
 
-function matchResponse(query) {
-  const normalizedQuery = normalize(query);
-  return LlamaRagResponses.find((entry) =>
-    entry.keywords.some((keyword) => normalizedQuery.includes(keyword))
-  );
-}
-
-export function getLlamaRagResponse(query) {
-  if (!query || !query.trim()) {
-    return {
-      heading: "Ask anything",
-      body: "Type what you need. Llama Rag will answer with tiny, useful steps.",
-      tip: "Try asking about layout, motion, or exporting.",
-    };
+  for (const route of routes) {
+    if (route.keywords.some((keyword) => text.includes(keyword))) {
+      return route.response();
+    }
   }
 
-  const match = matchResponse(query.trim());
-  if (match) {
-    return match;
-  }
+  const neutralResponses = [
+    "It does the job. Adjust what you need and keep moving.",
+    "This panel takes input and spits output. Set it and go.",
+    "You press the control, it responds. That is the whole story.",
+  ];
 
-  return {
-    heading: "Try this",
-    body: "Start with one change: pick a mode, drag something onto the page, and peek at Preview Mode to see how it feels.",
-    tip: "Mention drag, color, motion, or export so I can aim the advice.",
-  };
+  return neutralResponses[Math.floor(Math.random() * neutralResponses.length)];
 }

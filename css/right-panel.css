@@ -87,6 +87,11 @@
 .fp-control__input {
   width: 140px;
   accent-color: #ff9f1c;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.fp-control__input:hover {
+  box-shadow: 0 0 0 3px rgba(255, 159, 28, 0.25);
 }
 
 .fp-control__hints {
@@ -116,6 +121,56 @@
   border: 2px solid #999;
   border-radius: 8px;
   background: #fff;
+}
+
+.fp-color-palette {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.fp-color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #222;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fp-color-swatch:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+}
+
+.slider-bounce {
+  animation: sliderBounce 0.25s ease;
+}
+
+@keyframes sliderBounce {
+  0% {
+    transform: scale(0.98);
+  }
+  60% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.tick-pulse {
+  animation: tickPulse 0.22s ease;
+}
+
+@keyframes tickPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 159, 28, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 8px rgba(255, 159, 28, 0);
+  }
 }
 
 .fp-control--select {

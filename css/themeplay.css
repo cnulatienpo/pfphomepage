@@ -1,269 +1,183 @@
-/* Root container */
-#themeplay-root {
-  width: 100%;
-  height: 100%;
-  background: #f4f4f4;
+.themeplay-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 360px;
+  height: 100vh;
+  background: linear-gradient(180deg, #fef7e0, #f5e2ff);
+  border-left: 6px solid #ffcc4d;
+  box-shadow: -12px 0 30px rgba(0, 0, 0, 0.12);
+  transform: translateX(100%);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  z-index: 40;
+}
+
+.themeplay-overlay.is-open {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.themeplay-overlay.is-hidden {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.themeplay-window {
   display: flex;
   flex-direction: column;
-  font-family: Arial, sans-serif;
-  padding: 16px;
-  box-sizing: border-box;
+  height: 100%;
+  padding: 18px 16px 20px;
   gap: 12px;
+  font-family: "Arial Rounded MT Bold", "Helvetica", sans-serif;
 }
 
-/* Header */
-#themeplay-header {
-  text-align: center;
-  margin-bottom: 4px;
-}
-
-#tp-title {
-  font-size: 28px;
-  font-weight: bold;
-  padding: 6px 0;
-  letter-spacing: 0.5px;
-}
-
-#tp-subtitle {
-  color: #555;
-  font-size: 14px;
-  margin-bottom: 8px;
-}
-
-/* Goals list */
-#themeplay-goal-list {
-  flex: 1;
-  overflow-y: auto;
-  background: #ffffff;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  padding: 12px;
-  box-sizing: border-box;
-  box-shadow: inset 0 0 0 1px #ededed;
-}
-
-/* Individual goal entries */
-.tp-goal {
-  padding: 10px;
-  border: 2px solid #d0d0d0;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  background: #fafafa;
-  cursor: pointer;
-  transition: transform 0.15s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.tp-goal:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.04);
-}
-
-.tp-goal.completed {
-  border-color: #65a868;
-  background: #e4f5e4;
-  animation: goalShimmer 1.2s ease;
-}
-
-.tp-goal.completed .tp-goal-text {
-  color: #2d662f;
-}
-
-.tp-goal-text {
-  font-size: 14px;
-  line-height: 1.3;
-}
-
-/* Buttons */
-.tp-btn {
-  background: #ffffff;
-  border: 2px solid #777;
-  font-size: 14px;
-  padding: 8px 12px;
-  margin: 6px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.08);
-}
-
-.tp-btn:hover {
-  transform: scale(1.03);
-  background: #f0f0f0;
-  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.06);
-}
-
-.tp-big-btn {
-  background: #ffffff;
-  border: 3px solid #333;
-  font-size: 18px;
-  padding: 12px 16px;
-  margin: 10px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.1);
-}
-
-.tp-big-btn:hover {
-  transform: scale(1.05);
-}
-
-/* Control section */
-#themeplay-controls {
+.themeplay-header {
   display: flex;
-  justify-content: center;
-  margin: 8px 0 4px;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
-/* Reward panel */
-#themeplay-reward-panel {
-  text-align: center;
-  padding: 20px;
-  border: 3px solid #333;
-  border-radius: 10px;
-  background: #fff;
-  animation: popIn 0.35s ease;
-  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.08);
-}
-
-.hidden {
-  display: none;
-}
-
-#reward-title {
+.themeplay-title {
   font-size: 22px;
-  font-weight: bold;
-  margin-bottom: 6px;
+  font-weight: 800;
+  color: #2c2c38;
 }
 
-#reward-sub {
-  color: #444;
+.themeplay-subtitle {
+  font-size: 13px;
+  color: #4c4c5c;
+}
+
+.themeplay-close {
+  background: #ffd86b;
+  border: 3px solid #f2b12c;
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #c38b1e;
+}
+
+.themeplay-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.themeplay-btn {
+  background: linear-gradient(180deg, #ffffff, #ffe29f);
+  border: 3px solid #f2b12c;
+  border-radius: 16px;
+  padding: 12px 14px;
+  font-weight: 800;
+  color: #2c2c38;
+  cursor: pointer;
+  box-shadow: 0 6px 0 #c38b1e;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.themeplay-btn:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 8px 0 #c38b1e;
+}
+
+.themeplay-btn:active {
+  transform: translateY(1px) scale(0.99);
+  box-shadow: 0 4px 0 #c38b1e;
+}
+
+.themeplay-goals {
+  background: rgba(255, 255, 255, 0.8);
+  border: 3px dashed #f2b12c;
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  min-height: 200px;
+}
+
+.themeplay-goal {
+  padding: 10px 12px;
+  background: #fff5cc;
+  border: 2px solid #ffd86b;
+  border-radius: 12px;
+  font-weight: 700;
+  position: relative;
+  overflow: hidden;
+}
+
+.themeplay-goal.is-complete {
+  background: #dff7d4;
+  border-color: #8ed26f;
+}
+
+.themeplay-goal.sparkle {
+  animation: sparkleBlink 0.6s ease;
+}
+
+@keyframes sparkleBlink {
+  0% { box-shadow: 0 0 0px 0 rgba(255, 204, 77, 0.8); }
+  50% { box-shadow: 0 0 12px 3px rgba(255, 204, 77, 0.9); }
+  100% { box-shadow: 0 0 0px 0 rgba(255, 204, 77, 0.8); }
+}
+
+.themeplay-feedback {
+  min-height: 24px;
   font-size: 14px;
-  margin-bottom: 12px;
+  color: #2c2c38;
 }
 
-/* Fun CSS-only shimmer for completed goals */
-@keyframes goalShimmer {
-  0% { border-color: #65a868; box-shadow: none; }
-  50% { border-color: #85c788; box-shadow: 0 0 8px #98e298; }
-  100% { border-color: #65a868; box-shadow: none; }
+.pop-feedback {
+  animation: popFeedback 0.4s ease;
 }
 
-/* Reward panel animation */
-@keyframes popIn {
-  0% { transform: scale(0.8); opacity: 0; }
+@keyframes popFeedback {
+  0% { transform: scale(0.95); opacity: 0.6; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+.themeplay-reward {
+  margin-top: auto;
+  background: linear-gradient(135deg, #fff7d6, #ffe3ff);
+  border: 3px solid #f2b12c;
+  border-radius: 18px;
+  padding: 14px;
+  animation: rewardPop 0.25s ease;
+}
+
+.themeplay-reward__title {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.themeplay-reward__actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+@keyframes rewardPop {
+  0% { transform: scale(0.95); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* Llama Rag helper window */
-#llama-rag-root {
-  width: 100%;
-  height: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-  background: linear-gradient(135deg, #f9f9ff, #f3f7fb);
-  font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.preview-mode .center-area {
+  outline: 4px dashed #7cd1ff;
+  box-shadow: inset 0 0 0 4px rgba(124, 209, 255, 0.4);
 }
 
-.llama-heading {
-  text-align: center;
-  font-weight: 800;
-  font-size: 22px;
-  letter-spacing: 0.4px;
+.shimmer-once {
+  animation: shimmer 0.8s ease;
 }
 
-.llama-subtitle {
-  text-align: center;
-  color: #5a5f6b;
-  margin-top: -6px;
-}
-
-#llama-log {
-  flex: 1;
-  border: 2px solid #d0d5e0;
-  border-radius: 12px;
-  background: #fff;
-  padding: 12px;
-  overflow-y: auto;
-  box-shadow: inset 0 0 0 1px #eef2f7;
-}
-
-.llama-card {
-  border: 2px solid #cbd2df;
-  border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 10px;
-  background: #fdfefe;
-  animation: floaty 0.35s ease;
-}
-
-.llama-card.you {
-  border-color: #ffd166;
-  background: #fff9e6;
-}
-
-.llama-card.llama {
-  border-color: #7ac0ff;
-  background: #ecf6ff;
-}
-
-.llama-card h4 {
-  margin: 0 0 6px 0;
-  font-size: 14px;
-}
-
-.llama-card p {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-#llama-form {
-  display: flex;
-  gap: 8px;
-}
-
-#llama-input {
-  flex: 1;
-  padding: 10px 12px;
-  border: 2px solid #8da3bf;
-  border-radius: 10px;
-  font-size: 14px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-#llama-input:focus {
-  outline: none;
-  border-color: #6aa2ff;
-  box-shadow: 0 0 0 3px rgba(106, 162, 255, 0.2);
-}
-
-.llama-actions {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 8px;
-}
-
-.llama-chip {
-  padding: 8px 10px;
-  border: 2px solid #c3cad7;
-  border-radius: 20px;
-  background: #fff;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  text-align: center;
-}
-
-.llama-chip:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.06);
-}
-
-@keyframes floaty {
-  0% { transform: translateY(6px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
+@keyframes shimmer {
+  0% { box-shadow: 0 0 0px rgba(255, 255, 255, 0); }
+  50% { box-shadow: 0 0 12px rgba(255, 255, 255, 0.6); }
+  100% { box-shadow: 0 0 0px rgba(255, 255, 255, 0); }
 }
