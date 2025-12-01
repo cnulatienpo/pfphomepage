@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Llama Rag</title>
+    <link rel="stylesheet" href="css/llama-rag.css" />
+  </head>
+  <body>
+    <div class="llama-rag-shell">
+      <header class="llama-rag-header">Llama Rag</header>
+      <main class="llama-rag-body">
+        <label class="llama-rag-label" for="llama-rag-log">Conversation</label>
+        <textarea id="llama-rag-log" class="llama-rag-log" readonly></textarea>
+      </main>
+      <form class="llama-rag-input-row" id="llama-rag-form">
+        <input
+          type="text"
+          id="llama-rag-input"
+          class="llama-rag-input"
+          placeholder="Type a prompt"
+          autocomplete="off"
+        />
+        <button type="submit" class="llama-rag-send">Send</button>
+      </form>
+    </div>
+    <script type="module" src="js/llama-rag-ui.js"></script>
+  </body>
+</html>
