@@ -1,9 +1,39 @@
 // Fisher-Price Theme Builder Right Properties Panel
 // Text is written to feel like "explain like I'm five".
+import { onAction } from "./themeplay.js";
 
 let currentSelection = null;
 let panelRoot = null;
 const controlRegistry = new Map();
+
+function clamp(num, min, max) {
+  return Math.min(Math.max(num, min), max);
+}
+
+function hexToRgb(hex) {
+  const parsed = hex.replace("#", "");
+  const bigint = parseInt(parsed, 16);
+  return {
+    r: (bigint >> 16) & 255,
+    g: (bigint >> 8) & 255,
+    b: bigint & 255,
+  };
+}
+
+function rgbToHex({ r, g, b }) {
+  return `#${[r, g, b]
+    .map((value) => clamp(Math.round(value), 0, 255).toString(16).padStart(2, "0"))
+    .join("")}`;
+}
+
+function generatePaletteFromColor(color) {
+  const { r, g, b } = hexToRgb(color || "#ffcc66");
+  return [
+    rgbToHex({ r: r + 20, g: g + 10, b: b + 10 }),
+    rgbToHex({ r: r - 10, g: g - 10, b: b - 10 }),
+    rgbToHex({ r: g, g: b, b: r }),
+  ];
+}
 
 function createDrawer(title, subtitle) {
   const drawer = document.createElement("section");
@@ -64,6 +94,22 @@ function buildSlider(label, tooltip, property, options = {}) {
 
   input.addEventListener("input", () => {
     dispatchPropertyChange(property, parseFloat(input.value));
+    if (property.includes("motion")) {
+      onAction("motion-change");
+    }
+  });
+
+  const bounce = () => {
+    wrapper.classList.remove("slider-bounce");
+    void wrapper.offsetWidth;
+    wrapper.classList.add("slider-bounce");
+    wrapper.classList.add("tick-pulse");
+    setTimeout(() => wrapper.classList.remove("tick-pulse"), 260);
+    onAction(property.includes("motion") ? "motion-change" : "slider-change");
+  };
+
+  ["pointerup", "mouseup", "touchend"].forEach((evt) => {
+    input.addEventListener(evt, bounce);
   });
 
   controlRegistry.set(property, input);
@@ -111,10 +157,33 @@ function buildColor(label, tooltip, property, defaultValue = "#cccccc") {
 
   input.addEventListener("input", () => {
     dispatchPropertyChange(property, input.value);
+    onAction("color-change");
   });
 
+  const paletteRow = document.createElement("div");
+  paletteRow.className = "fp-color-palette";
+  const paint = () => {
+    paletteRow.innerHTML = "";
+    generatePaletteFromColor(input.value).forEach((color) => {
+      const swatch = document.createElement("div");
+      swatch.className = "fp-color-swatch";
+      swatch.style.background = color;
+      swatch.title = `Use ${color}`;
+      swatch.addEventListener("click", () => {
+        input.value = color;
+        dispatchPropertyChange(property, color);
+        onAction("color-change");
+        swatch.classList.add("tick-pulse");
+        setTimeout(() => swatch.classList.remove("tick-pulse"), 260);
+      });
+      paletteRow.appendChild(swatch);
+    });
+  };
+  paint();
+  input.addEventListener("change", paint);
+
   controlRegistry.set(property, input);
-  wrapper.append(text, input);
+  wrapper.append(text, input, paletteRow);
   return wrapper;
 }
 
@@ -197,6 +266,7 @@ function buildMoveByItselfSection(body) {
       if (!currentSelection) return;
       const event = new CustomEvent("ui:testMotion", { detail: { id: currentSelection.id } });
       panelRoot?.dispatchEvent(event);
+      onAction("motion-test");
     })
   );
 }
