@@ -1,26 +1,51 @@
-import { LlamaRagResponses } from './llamaRag-responses.js';
+export function getLlamaRagResponse(inputString = "") {
+  const text = inputString.toLowerCase();
 
-function pick(list) {
-  return list[Math.floor(Math.random() * list.length)];
-}
+  const routes = [
+    {
+      keywords: ["size", "width", "height", "bigger", "smaller", "scale"],
+      response: () =>
+        "Size runs on sliders. Push right to widen, left to narrow. Nothing fancy.",
+    },
+    {
+      keywords: ["color", "paint", "tint", "hue", "shade"],
+      response: () => "Color is paint. Pick a bucket, coat the part, move on.",
+    },
+    {
+      keywords: ["layer", "stack", "order", "front", "back"],
+      response: () =>
+        "Layers are the stack. Move a piece up to sit on top. Drop it to send it behind.",
+    },
+    {
+      keywords: ["motion", "animate", "move", "cycle", "loop", "preset"],
+      response: () => "Motion runs off presets. Pick a cycle and keep the range tight.",
+    },
+    {
+      keywords: ["depth", "3d", "distance", "z-index", "ahead", "behind"],
+      response: () => "Depth is front and back cuts. Choose where it sits in the lane.",
+    },
+    {
+      keywords: ["sound", "audio", "volume", "loud", "quiet"],
+      response: () => "Sound is numbers pushing parts. Feed numbers, watch output, adjust.",
+    },
+    {
+      keywords: ["error", "broken", "fail", "bug", "jam"],
+      response: () =>
+        "When it jams, follow procedure. Reset the unit, check cables, reload, test again.",
+    },
+  ];
 
-function chooseCategory(input) {
-  const text = input.toLowerCase();
-  if (/color|palette|paint/.test(text)) return 'colors';
-  if (/layout|grid|row|column|stack/.test(text)) return 'layout';
-  if (/size|resize|scale|fit/.test(text)) return 'sizing';
-  if (/layer|order|stack/.test(text)) return 'layers';
-  if (/background|texture|gradient/.test(text)) return 'backgrounds';
-  if (/font|type|text/.test(text)) return 'typography';
-  if (/motion|animate|move/.test(text)) return 'motion';
-  if (/export|save|download/.test(text)) return 'export';
-  if (/broken|problem|issue|stuck/.test(text)) return 'problems';
-  if (/random/.test(text)) return 'random';
-  return 'unknown';
-}
+  for (const route of routes) {
+    if (route.keywords.some((keyword) => text.includes(keyword))) {
+      return route.response();
+    }
+  }
 
-export function getLlamaRagResponse(message) {
-  const category = chooseCategory(message || '');
-  const pool = LlamaRagResponses[category] || LlamaRagResponses.unknown;
-  return pick(pool);
+  const neutralResponses = [
+    "It does the job. Adjust what you need and keep moving.",
+    "This panel takes input and spits output. Set it and go.",
+    "You press the control, it responds. That is the whole story.",
+  ];
+
+  return neutralResponses[Math.floor(Math.random() * neutralResponses.length)];
 }

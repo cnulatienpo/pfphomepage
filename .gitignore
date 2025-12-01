@@ -8,9 +8,14 @@ yarn-debug.log*
 pnpm-debug.log*
 
 # Build outputs
-dist
-build
+dist/
+build/
+*.log
 
 # Node deps
-node_modules
+node_modules/
 .venv/
+
+# Do not commit local environment files
+.env
+.env.local

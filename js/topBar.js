@@ -70,6 +70,18 @@ export function initTopBar(rootElement) {
     bar.appendChild(button);
   });
 
+  const themePlayBtn = document.createElement("button");
+  themePlayBtn.type = "button";
+  themePlayBtn.className = "top-button top-button--themeplay";
+  themePlayBtn.textContent = "ThemePlay Mode";
+  themePlayBtn.title = "Open the playful checklist and helper.";
+  themePlayBtn.addEventListener("click", () => {
+    const event = new CustomEvent("ui:openThemePlay", { bubbles: true });
+    rootElement.dispatchEvent(event);
+  });
+
+  bar.appendChild(themePlayBtn);
+
   rootElement.appendChild(bar);
   return bar;
 }

@@ -7,13 +7,22 @@
     <link rel="stylesheet" href="css/llama-rag.css" />
   </head>
   <body>
-    <header>Llama Rag</header>
-    <div class="chat-shell">
-      <div id="chat-log" class="chat-log" aria-live="polite"></div>
-      <div class="input-row">
-        <input id="chat-input" type="text" placeholder="Ask for a quick tip" />
-        <button id="chat-send" type="button">Send</button>
-      </div>
+    <div class="llama-rag-shell">
+      <header class="llama-rag-header">Llama Rag</header>
+      <main class="llama-rag-body">
+        <label class="llama-rag-label" for="llama-rag-log">Conversation</label>
+        <textarea id="llama-rag-log" class="llama-rag-log" readonly></textarea>
+      </main>
+      <form class="llama-rag-input-row" id="llama-rag-form">
+        <input
+          type="text"
+          id="llama-rag-input"
+          class="llama-rag-input"
+          placeholder="Type a prompt"
+          autocomplete="off"
+        />
+        <button type="submit" class="llama-rag-send">Send</button>
+      </form>
     </div>
     <script type="module" src="js/llama-rag-ui.js"></script>
   </body>

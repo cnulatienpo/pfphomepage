@@ -5,18 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fisher-Price Theme Builder</title>
     <link rel="stylesheet" href="css/layout-shell.css" />
+    <style>
+      #llama-rag-button {
+        position: fixed;
+        top: 12px;
+        right: 12px;
+        z-index: 9999;
+        padding: 10px 14px;
+        background: #2c2c2c;
+        color: #f3e7a2;
+        border: 3px solid #3f3f3f;
+        font-family: "Roboto Mono", "IBM Plex Mono", "Consolas", monospace;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      #llama-rag-button:hover,
+      #llama-rag-button:focus {
+        background: #363636;
+        outline: none;
+      }
+
+      #llama-rag-panel {
+        position: fixed;
+        top: 60px;
+        right: 24px;
+        width: 420px;
+        height: 600px;
+        border: 4px solid #3f3f3f;
+        background: #1f1f1f;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+        z-index: 9998;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #llama-rag-panel header {
+        background: #303030;
+        color: #d5c46a;
+        padding: 10px 14px;
+        font-family: "Roboto Mono", "IBM Plex Mono", "Consolas", monospace;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: move;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      #llama-rag-panel button {
+        background: #3a3a3a;
+        color: #f3e7a2;
+        border: 2px solid #3f3f3f;
+        font-family: "Roboto Mono", "IBM Plex Mono", "Consolas", monospace;
+        font-size: 12px;
+        cursor: pointer;
+      }
+
+      #llama-rag-panel iframe {
+        flex: 1 1 auto;
+        border: none;
+        background: #1f1f1f;
+      }
+    </style>
   </head>
   <body>
-    <button id="open-llama-rag" type="button">Talk To Llama Rag</button>
+    <button id="llama-rag-button" type="button">Talk To Llama Rag</button>
     <div id="app"></div>
     <script type="module" src="js/layoutShell.js"></script>
-    <script type="module">
-      const ragButton = document.getElementById("open-llama-rag");
-      if (ragButton) {
-        ragButton.addEventListener("click", () => {
-          window.open("llama-rag-window.html", "_blank", "width=430,height=620");
+    <script>
+      (function () {
+        const button = document.getElementById("llama-rag-button");
+        if (!button) return;
+
+        function makePanel() {
+          let panel = document.getElementById("llama-rag-panel");
+          if (panel) return panel;
+
+          panel = document.createElement("div");
+          panel.id = "llama-rag-panel";
+
+          const header = document.createElement("header");
+          header.textContent = "Llama Rag";
+
+          const closeButton = document.createElement("button");
+          closeButton.type = "button";
+          closeButton.textContent = "Close";
+          closeButton.addEventListener("click", () => panel.remove());
+
+          header.appendChild(closeButton);
+          panel.appendChild(header);
+
+          const frame = document.createElement("iframe");
+          frame.src = "llama-rag-window.html";
+          frame.title = "Llama Rag";
+          panel.appendChild(frame);
+
+          let offsetX = 0;
+          let offsetY = 0;
+          let dragging = false;
+
+          const startDrag = (event) => {
+            dragging = true;
+            const rect = panel.getBoundingClientRect();
+            offsetX = event.clientX - rect.left;
+            offsetY = event.clientY - rect.top;
+            document.addEventListener("mousemove", onDrag);
+            document.addEventListener("mouseup", endDrag);
+          };
+
+          const onDrag = (event) => {
+            if (!dragging) return;
+            panel.style.left = `${event.clientX - offsetX}px`;
+            panel.style.top = `${event.clientY - offsetY}px`;
+            panel.style.right = "auto";
+          };
+
+          const endDrag = () => {
+            dragging = false;
+            document.removeEventListener("mousemove", onDrag);
+            document.removeEventListener("mouseup", endDrag);
+          };
+
+          header.addEventListener("mousedown", startDrag);
+
+          document.body.appendChild(panel);
+          return panel;
+        }
+
+        button.addEventListener("click", () => {
+          const popup = window.open(
+            "llama-rag-window.html",
+            "llamaRag",
+            "width=420,height=600,resizable=yes"
+          );
+
+          if (popup && !popup.closed) {
+            popup.focus();
+            return;
+          }
+
+          const panel = makePanel();
+          panel.style.display = "flex";
         });
-      }
+      })();
     </script>
   </body>
 </html>
