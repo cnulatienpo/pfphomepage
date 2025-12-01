@@ -10,6 +10,11 @@ const DEFAULT_BUCKETS = [
 const COLOR_DRAG_TYPE = 'application/pfp-color';
 export const colorHistory = [];
 
+function markGoal(goalId) {
+  if (!goalId) return;
+  window.dispatchEvent(new CustomEvent('themeplay:markGoal', { detail: { goalId } }));
+}
+
 function isColorValue(value) {
   const normalized = value.trim().toLowerCase();
   return /^(#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8}))$/.test(normalized) ||
@@ -95,6 +100,7 @@ export function applyBucketToLayer(layerManager, layerId, bucket) {
   const borderColor = emphasizeColor(bucket.value, -0.16);
   const textColor = getContrastColor(bucket.value);
   layerManager.updateLayer(layerId, { backgroundColor, borderColor, textColor });
+  markGoal('goal-change-fill');
   logHistory(bucket, layerId);
   return true;
 }

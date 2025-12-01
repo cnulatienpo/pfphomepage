@@ -5,6 +5,11 @@ export const transformDefs = [
   { key: 'y', label: 'Offset Y', min: -400, max: 400, step: 5 },
 ];
 
+function markGoal(goalId) {
+  if (!goalId) return;
+  window.dispatchEvent(new CustomEvent('themeplay:markGoal', { detail: { goalId } }));
+}
+
 export function buildTransformUI(container, layerManager, onChange) {
   container.innerHTML = '';
   const active = layerManager.layers.find((l) => l.id === layerManager.activeId);
@@ -26,6 +31,12 @@ export function buildTransformUI(container, layerManager, onChange) {
     input.addEventListener('input', (e) => {
       const value = Number(e.target.value);
       layerManager.updateLayer(active.id, { transform: { ...active.transform, [def.key]: value } });
+      if (def.key === 'scale') {
+        markGoal('goal-resize-one');
+      }
+      if (def.key === 'x' || def.key === 'y') {
+        markGoal('goal-move-one');
+      }
       onChange();
     });
     wrapper.append(label, input);
