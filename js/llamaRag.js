@@ -1,62 +1,51 @@
-const categories = [
-  {
-    id: "colors",
-    keywords: ["color", "palette", "hue", "paint"],
-    reply: "Use Look & Color. Pick a fill. Pick a text color. That’s it.",
-  },
-  {
-    id: "layout",
-    keywords: ["layout", "grid", "place", "drop", "arrange"],
-    reply: "Place boxes. Use snap lines. Move them until it lines up.",
-  },
-  {
-    id: "sizing",
-    keywords: ["size", "scale", "width", "height"],
-    reply: "Use the size sliders. Stop when it fits the spot.",
-  },
-  {
-    id: "spacing",
-    keywords: ["spacing", "gap", "padding", "margin"],
-    reply: "Use the spacing slider. Tiny gaps feel tight. Bigger gaps feel calm.",
-  },
-  {
-    id: "layers",
-    keywords: ["layer", "z", "front", "behind"],
-    reply: "Layers are out of order. Move the right one higher.",
-  },
-  {
-    id: "motion",
-    keywords: ["motion", "animate", "move", "wiggle", "bounce"],
-    reply: "Pick a motion preset. Test it. If it’s too much, pull it back.",
-  },
-  {
-    id: "backgrounds",
-    keywords: ["background", "wall", "floor"],
-    reply: "Pick a background swatch. Swap until the page feels steady.",
-  },
-  {
-    id: "export",
-    keywords: ["export", "download", "save"],
-    reply: "Export panel makes the theme. Press the big button.",
-  },
-  {
-    id: "text",
-    keywords: ["text", "font", "title", "words"],
-    reply: "Use the title block. Change color and size until it reads clearly.",
-  },
-  {
-    id: "problems",
-    keywords: ["wrong", "weird", "broken", "can’t", "cant", "cannot"],
-    reply: "Hard to say. Try a different setting. Play with it.",
-  },
-];
+export function getLlamaRagResponse(inputString = "") {
+  const text = inputString.toLowerCase();
 
-export function getLlamaRagResponse(inputText = "") {
-  const normalized = inputText.toLowerCase();
-  for (const category of categories) {
-    if (category.keywords.some((keyword) => normalized.includes(keyword))) {
-      return category.reply;
+  const routes = [
+    {
+      keywords: ["size", "width", "height", "bigger", "smaller", "scale"],
+      response: () =>
+        "Size runs on sliders. Push right to widen, left to narrow. Nothing fancy.",
+    },
+    {
+      keywords: ["color", "paint", "tint", "hue", "shade"],
+      response: () => "Color is paint. Pick a bucket, coat the part, move on.",
+    },
+    {
+      keywords: ["layer", "stack", "order", "front", "back"],
+      response: () =>
+        "Layers are the stack. Move a piece up to sit on top. Drop it to send it behind.",
+    },
+    {
+      keywords: ["motion", "animate", "move", "cycle", "loop", "preset"],
+      response: () => "Motion runs off presets. Pick a cycle and keep the range tight.",
+    },
+    {
+      keywords: ["depth", "3d", "distance", "z-index", "ahead", "behind"],
+      response: () => "Depth is front and back cuts. Choose where it sits in the lane.",
+    },
+    {
+      keywords: ["sound", "audio", "volume", "loud", "quiet"],
+      response: () => "Sound is numbers pushing parts. Feed numbers, watch output, adjust.",
+    },
+    {
+      keywords: ["error", "broken", "fail", "bug", "jam"],
+      response: () =>
+        "When it jams, follow procedure. Reset the unit, check cables, reload, test again.",
+    },
+  ];
+
+  for (const route of routes) {
+    if (route.keywords.some((keyword) => text.includes(keyword))) {
+      return route.response();
     }
   }
-  return "Hard to say. Try a different setting. Play with it.";
+
+  const neutralResponses = [
+    "It does the job. Adjust what you need and keep moving.",
+    "This panel takes input and spits output. Set it and go.",
+    "You press the control, it responds. That is the whole story.",
+  ];
+
+  return neutralResponses[Math.floor(Math.random() * neutralResponses.length)];
 }

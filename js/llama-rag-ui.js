@@ -1,69 +1,34 @@
 import { getLlamaRagResponse } from "./llamaRag.js";
 
-let ragContainer = null;
-let ragLog = null;
-let ragInput = null;
-let ragWindow = null;
+const log = document.getElementById("llama-rag-log");
+const input = document.getElementById("llama-rag-input");
+const form = document.getElementById("llama-rag-form");
 
-async function loadTemplate() {
-  if (ragContainer) return ragContainer;
-  const res = await fetch("./llama-rag-window.html");
-  const html = await res.text();
-  const wrapper = document.createElement("div");
-  wrapper.innerHTML = html.trim();
-  ragContainer = wrapper.firstElementChild;
-  ragContainer.classList.add("llama-rag__overlay");
-  ragLog = ragContainer.querySelector(".llama-rag__log");
-  ragInput = ragContainer.querySelector(".llama-rag__input");
-  ragWindow = ragContainer;
-
-  ragContainer.querySelector(".llama-rag__close").addEventListener("click", closeLlamaRag);
-  ragContainer.querySelector(".llama-rag__composer").addEventListener("submit", (event) => {
-    event.preventDefault();
-    const value = ragInput.value.trim();
-    if (!value) return;
-    appendMessage("You", value);
-    ragInput.value = "";
-    respond(value);
-  });
-
-  return ragContainer;
+function appendMessage(label, message) {
+  const prefix = label ? `${label}: ` : "";
+  log.value += `${prefix}${message}\n`;
+  log.scrollTop = log.scrollHeight;
 }
 
-function appendMessage(author, text) {
-  const line = document.createElement("div");
-  line.className = "llama-rag__message";
-  line.innerHTML = `<strong>${author}:</strong> <span>${text}</span>`;
-  ragLog.appendChild(line);
-  ragLog.scrollTop = ragLog.scrollHeight;
-}
+function sendMessage(evt) {
+  evt.preventDefault();
+  const text = input.value.trim();
+  if (!text) return;
 
-function respond(text) {
+  appendMessage("You", text);
   const reply = getLlamaRagResponse(text);
   appendMessage("Llama Rag", reply);
+  input.value = "";
+  input.focus();
 }
 
-export async function openLlamaRagWindow() {
-  await loadTemplate();
-  if (!document.body.contains(ragContainer)) {
-    document.body.appendChild(ragContainer);
-  }
-  ragContainer.classList.add("is-open");
-  ragContainer.classList.remove("is-closed");
-  ragInput?.focus();
-  if (!ragLog.hasChildNodes()) {
-    appendMessage("Llama Rag", "Ask what you need. I will be direct.");
-  }
-}
+if (form && input && log) {
+  form.addEventListener("submit", sendMessage);
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      sendMessage(event);
+    }
+  });
 
-export function closeLlamaRag() {
-  ragContainer?.classList.remove("is-open");
-  ragContainer?.classList.add("is-closed");
-}
-
-export async function attachLlamaRag() {
-  await loadTemplate();
-  if (!document.body.contains(ragContainer)) {
-    document.body.appendChild(ragContainer);
-  }
+  appendMessage("Llama Rag", "Panel online. Type instructions.");
 }

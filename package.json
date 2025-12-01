@@ -1,13 +1,19 @@
 {
-  "name": "projects-from-the-projects",
-  "private": true,
-  "version": "0.0.1",
+  "name": "kill-line-theme-builder",
+  "version": "0.1.0",
+  "description": "Fisher-Price-style theme builder as a Windows app.",
+  "main": "electron-main.js",
   "type": "module",
+  "author": "",
+  "license": "MIT",
+  "private": true,
   "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win nsis",
     "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
     "dev:client": "vite",
     "dev:server": "tsx watch server/index.ts",
-    "build": "vite build && tsc -p tsconfig.server.json",
     "preview": "vite preview",
     "server": "tsx server/index.ts",
     "postinstall": "node postinstall.js",
@@ -30,8 +36,36 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
+    "electron": "^29.4.6",
+    "electron-builder": "^24.13.3",
     "jsdom": "^23.2.0",
     "typescript": "^5.4.5",
     "vite": "^5.2.0"
+  },
+  "build": {
+    "appId": "com.killline.themebuilder",
+    "productName": "Kill Line Theme Builder",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "index.html",
+      "electron-main.js",
+      "js/**/*",
+      "css/**/*",
+      "package.json",
+      "assets/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "artifactName": "KillLineThemeBuilder-Setup-${version}.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   }
 }

@@ -1,105 +1,118 @@
-.llama-rag__overlay {
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
-  width: 340px;
-  max-height: 480px;
-  background: linear-gradient(180deg, #222639, #1b1f2d);
-  color: #f3f5ff;
-  border: 3px solid #5c68ff;
-  border-radius: 18px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
-  transform: translateY(20px);
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.25s ease, opacity 0.25s ease;
-  z-index: 50;
+:root {
+  --rag-bg: #1f1f1f;
+  --rag-panel: #2c2c2c;
+  --rag-border: #3f3f3f;
+  --rag-accent: #d5c46a;
+  --rag-text: #f0f0f0;
+  --rag-muted: #b0a77a;
+  --rag-font: "Roboto Mono", "IBM Plex Mono", "Consolas", monospace;
 }
 
-.llama-rag__overlay.is-open {
-  transform: translateY(0);
-  opacity: 1;
-  pointer-events: auto;
+* {
+  box-sizing: border-box;
 }
 
-.llama-rag__header {
+body {
+  margin: 0;
+  background: var(--rag-bg);
+  color: var(--rag-text);
+  font-family: var(--rag-font);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 14px;
-  background: rgba(255, 255, 255, 0.05);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+  justify-content: center;
+  align-items: stretch;
+  min-height: 100vh;
+  padding: 16px;
 }
 
-.llama-rag__title {
-  font-weight: 800;
-  letter-spacing: 0.4px;
+.llama-rag-shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 420px;
+  height: 100%;
+  max-height: 600px;
+  border: 4px solid var(--rag-border);
+  background: var(--rag-panel);
+  box-shadow: 0 0 0 4px #0d0d0d inset;
 }
 
-.llama-rag__subtitle {
+.llama-rag-header {
+  padding: 12px 16px;
+  background: #303030;
+  color: var(--rag-accent);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-bottom: 3px solid var(--rag-border);
+  text-transform: uppercase;
+}
+
+.llama-rag-body {
+  flex: 1 1 auto;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.llama-rag-label {
   font-size: 12px;
-  color: #c7cce8;
+  color: var(--rag-muted);
+  letter-spacing: 0.6px;
 }
 
-.llama-rag__close {
-  background: #ffce4a;
-  color: #1b1f2d;
-  border: 2px solid #f4b639;
-  border-radius: 12px;
-  padding: 8px 10px;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.25);
-}
-
-.llama-rag__body {
-  padding: 10px 12px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.llama-rag__log {
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 10px;
-  flex: 1;
+.llama-rag-log {
+  flex: 1 1 auto;
+  width: 100%;
+  resize: none;
+  background: #1b1b1b;
+  color: var(--rag-text);
+  border: 3px solid var(--rag-border);
+  padding: 12px;
+  font-family: var(--rag-font);
+  font-size: 14px;
+  line-height: 1.4;
   overflow-y: auto;
-  min-height: 180px;
-  max-height: 300px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
 }
 
-.llama-rag__composer {
+.llama-rag-input-row {
   display: grid;
-  grid-template-columns: 1fr 90px;
+  grid-template-columns: 1fr 120px;
   gap: 8px;
+  padding: 12px 16px 16px;
+  background: #262626;
+  border-top: 3px solid var(--rag-border);
+  position: sticky;
+  bottom: 0;
 }
 
-.llama-rag__input {
-  border-radius: 12px;
-  border: 2px solid #525b84;
-  padding: 10px 12px;
-  background: #1b1f2d;
-  color: #f3f5ff;
+.llama-rag-input {
+  padding: 12px;
+  background: #1b1b1b;
+  border: 3px solid var(--rag-border);
+  color: var(--rag-text);
+  font-family: var(--rag-font);
+  font-size: 14px;
 }
 
-.llama-rag__send {
-  background: linear-gradient(180deg, #7cf0ff, #55c5ff);
-  border: 2px solid #2c9de6;
-  border-radius: 12px;
-  font-weight: 800;
+.llama-rag-input:focus {
+  outline: 2px solid var(--rag-accent);
+  outline-offset: -2px;
+}
+
+.llama-rag-send {
+  background: #3a3a3a;
+  color: var(--rag-accent);
+  border: 3px solid var(--rag-border);
+  font-family: var(--rag-font);
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 0 #1e7bb8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.llama-rag__message strong {
-  color: #7cf0ff;
-}
-
-.llama-rag__message span {
-  color: #e6e9ff;
+.llama-rag-send:hover,
+.llama-rag-send:focus {
+  background: #454545;
+  outline: none;
 }
