@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Final App Test</title>
+  <link rel="stylesheet" href="css/layout-shell.css" />
+  <style>
+    body { margin: 0; }
+    .test-result { padding: 20px; font-family: monospace; background: #f5f5f5; }
+    .success { color: green; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="status" class="test-result">
+    <div>Starting up...</div>
+  </div>
+  
+  <script type="module">
+    const status = document.getElementById('status');
+    const results = [];
+    
+    function addResult(msg, isError = false) {
+      const div = document.createElement('div');
+      div.className = isError ? 'error' : 'success';
+      div.textContent = (isError ? '✗ ' : '✓ ') + msg;
+      status.appendChild(div);
+      results.push(msg);
+    }
+    
+    try {
+      addResult('Module import test starting');
+      const { initLayoutShell } = await import('./js/layoutShell.js');
+      addResult('layoutShell.js imported successfully');
+      
+      if (typeof initLayoutShell === 'function') {
+        addResult('initLayoutShell is a function');
+        
+        // Try to initialize
+        try {
+          initLayoutShell();
+          addResult('initLayoutShell() called successfully - UI should be initialized');
+          
+          // Check if UI elements exist
+          setTimeout(() => {
+            const app = document.getElementById('app');
+            if (app && app.innerHTML.length > 100) {
+              addResult(`App div populated with ${app.innerHTML.length} characters of content`);
+            } else {
+              addResult('Warning: App div not properly populated', true);
+            }
+          }, 500);
+        } catch (e) {
+          addResult(`initLayoutShell() error: ${e.message}`, true);
+        }
+      } else {
+        addResult('initLayoutShell is not a function!', true);
+      }
+    } catch (e) {
+      addResult(`Failed to import layoutShell: ${e.message}`, true);
+      console.error(e);
+    }
+  </script>
+</body>
+</html>

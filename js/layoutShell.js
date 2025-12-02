@@ -248,6 +248,16 @@ function bindTopBarInteractions(topBarContainer) {
   topBarContainer.addEventListener("ui:openThemePlay", toggleThemePlayPanel);
 }
 
+function createThemePlayButton() {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "themeplay-button";
+  button.textContent = "ThemePlay";
+  button.title = "Open the playful checklist and helper";
+  button.addEventListener("click", toggleThemePlayPanel);
+  return button;
+}
+
 function buildBottomBar() {
   const bottomBar = document.createElement("footer");
   bottomBar.className = "bottom-bar";
