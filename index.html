@@ -79,20 +79,48 @@
       </div>
     </div>
     <script type="module">
-      import { initLayoutShell } from './js/layoutShell.js';
+      console.log('[index] Module script starting');
       
-      const testDiv = document.getElementById('app');
-      testDiv.innerHTML += '<p style="color: blue;">✓ Module imported successfully</p>';
-      
-      document.addEventListener('DOMContentLoaded', () => {
-        testDiv.innerHTML += '<p style="color: blue;">✓ DOMContentLoaded fired, calling init...</p>';
-        initLayoutShell();
-      });
-      
-      // Also try immediately if already loaded
-      if (document.readyState !== 'loading') {
-        testDiv.innerHTML += '<p style="color: blue;">✓ Page already loaded, calling init immediately...</p>';
-        initLayoutShell();
+      try {
+        console.log('[index] About to import initLayoutShell');
+        const mod = await import('./js/layoutShell.js');
+        console.log('[index] Module imported, checking for initLayoutShell');
+        const { initLayoutShell } = mod;
+        console.log('[index] Got initLayoutShell:', typeof initLayoutShell);
+        
+        const testDiv = document.getElementById('app');
+        testDiv.innerHTML = '<p style="color: blue;">✓ Module imported successfully</p>';
+        
+        function doInit() {
+          try {
+            testDiv.innerHTML += '<p style="color: blue;">✓ Calling initLayoutShell()...</p>';
+            console.log('[index] Calling initLayoutShell()');
+            initLayoutShell();
+            console.log('[index] initLayoutShell() returned');
+            testDiv.innerHTML += '<p style="color: green;">✓ initLayoutShell() completed</p>';
+          } catch (e) {
+            console.error('[index] Error in doInit:', e);
+            testDiv.innerHTML += `<p style="color: red;">✗ Error: ${e.message}</p><pre style="color: red; font-size: 10px; overflow-x: auto;">${e.stack}</pre>`;
+          }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+          console.log('[index] DOMContentLoaded fired');
+          testDiv.innerHTML += '<p style="color: blue;">✓ DOMContentLoaded fired</p>';
+          doInit();
+        });
+        
+        // Also try immediately if already loaded
+        if (document.readyState !== 'loading') {
+          console.log('[index] Page already loaded (readyState=' + document.readyState + '), calling init immediately');
+          testDiv.innerHTML += '<p style="color: blue;">✓ Page already loaded, calling init immediately...</p>';
+          doInit();
+        } else {
+          console.log('[index] Page still loading (readyState=' + document.readyState + ')');
+        }
+      } catch (e) {
+        console.error('[index] Error during module import:', e);
+        document.getElementById('app').innerHTML = `<p style="color: red;">Import Error: ${e.message}</p><pre>${e.stack}</pre>`;
       }
     </script>
     <script>
