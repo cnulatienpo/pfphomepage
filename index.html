@@ -72,10 +72,28 @@
   </head>
   <body>
     <button id="llama-rag-button" type="button">Talk To Llama Rag</button>
-    <div id="app"></div>
+    <div id="app">
+      <div style="padding: 20px; background: #fff; color: #000; font-family: monospace; font-size: 12px; position: relative; z-index: 1;">
+        <p>✓ Page loaded, app div visible</p>
+        <p>Loading layoutShell module...</p>
+      </div>
+    </div>
     <script type="module">
       import { initLayoutShell } from './js/layoutShell.js';
-      window.addEventListener('load', initLayoutShell);
+      
+      const testDiv = document.getElementById('app');
+      testDiv.innerHTML += '<p style="color: blue;">✓ Module imported successfully</p>';
+      
+      document.addEventListener('DOMContentLoaded', () => {
+        testDiv.innerHTML += '<p style="color: blue;">✓ DOMContentLoaded fired, calling init...</p>';
+        initLayoutShell();
+      });
+      
+      // Also try immediately if already loaded
+      if (document.readyState !== 'loading') {
+        testDiv.innerHTML += '<p style="color: blue;">✓ Page already loaded, calling init immediately...</p>';
+        initLayoutShell();
+      }
     </script>
     <script>
       (function () {

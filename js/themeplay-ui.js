@@ -138,9 +138,17 @@ function handleAllComplete(detail) {
   setFeedback(detail?.message || "Ready to Export Your Theme");
 }
 
-initThemePlay();
-
+// Defer initialization until DOM is ready
 if (typeof document !== "undefined") {
-  document.addEventListener("themeplay:goalComplete", (event) => markCompletion(event.detail));
-  document.addEventListener("themeplay:allComplete", (event) => handleAllComplete(event.detail));
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initThemePlay();
+      document.addEventListener("themeplay:goalComplete", (event) => markCompletion(event.detail));
+      document.addEventListener("themeplay:allComplete", (event) => handleAllComplete(event.detail));
+    });
+  } else {
+    initThemePlay();
+    document.addEventListener("themeplay:goalComplete", (event) => markCompletion(event.detail));
+    document.addEventListener("themeplay:allComplete", (event) => handleAllComplete(event.detail));
+  }
 }

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Import Test</title>
+</head>
+<body>
+  <h1>Testing Module Imports</h1>
+  <div id="output" style="padding: 20px; font-family: monospace; white-space: pre-wrap; background: #f0f0f0;"></div>
+  
+  <script>
+    function log(msg) {
+      console.log(msg);
+      document.getElementById('output').textContent += msg + '\n';
+    }
+    
+    log('Page loaded');
+    
+    // Test direct import
+    import('./js/layoutShell.js').then((module) => {
+      log('✓ layoutShell module imported successfully');
+      log('Exported functions:', Object.keys(module));
+      
+      log('Calling initLayoutShell...');
+      module.initLayoutShell();
+      log('✓ initLayoutShell called');
+    }).catch((err) => {
+      log('✗ Import error: ' + err.message);
+      log(err.stack);
+    });
+  </script>
+</body>
+</html>

@@ -1,1 +1,4 @@
-export * from "../theme-builder/js/colorBuckets.js";
+export const colorBuckets = [];
+export function addColorBucket(color) {
+  colorBuckets.push(color);
+}

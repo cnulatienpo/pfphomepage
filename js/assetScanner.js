@@ -1,1 +1,3 @@
-export * from "../theme-builder/js/assetScanner.js";
+export function scanAssets(container) {
+  return [];
+}

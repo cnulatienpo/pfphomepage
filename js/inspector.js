@@ -1,1 +1,7 @@
-export * from "../theme-builder/js/inspector.js";
+export function inspectElement(element) {
+  return {
+    tag: element.tagName,
+    classes: element.className,
+    styles: window.getComputedStyle(element)
+  };
+}

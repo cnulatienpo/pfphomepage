@@ -1,1 +1,5 @@
-export * from "../theme-builder/js/spacingBlocks.js";
+export function createSpacingBlock(size) {
+  const el = document.createElement('div');
+  el.style.height = `${size}px`;
+  return el;
+}

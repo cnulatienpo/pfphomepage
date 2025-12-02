@@ -1,1 +1,3 @@
-export * from "../theme-builder/js/canvasEngine.js";
+export function renderToCanvas(canvas, data) {
+  console.log('Canvas rendering with data:', data);
+}

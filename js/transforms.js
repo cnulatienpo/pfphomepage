@@ -1,1 +1,3 @@
-export * from "../theme-builder/js/transforms.js";
+export function applyTransform(element, transform) {
+  element.style.transform = transform;
+}

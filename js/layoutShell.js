@@ -361,44 +361,47 @@ export function initLayoutShell() {
   }
 }
 
-if (!window.randomizeSomethingInBuilder) {
-  window.randomizeSomethingInBuilder = function () {};
-}
-
-if (!window.openPreviewMode) {
-  window.openPreviewMode = function () {};
-}
-
-if (!window.exportCurrentTheme) {
-  window.exportCurrentTheme = function () {};
-}
-
-window.addEventListener("themeplay:randomize", () => {
-  if (window.randomizeSomethingInBuilder) {
-    window.randomizeSomethingInBuilder();
+// Only run in browser environment
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  if (!window.randomizeSomethingInBuilder) {
+    window.randomizeSomethingInBuilder = function () {};
   }
-});
 
-window.addEventListener("themeplay:preview", () => {
-  if (window.openPreviewMode) {
-    window.openPreviewMode();
+  if (!window.openPreviewMode) {
+    window.openPreviewMode = function () {};
   }
-});
 
-window.addEventListener("themeplay:export", () => {
-  if (window.exportCurrentTheme) {
-    window.exportCurrentTheme();
+  if (!window.exportCurrentTheme) {
+    window.exportCurrentTheme = function () {};
   }
-});
 
-window.onload = initLayoutShell;
+  window.addEventListener("themeplay:randomize", () => {
+    if (window.randomizeSomethingInBuilder) {
+      window.randomizeSomethingInBuilder();
+    }
+  });
 
-// If page is already loaded when this module executes, call immediately
-if (document.readyState === 'loading') {
-  // Page is still loading, wait for onload
-  console.log('[layoutShell] Page still loading, will init on load event');
-} else {
-  // Page already loaded, init now
-  console.log('[layoutShell] Page already loaded, initializing immediately');
-  initLayoutShell();
+  window.addEventListener("themeplay:preview", () => {
+    if (window.openPreviewMode) {
+      window.openPreviewMode();
+    }
+  });
+
+  window.addEventListener("themeplay:export", () => {
+    if (window.exportCurrentTheme) {
+      window.exportCurrentTheme();
+    }
+  });
+
+  window.onload = initLayoutShell;
+
+  // If page is already loaded when this module executes, call immediately
+  if (document.readyState === 'loading') {
+    // Page is still loading, wait for onload
+    console.log('[layoutShell] Page still loading, will init on load event');
+  } else {
+    // Page already loaded, init now
+    console.log('[layoutShell] Page already loaded, initializing immediately');
+    initLayoutShell();
+  }
 }

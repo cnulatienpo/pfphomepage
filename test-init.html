@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Init Test</title>
+  <link rel="stylesheet" href="css/layout-shell.css" />
+  <style>
+    body { margin: 0; padding: 0; font-family: monospace; }
+    #status { padding: 10px; background: #f0f0f0; border-bottom: 1px solid #ccc; }
+    #status.error { background: #ffcccc; }
+    #status.success { background: #ccffcc; }
+  </style>
+</head>
+<body>
+  <div id="status">Initializing...</div>
+  <div id="app"></div>
+  
+  <script type="module">
+    const status = document.getElementById('status');
+    
+    function log(msg, isError = false) {
+      status.textContent = msg;
+      status.classList.toggle('error', isError);
+      status.classList.toggle('success', !isError);
+      console.log(msg);
+    }
+    
+    try {
+      log('Importing layoutShell...');
+      const { initLayoutShell } = await import('./js/layoutShell.js');
+      log('✓ layoutShell imported successfully');
+      
+      log('Calling initLayoutShell()...');
+      const result = initLayoutShell();
+      log(`✓ initLayoutShell() executed, returned: ${typeof result}`);
+    } catch (e) {
+      log(`ERROR: ${e.message}`, true);
+      console.error('Full error:', e);
+    }
+  </script>
+</body>
+</html>

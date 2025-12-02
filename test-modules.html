@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Module Import Test</title>
+</head>
+<body>
+  <div id="log" style="font-family: monospace; white-space: pre-wrap; padding: 20px; background: #f5f5f5; max-height: 600px; overflow-y: auto;"></div>
+  
+  <script type="module">
+    const log = document.getElementById('log');
+    
+    function addLog(msg, color = 'black') {
+      const line = document.createElement('div');
+      line.style.color = color;
+      line.textContent = msg;
+      log.appendChild(line);
+    }
+    
+    async function testImports() {
+      try {
+        addLog('Testing exports.js...', 'blue');
+        const exp = await import('./js/exportTools.js');
+        addLog('✓ exportTools.js loaded, exports:', 'green');
+        addLog(Object.keys(exp).join(', '), 'green');
+      } catch (e) {
+        addLog(`✗ exportTools.js: ${e.message}`, 'red');
+      }
+      
+      try {
+        addLog('Testing topBar.js...', 'blue');
+        const tb = await import('./js/topBar.js');
+        addLog('✓ topBar.js loaded, exports:', 'green');
+        addLog(Object.keys(tb).join(', '), 'green');
+      } catch (e) {
+        addLog(`✗ topBar.js: ${e.message}`, 'red');
+      }
+      
+      try {
+        addLog('Testing leftSidebar.js...', 'blue');
+        const ls = await import('./js/leftSidebar.js');
+        addLog('✓ leftSidebar.js loaded, exports:', 'green');
+        addLog(Object.keys(ls).join(', '), 'green');
+      } catch (e) {
+        addLog(`✗ leftSidebar.js: ${e.message}`, 'red');
+      }
+      
+      try {
+        addLog('Testing randomizers.js...', 'blue');
+        const rnd = await import('./js/randomizers.js');
+        addLog('✓ randomizers.js loaded, exports:', 'green');
+        addLog(Object.keys(rnd).join(', '), 'green');
+      } catch (e) {
+        addLog(`✗ randomizers.js: ${e.message}`, 'red');
+      }
+      
+      try {
+        addLog('Testing llama-rag-ui.js...', 'blue');
+        const rai = await import('./js/llama-rag-ui.js');
+        addLog('✓ llama-rag-ui.js loaded, exports:', 'green');
+        addLog(Object.keys(rai).join(', '), 'green');
+      } catch (e) {
+        addLog(`✗ llama-rag-ui.js: ${e.message}`, 'red');
+      }
+      
+      try {
+        addLog('Testing layoutShell.js...', 'blue');
+        const layout = await import('./js/layoutShell.js');
+        addLog('✓ layoutShell.js loaded, exports:', 'green');
+        addLog(Object.keys(layout).join(', '), 'green');
+      } catch (e) {
+        addLog(`✗ layoutShell.js: ${e.message}`, 'red');
+      }
+    }
+    
+    testImports();
+  </script>
+</body>
+</html>
