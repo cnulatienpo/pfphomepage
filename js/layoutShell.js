@@ -294,10 +294,15 @@ function attachExportHandler() {
 }
 
 export function initLayoutShell() {
+  console.log('[layoutShell] Initializing...');
   const app = document.getElementById("app");
-  if (!app) return;
+  if (!app) {
+    console.error('[layoutShell] #app element not found!');
+    return;
+  }
 
-  app.textContent = "";
+  try {
+    app.textContent = "";
 
   const shell = document.createElement("div");
   shell.className = "layout-shell";
@@ -343,6 +348,11 @@ export function initLayoutShell() {
   attachExportHandler();
 
   randomizeLayout(document);
+  console.log('[layoutShell] Successfully initialized');
+  } catch (error) {
+    console.error('[layoutShell] Error during initialization:', error);
+    app.innerHTML = `<pre style="color: red; padding: 20px;">Error: ${error.message}\n${error.stack}</pre>`;
+  }
 }
 
 if (!window.randomizeSomethingInBuilder) {
