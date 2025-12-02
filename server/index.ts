@@ -2,8 +2,6 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 
-import './types'
-
 dotenv.config()
 
 type SpaceWeatherMode = 'QUIET' | 'FLR' | 'CME' | 'GST' | 'SEP' | 'HSS' | 'RBE'

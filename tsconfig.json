@@ -10,9 +10,15 @@
     "esModuleInterop": true,
     "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
-    "types": [],
+    "types": ["node"],
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@assets/*": ["assets/*"],
+      "@src/*": ["src/*"],
+      "@packages/*": ["packages/*"]
+    }
   },
   "include": ["src"],
   "references": [
