@@ -1,0 +1,196 @@
+.td-panel {
+  background: linear-gradient(135deg, #0f141a 0%, #18222c 100%);
+  color: #e2e8f0;
+  border: 1px solid #2d3a45;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  max-width: 880px;
+}
+
+.td-panel-header h2 {
+  margin: 0 0 4px 0;
+  font-size: 22px;
+  letter-spacing: 0.3px;
+}
+
+.td-panel-subtitle {
+  margin: 0;
+  color: #9fb3c8;
+  font-size: 14px;
+}
+
+.td-connection-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: 1px solid #2f3b46;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.td-connect-button {
+  background: linear-gradient(90deg, #1f7afc 0%, #34c8ff 100%);
+  color: #0c1117;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  box-shadow: 0 8px 18px rgba(52, 200, 255, 0.35);
+  transition: transform 120ms ease, box-shadow 150ms ease;
+}
+
+.td-connect-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 22px rgba(52, 200, 255, 0.45);
+}
+
+.td-connect-button:active {
+  transform: translateY(0);
+  box-shadow: 0 5px 12px rgba(52, 200, 255, 0.35);
+}
+
+.td-status-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c0d2e2;
+  font-weight: 600;
+}
+
+.td-status-text {
+  color: #6ee7b7;
+  padding: 6px 10px;
+  border: 1px solid #2e7d61;
+  background: rgba(110, 231, 183, 0.1);
+  border-radius: 6px;
+}
+
+.td-channels-section,
+.td-targets-section {
+  margin-top: 18px;
+  border: 1px solid #2d3741;
+  border-radius: 12px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.td-channels-section h3,
+.td-targets-section h3 {
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  font-size: 13px;
+  color: #9fb3c8;
+  letter-spacing: 0.6px;
+}
+
+.td-channels-list {
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+}
+
+.td-channel-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #32404c;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+  cursor: grab;
+  transition: border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+}
+
+.td-channel-row:hover {
+  border-color: #4ea0ff;
+  box-shadow: 0 6px 14px rgba(78, 160, 255, 0.1);
+}
+
+.td-channel-row:active {
+  cursor: grabbing;
+}
+
+.td-channel-name {
+  font-weight: 600;
+}
+
+.td-channel-value {
+  font-variant-numeric: tabular-nums;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #2e3a44;
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: #8ae4ff;
+  min-width: 60px;
+  text-align: right;
+}
+
+.td-channel-row.td-dragging {
+  opacity: 0.6;
+  transform: scale(0.99);
+}
+
+.td-target-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.td-target-card {
+  border: 1px dashed #3a4a57;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  padding: 12px;
+  min-height: 96px;
+  position: relative;
+  transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+}
+
+.td-target-label {
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 8px;
+}
+
+.td-target-mapping {
+  font-size: 13px;
+  color: #9ee3a2;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #2f6241;
+  background: rgba(46, 98, 65, 0.25);
+  min-height: 22px;
+}
+
+.td-target-card.td-target-hover {
+  border-color: #7ce7ff;
+  box-shadow: 0 10px 22px rgba(124, 231, 255, 0.18);
+  background: rgba(124, 231, 255, 0.06);
+}
+
+.td-target-card::after {
+  content: 'Drop a channel to map';
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #65798f;
+}
+
+.td-target-card.td-target-hover::after,
+.td-target-card.td-has-mapping::after {
+  color: #7ce7ff;
+}

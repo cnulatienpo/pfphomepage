@@ -1,0 +1,5 @@
+# Ignore everything in visual-assets
+*
+
+# Except the .gitignore
+!.gitignore

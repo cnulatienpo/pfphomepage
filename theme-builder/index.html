@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fisher-Price Construction Theme Builder</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/toolbelt.css">
+  <link rel="stylesheet" href="css/panels.css">
+  <link rel="stylesheet" href="css/layers.css">
+  <link rel="stylesheet" href="css/canvas.css">
+  <link rel="stylesheet" href="css/blocks.css">
+  <link rel="stylesheet" href="css/inspector.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/gl-panels.css">
+  <link rel="stylesheet" href="css/motion-panels.css">
+  <link rel="stylesheet" href="css/playground.css">
+</head>
+<body>
+  <header class="toolbelt">
+    <div class="brand">
+      <div class="peg"></div>
+      <div class="title">Fisher-Price Construction Theme Builder</div>
+    </div>
+    <div class="pd-chip" data-role="pd-chip" data-state="disconnected">Pd Link: Offline</div>
+    <div class="toolbelt-actions">
+      <button data-action="new" class="primary">New Build</button>
+      <button data-action="open">Open JSON</button>
+      <button data-action="save">Save JSON</button>
+      <button data-action="export-html">Export HTML/CSS</button>
+      <button data-action="export-png">Export PNG</button>
+      <button data-action="export-json">Export Project</button>
+      <button data-action="toggle-grid">Toggle Peg Grid</button>
+      <div class="zoom-control">
+        <button data-action="zoom-out">-</button>
+        <span id="zoom-level">100%</span>
+        <button data-action="zoom-in">+</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="panel column assets-column">
+      <h2>Asset Scanner</h2>
+      <p class="hint">Runtime assets are generated locally by <code>generate-assets.js</code>. Until then, you will see playful placeholders.</p>
+      <div class="asset-toolbar">
+        <button id="scan-assets">Scan Local Assets</button>
+        <button id="refresh-placeholders">Refresh Placeholders</button>
+      </div>
+      <div id="asset-list" class="asset-list"></div>
+      <div class="section">
+        <h3>Sticker Buckets</h3>
+        <div id="behavior-badges" class="badge-grid"></div>
+      </div>
+    </aside>
+
+    <section class="canvas-area">
+      <div class="canvas-shell">
+        <canvas id="gl-canvas"></canvas>
+        <canvas id="design-canvas" width="1280" height="720"></canvas>
+        <div id="canvas-overlay" class="canvas-overlay"></div>
+      </div>
+      <div class="drawer">
+        <div class="drawer-section">
+          <h3>Layers</h3>
+          <div id="layer-panel" class="layer-list"></div>
+        </div>
+        <div class="drawer-section">
+          <h3>Spacing + Grid</h3>
+          <div id="spacing-preview" class="spacing-preview"></div>
+          <div class="grid-toggle">
+            <label><input type="checkbox" id="peg-visibility" checked> Show Pegs</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel column inspector-column">
+      <h2>Inspector</h2>
+      <div id="properties" class="inspector"></div>
+      <div class="section">
+        <h3>Filters</h3>
+        <div id="filter-controls" class="control-grid"></div>
+      </div>
+      <div class="section">
+        <h3>Transforms</h3>
+        <div id="transform-controls" class="control-grid"></div>
+      </div>
+      <div class="section">
+        <h3>Components</h3>
+        <div id="theme-components" class="component-grid"></div>
+      </div>
+      <div class="section">
+        <h3>Colors</h3>
+        <div id="color-buckets" class="color-buckets"></div>
+      </div>
+      <div class="section">
+        <h3>Type Blocks</h3>
+        <div id="type-blocks" class="type-grid"></div>
+      </div>
+      <div class="section">
+        <h3>Pure Data Control Room</h3>
+        <div id="pure-data-room"></div>
+      </div>
+    </aside>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

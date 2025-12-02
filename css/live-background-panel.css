@@ -1,0 +1,123 @@
+.live-background-panel {
+  background: #0f1116;
+  color: #f2f4f8;
+  border: 1px solid #1f2430;
+  border-radius: 10px;
+  padding: 16px 18px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  max-width: 420px;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.live-background-header h2 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.live-background-header p {
+  margin: 0 0 14px;
+  color: #c3c8d4;
+  font-size: 13px;
+}
+
+.live-background-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.live-background-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  background: #131722;
+  border: 1px solid #22283a;
+  border-radius: 8px;
+  color: #f2f4f8;
+}
+
+.live-background-field .field-label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.select-field select.field-control,
+.slider-field .field-control,
+.toggle-field .field-control {
+  width: 100%;
+  background: #0b0d14;
+  color: #f2f4f8;
+  border: 1px solid #22283a;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  outline: none;
+}
+
+.select-field select.field-control:hover,
+.slider-field .field-control:hover,
+.toggle-field .field-control:hover,
+.select-field select.field-control:focus,
+.slider-field .field-control:focus,
+.toggle-field .field-control:focus {
+  border-color: #3e72ff;
+  box-shadow: 0 0 0 2px rgba(62, 114, 255, 0.25);
+}
+
+.slider-field .field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slider-field .field-value {
+  font-size: 12px;
+  color: #9ea5b5;
+}
+
+.slider-field .field-control {
+  appearance: none;
+  height: 6px;
+  padding: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #3e72ff, #23c9ff);
+}
+
+.slider-field .field-control::-webkit-slider-thumb {
+  appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #f2f4f8;
+  border: 2px solid #1f2430;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.slider-field .field-control::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #f2f4f8;
+  border: 2px solid #1f2430;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.toggle-field {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toggle-field .field-control {
+  width: auto;
+  height: 18px;
+  margin-left: 10px;
+}
+
+.toggle-field .field-control:checked {
+  accent-color: #3e72ff;
+}

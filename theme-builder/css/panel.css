@@ -1,0 +1,35 @@
+.panel h2 {
+  color: var(--text);
+  font-size: 15px;
+}
+
+.panel h3 {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.properties-panel {
+  overflow-y: auto;
+}
+
+.filter-controls, .transform-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-controls label,
+.transform-controls label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.filter-controls input,
+.transform-controls input,
+.properties-panel select {
+  flex: 1;
+}

@@ -1,0 +1,1260 @@
+# Kill Line Theme Builder – Full Manual  
+### Explain Like I’m Five, Facility Edition
+
+This manual is for the moment when you open the app, look at all the panels, and your brain goes:
+
+> “I have no idea what any of this is for.”
+
+You have:
+
+- a builder  
+- a theme system  
+- motion  
+- depth  
+- sound  
+- outside machines  
+
+You might not know what a “theme” is, what you’re trying to make, or what these knobs do.
+
+This file is here to:
+
+- explain everything in **plain language**  
+- show you **how to play** with the toys  
+- keep you in the **industrial world** you described (Stock Yards, rail, factory, unsentimental)  
+
+You can read it straight through, or jump around by headings.
+
+
+---
+
+## 1. What This Thing Actually Is
+
+### 1.1 Two big pieces: stuff vs. how stuff looks
+
+Every page or screen has two big parts:
+
+1. **The stuff**  
+   - the words  
+   - the boxes  
+   - the buttons  
+   - any icons or diagrams  
+
+2. **The way the stuff looks and behaves**  
+   - colors  
+   - fonts  
+   - how big things are  
+   - how far apart things are  
+   - what the background looks like  
+   - whether anything moves, or stays still  
+   - how it reacts to sound, depth, or outside apps  
+
+The **theme** is part 2.
+
+The **builder** is a machine that lets you control part 2 without writing code every time.
+
+You bring:
+
+- ideas  
+- language  
+- the world (Stock Yards, factory, rails)  
+
+The builder:
+
+- gives you knobs and blocks so that world can show up on the screen consistently.
+
+
+### 1.2 What is a “theme” in this context?
+
+Put simply:
+
+> A theme is a set of rules about how things look and move.
+
+The rules answer questions like:
+
+- What kind of colors do we use here?  
+- How do headers look?  
+- How do warning areas look?  
+- How much dirt and damage is there?  
+- Do things wiggle or stay rigid?  
+- What feels close, what feels far?  
+- How does sound show up visually, if it does at all?
+
+The theme builder lets you **set those rules visually** instead of hard-coding them in CSS or JS.
+
+Once you have those rules, you can:
+
+- build a lot of pages  
+- reuse the same rules  
+- keep everything in the same world
+
+
+### 1.3 Your specific world: not candy, not clean, not cute
+
+You already set the tone:
+
+- Chicago Union Stock Yards  
+- Back of the Yards  
+- rails, freight, switching  
+- factories, processing, slaughter, distribution  
+- unsentimental, industrial, workmanlike  
+- sound as cargo, not magic  
+
+So the theme here is not:
+
+- bright pastel buttons  
+- soft rounded everything  
+- cheerful copy  
+
+It is more like:
+
+- concrete floors  
+- bolted steel  
+- rust stains  
+- faded yellow signage  
+- blueprint maps and yard diagrams  
+- hazard icons  
+- motion like machines cycling, not toys bouncing  
+
+This manual assumes that world.
+
+Whenever you make a choice, you can ask:
+
+> “Would this show up in a yard, a plant, or a control room?”
+
+
+---
+
+## 2. The Main Screen: What’s Where
+
+This section is a tour.
+
+We are going to treat the UI like a floor plan.
+
+### 2.1 The top: mode bar
+
+At the top is a row of big buttons. This is your **mode bar**.
+
+Each button puts your head in a different mode:
+
+- **Put Stuff On The Page**  
+  Add boxes, words, stickers, backgrounds.
+
+- **Paint The Colors**  
+  Change colors of boxes, text, and stickers.
+
+- **Add Dirt And Scratches**  
+  Age things: grain, blur, scratches, grime.
+
+- **Make It Move**  
+  Decide how things move by themselves.
+
+- **Depth And Layers**  
+  Decide what feels near, what feels far, and how they stack.
+
+- **Sound Makes It Move**  
+  Let sound shove things around.
+
+- **Big Control Room**  
+  Let outside tools like TouchDesigner or Pure Data steer the visuals.
+
+- **Save And Take Out**  
+  Save and export your work.
+
+You won’t use all of them at once. For a long time you may live in:
+
+- Put Stuff On The Page  
+- Paint The Colors  
+
+The rest can come in later.
+
+### 2.2 The left: bins of parts
+
+Left side is your **shelf of parts**.
+
+It is split into bins:
+
+- **Big Boxes** – layout stuff  
+- **Words** – text blocks  
+- **Stickers** – signs, marks, arrows  
+- **Backgrounds** – big floor/wall images  
+- **Dust & Scratches** – dirt and age tools  
+
+You drag items from here onto the **middle** (the board).
+
+
+### 2.3 The middle: the board / play area
+
+This is the **table** where everything goes.
+
+You:
+
+- drag things in  
+- move them  
+- resize them  
+- look at the overall page  
+
+If you ever feel lost, look at the middle.  
+That is what your final page actually looks like.
+
+### 2.4 The right: knobs for the selected thing
+
+Right side is the **properties panel**.
+
+It usually has three drawers:
+
+1. **Size & Spot**  
+   Where the thing is and how big it is.
+
+2. **Look & Color**  
+   Colors, blur, dirt, lines.
+
+3. **Move By Itself**  
+   Motion presets and speeds.
+
+You **click** something in the middle, then adjust it on the right.
+
+If nothing is selected, the right panel might show page-level settings instead.
+
+### 2.5 The bottom: stack of things (layers)
+
+Bottom is your **Stack Of Things**.
+
+Every piece you add is a **layer**:
+
+- backgrounds  
+- big boxes  
+- cards  
+- stickers  
+- text  
+
+Layers at the **top** of the list are on top visually.
+
+Layers at the **bottom** are behind other things.
+
+From here you can:
+
+- reorder  
+- hide/show  
+- lock/unlock  
+- adjust opacity  
+- clone  
+- delete  
+
+If something is not clicking or looks wrong, the answer is often in this stack.
+
+
+---
+
+## 3. First Contact: Build One Simple Page
+
+You might still be thinking:
+
+> “That’s nice but I still don’t know what to actually do.”
+
+This section walks you through **one full pass**:
+
+- build a layout  
+- add text  
+- add background  
+- add one sticker  
+- color it  
+- age it  
+- add one tiny motion  
+- save  
+
+
+### 3.1 Start with a blank board
+
+Open the app.
+
+If there is old content, either:
+
+- use **New Board** / **New Project**, or  
+- select old pieces and delete them.
+
+You want an empty middle.
+
+### 3.2 Carve basic zones
+
+Goal:
+
+- a header at the top  
+- a main body under it  
+
+#### Header
+
+1. Open **Big Boxes** bin.  
+2. Drag **Header Bar** onto the top of the board.  
+3. Drop it.  
+
+You should see a long strip at the top.
+
+#### Body
+
+1. Still in **Big Boxes**, drag **Big Box**.  
+2. Drop it under the header, stretching it to fill the rest.  
+
+Now you have two big zones:
+
+- top strip: header  
+- big box: body  
+
+This is enough to start.
+
+### 3.3 Put words in place
+
+Open **Words** bin.
+
+#### Header text
+
+1. Drag **Big Title Words** into the header.  
+2. Type something like:
+
+   > ARRIVAL RAILS – SOUTH YARD  
+
+You can rename later. For now it gives shape.
+
+#### Body text
+
+1. Drag **Normal Reading Words** into the big box.  
+2. Type something like:
+
+   > This board shows sound loads arriving on the rails.  
+   > Each row is a car.  
+   > Each car carries a pattern.
+
+You now have a crude information layout:
+
+- what this screen is  
+- what it does  
+
+### 3.4 Drop a background
+
+Open **Backgrounds** bin.
+
+1. Drag **Concrete Floor** into the board.  
+2. Drop it anywhere.
+
+The background behind everything should turn into a “concrete” look.
+
+Check the **Stack Of Things**:
+
+- `Concrete Floor` will be near the bottom.  
+- The header and big box should sit on top of it.
+
+If concrete is covering everything, drag its layer down to the very bottom.
+
+### 3.5 Add one sticker
+
+Open **Stickers** bin.
+
+1. Drag **Warning Sign** near the header text.  
+2. Drop it.  
+
+Use the right panel:
+
+- **Size & Spot**:
+  - Move Left / Right  
+  - Move Up / Down  
+  - Make It Wider / Taller  
+
+Place it so it feels like a hazard badge in the header.
+
+### 3.6 Color the pieces
+
+Switch to **Paint The Colors**, or just use **Look & Color**.
+
+#### Header bar
+
+1. Click the header bar.  
+2. Look & Color:
+   - Fill Color: deep, dark gray.  
+   - Words Color (for header text): near-white or light grey.
+
+#### Big box (body)
+
+1. Click the big box.  
+2. Look & Color:
+   - Fill Color: a little lighter than header.  
+   - Words Color: dark text on light or light text on dark, but high contrast.
+
+#### Warning sign
+
+1. Click the warning sign.  
+2. Look & Color:
+   - Fill Color: hazard yellow or faded yellow.  
+   - Border Color: darker, maybe almost black.  
+   - Words Color (if text exists): dark enough to read.
+
+Now everything has a simple hierarchy:
+
+- header: dark, strong  
+- body: lighter, readable  
+- warning: bright accent  
+
+### 3.7 Age the page
+
+Open **Add Dirt And Scratches**, or use dirt controls in **Look & Color**.
+
+For the background layers:
+
+- `Concrete Floor`:
+  - Add Dirt: medium.  
+  - Sharp Or Blurry: soft on the edges, sharper in the center.
+
+For the big box and header:
+
+- Add Dirt: small, so text stays readable.  
+- Sharp Or Blurry: mostly sharp.
+
+You want the **world** to feel old and used, but the **information** to stay legible.
+
+### 3.8 Add one tiny motion
+
+Choose one piece to move a little.
+
+Good candidates:
+
+- the warning sign  
+- a small indicator icon  
+
+For example, the warning sign.
+
+1. Select it.  
+2. Open **Move By Itself** drawer or **How Things Move** panel.  
+3. Set:
+   - Motion Preset: `Soft Bounce`.  
+   - How Much: very low.  
+   - How Fast: slow.  
+   - Repeat: on.  
+
+Click **Test Move** if you have that.
+
+Result:
+
+- the warning sign breathes a little, like a machine indicator  
+- everything else stays still  
+
+### 3.9 Save
+
+Open the **Save And Take Out** panel.
+
+Click **Save Project**.
+
+Name it something like:
+
+> arrival-rails-v0
+
+You have now:
+
+- carved zones  
+- added text  
+- applied background and colors  
+- added one sticker  
+- added dirt  
+- added one subtle motion  
+- saved a project  
+
+That is a full cycle.
+
+
+---
+
+## 4. The Fancy Panels, Explained Simple
+
+You have extra panels:
+
+- **Live Background** (WebGL)  
+- **Front And Back** (Depth / LiDAR)  
+- **Sound Pushes Things** (Pure Data / audio)  
+- **Other Machines Steer This** (TouchDesigner)  
+- **Play With Code** (creative coding)  
+
+This section explains each one in basic terms and how they connect to what you already did.
+
+---
+
+### 4.1 Live Background – moving wallpaper
+
+Think of this as **moving wallpaper** behind everything.
+
+You can switch from:
+
+- a still background  
+to  
+- a background that slowly moves.
+
+In the **Live Background** panel, you see:
+
+- **Background Style**  
+  Options like:
+  - Still Picture  
+  - Soft Moving Fog  
+  - Moving Lines  
+  - Sparks In The Dark  
+
+- **How Much Movement**  
+  How strong the movement is.
+
+- **How Sharp Or Soft**  
+  Whether the movement is crisp or blurred.
+
+- **Use Depth If There Is Any**  
+  If you have a depth picture, this lets the background feel deeper.
+
+You do not have to know WebGL to use it.
+
+You just pick:
+
+- type of motion  
+- strength  
+- softness  
+
+You use it when:
+
+- you want the screen to feel alive  
+- but you do not want to add a lot of foreground motion  
+
+Most of the time, subtle, slow movement is enough:
+
+- small flow of fog  
+- thin lines sliding slowly  
+- faint flickers far in the back  
+
+
+### 4.2 Front And Back – close vs far
+
+Depth is about **distance**.
+
+If you have a special kind of image (from LiDAR or a depth camera), the app can:
+
+- tell which parts are near  
+- which parts are middle  
+- which are far  
+
+From the **Front And Back** panel:
+
+- **Pick A Depth Picture**  
+  Choose a photo that carries depth information.
+
+- **Make Layers**  
+  Split it into:
+  - front stuff  
+  - middle stuff  
+  - far stuff  
+
+- Toggle:
+  - Show Only Front Stuff  
+  - Show Only Middle Stuff  
+  - Show Only Far Stuff  
+
+- Adjust:
+  - **Make Front Pop** – sharpen/brighten near stuff.  
+  - **Blur The Back** – blur far stuff.  
+  - **How Much Fake 3D** – slight tilt or parallax when you move/scroll.
+
+Why this helps:
+
+- The important things can be **sharp and close**.  
+- The less important things can be **soft and far**.  
+
+This matches your world:
+
+- the work zone in front  
+- the rest of the yard fading into the distance  
+
+
+### 4.3 Sound Pushes Things – sound into motion
+
+Sound can be measured:
+
+- how loud in low pitch  
+- how loud in middle  
+- how loud in high  
+
+Those numbers can drive movement and color.
+
+The **Sound Pushes Things** panel gives you:
+
+- **Use Sound To Move Things** – master on/off.  
+- **Pick Sound** – what input to use (file, mic, Pd output).  
+- Live bars:
+  - Low Booms  
+  - Middle Stuff  
+  - High Hiss  
+
+- Mappings:
+  - Make Things Bounce – vertical movement.  
+  - Make Colors Pulse – saturation/brightness changes.  
+  - Make Lights Flicker – brightness flicker.
+
+- **How Strong** – overall strength.
+
+Use cases:
+
+- Show beats as pulses in the Kill Line.  
+- Make hazard indicators flicker with high-frequency noise.  
+- Let low booms gently push main boxes up/down.
+
+You decide what moves.  
+You decide how dramatic it is.
+
+
+### 4.4 Other Machines Steer This – TouchDesigner
+
+TouchDesigner can:
+
+- look at cameras  
+- look at sound  
+- create visuals  
+- output numbers and signals  
+
+Your builder can:
+
+- subscribe to those numbers  
+- use them to move things and change colors  
+
+In the **Other Machines Steer This** panel:
+
+- **Connect To Big Visual Machine**  
+  Tells the app to link to TouchDesigner via the bridge.
+
+- A list of **channels** from TouchDesigner:
+  - `BeatLight`  
+  - `CameraMove`  
+  - `NoiseLevel`  
+  - etc.
+
+- A list of **targets** in the builder:
+  - Move Background  
+  - Move Boxes  
+  - Move Colors  
+
+You can:
+
+- drag a channel onto a target.  
+
+Example:
+
+- `BeatLight` → `Move Boxes`  
+  Boxes wiggle or pop when the beat hits.
+
+- `CameraMove` → `Move Background`  
+  Live background shifts when the camera sees motion.
+
+This lets your theme become:
+
+- not just a static factory diagram  
+- but a live board responding to external systems  
+
+
+### 4.5 Play With Code – your own generators
+
+The **Play With Code** panel is a tiny coding workshop.
+
+You get:
+
+- a text area where you type small JS snippets  
+- a preview canvas that shows what the code draws  
+- a switch for plain vs “3D” drawing modes  
+- a Run button  
+
+You can write tiny pieces like:
+
+- draw lines that look like rail diagrams  
+- draw moving stripes like scanning beams  
+- draw small grids or dots like distant factory lights  
+
+Even without heavy programming, you can:
+
+- copy examples  
+- tweak numbers  
+- change colors  
+- see what happens  
+
+These code outputs can then be used as:
+
+- backgrounds  
+- overlays  
+- stickers  
+
+So your theme is not just made from downloaded assets, but also from patterns that only you generate.
+
+
+---
+
+## 5. Two Full Workflows: Arrival Rails and Kill Line
+
+You have the basic page.
+
+Now this section walks through two specific screens in the facility:
+
+1. **Arrival Rails**  
+2. **Kill Line**
+
+These are not just UI exercises. They are **world exercises**.
+
+---
+
+### 5.1 Arrival Rails – calm, watchful, industrial
+
+This screen is about **incoming sound loads**.
+
+It should feel:
+
+- structured  
+- informative  
+- lower pressure than the Kill Line  
+
+#### 5.1.1 Surfaces and background
+
+Use the backgrounds like this:
+
+- Floor: **Concrete Floor** (visible).  
+- Walls: a **Dark Wall** strip up top, lighter below.  
+- Map: **Yard Map**, faded and slightly blurred.
+
+Goal:
+
+- the rail map is present but not screaming.  
+- the wall and floor give context.  
+
+Dirt:
+
+- moderate on walls/floor  
+- lower on reading areas  
+
+#### 5.1.2 Zones
+
+Use **Big Boxes**, **Stacks**, **Side Bars**:
+
+- Top: `Header Bar` → “ARRIVAL RAILS – SOUTH YARD”.  
+- Middle: large `Stack Of Stuff` for incoming cars.  
+- Right: `Side Bar` for status and filters.  
+- Bottom (optional): thin strip for logs.
+
+#### 5.1.3 Incoming cars representation
+
+Each car is a **Card** inside the Stack:
+
+Card content:
+
+- Tiny Helper Words:
+  - “CAR ID”  
+  - “LOAD TYPE”  
+  - “ETA”  
+
+- Normal Reading Words:
+  - placeholders for those values.
+
+Visual style:
+
+- light or medium-dark panel.  
+- strong contrast text.  
+- thin border.  
+- small amount of dirt.  
+
+Multiple rows give the impression of a schedule board.
+
+#### 5.1.4 Motion and sound
+
+Keep it light.
+
+- Live Background:
+  - Maybe “Moving Lines” at low intensity, blurred.  
+- Per-card motion:
+  - None, or almost none.  
+
+If you wire to sound:
+
+- map low-frequency energy (Low Booms) to:
+  - subtle background brightness change.  
+
+Avoid intense motion here.  
+This is a watching screen, not a processing screen.
+
+---
+
+### 5.2 Kill Line – heavy, pressurized, decisive
+
+This screen is about **stripping patterns down**.
+
+It should feel:
+
+- darker  
+- more enclosed  
+- more stressed  
+
+#### 5.2.1 Surfaces
+
+Background stack:
+
+- Concrete Floor: darkened.  
+- Dark Wall: bigger area.  
+- Yard Map: almost ghosted, lines barely visible.
+
+More dirt here than Arrival Rails.
+
+Edges:
+
+- more blurred, like heat or steam.  
+
+
+#### 5.2.2 Zones
+
+Three main zones:
+
+- Left: input.  
+- Center: Kill Line process.  
+- Right: output.
+
+Left side:
+
+- Side Bar named “INPUT LOADS”.  
+- Cards representing raw patterns.
+
+Center:
+
+- Big Box labeled “KILL LINE”.  
+- Stage labels: STRIP / STAMP / TEST / KEEP/THROW.  
+- Visual path using arrows and lines.
+
+Right side:
+
+- Side Bar named “OUTPUT PARTS”.  
+- Cards for stable patterns leaving the line.
+
+#### 5.2.3 Visual cues
+
+Use stickers:
+
+- arrows along the process path, in order.  
+- warning signs at:
+  - entry,  
+  - test,  
+  - exit.
+
+Lines:
+
+- background lines inside the central box to suggest belt tracks or hooks.
+
+Borders:
+
+- heavier borders around central process area.  
+- lighter borders around side bars.
+
+#### 5.2.4 Motion and sound
+
+This is where you can use sound more.
+
+- Sound:
+  - route beat or low-energy into process motion.  
+
+Examples:
+
+- A “current workpiece” block moves stage to stage on hits.  
+- The TEST warning sign glows brighter when pressure is high.  
+
+Keep motion purposeful:
+
+- central area shows “heartbeat” of the process.  
+- input and output remain mostly steady.
+
+Live Background:
+
+- maybe a darker “Soft Moving Fog” behind everything.  
+- intensity low; the action is in the process strip.
+
+---
+
+## 6. Troubleshooting: When Things Misbehave
+
+Things will go wrong visually.  
+This section is for when you do not know why.
+
+---
+
+### 6.1 I can’t select or move something
+
+Checklist:
+
+1. Look at **Stack Of Things**:
+   - Is the layer **locked**?  
+     - Lock icon on → unlock it.  
+   - Is the layer **hidden**?  
+     - Eye off → turn it on.
+
+2. Is something else on top?
+   - Drag that layer higher in the list.  
+   - Try clicking again.
+
+3. Are you clicking the right area?
+   - Some elements have invisible padding.  
+   - Try clicking near the visible part outline.
+
+---
+
+### 6.2 Something is hiding behind other stuff
+
+Checklist:
+
+1. Go to **Stack Of Things**.  
+2. Drag that layer near the top of the list.  
+3. Watch it move forward in the view.
+
+Or:
+
+1. Select the thing.  
+2. In **Size & Spot**:
+   - Slide **In Front / Behind** toward “In Front.”
+
+If you still can’t see it:
+
+- maybe its opacity is low; check see-through slider.  
+
+
+### 6.3 Everything seems washed out or unreadable
+
+Symptoms:
+
+- backgrounds overpower text.  
+- text blends into noise.
+
+Checklist:
+
+1. Background layers:
+   - reduce **Add Dirt**.  
+   - reduce saturation or lighten **Fill Color**.  
+   - increase **Sharp Or Blurry** toward blur for non-text areas.
+
+2. Text blocks:
+   - switch to stronger **Words Color**:
+     - light on dark or dark on light.  
+   - check that dirt and blur on text containers are minimal.
+
+3. Stickers:
+   - make hazard colors limited and strong, so they stand out.  
+   - avoid yellow on white or red on dark red.
+
+---
+
+### 6.4 Motion looks silly or too busy
+
+Symptoms:
+
+- too many things bounce  
+- something jitters in a annoying way
+
+Checklist:
+
+1. Count moving objects:
+   - try to keep it to 1–2 per screen.
+
+2. For each moving item:
+   - pick a calmer preset:
+     - Slow Float  
+     - Soft Bounce  
+   - reduce **How Much**.  
+   - reduce **How Fast**.
+
+3. Turn off loops when not needed:
+   - sometimes a one-time motion is enough.
+
+---
+
+### 6.5 Sound-driven things ignore the audio
+
+Symptoms:
+
+- sound meters move  
+- nothing on the page reacts
+
+Checklist:
+
+1. **Use Sound To Move Things**:
+   - is the toggle on?
+
+2. Mappings:
+   - is at least one of:
+     - Make Things Bounce  
+     - Make Colors Pulse  
+     - Make Lights Flicker  
+     on?
+
+3. Strength:
+   - is **How Strong** above zero?
+
+4. Are you sure you assigned sound to any specific item?
+   - some setups require attaching mapping to particular layers or groups; verify the mapping UI.
+
+---
+
+### 6.6 Export looks wrong
+
+Symptoms:
+
+- exported HTML looks different than in the app  
+- fonts changed  
+- textures missing
+
+Checklist:
+
+1. Fonts:
+   - ensure fonts are loaded via CSS, not only from your OS.  
+   - use web-safe fonts or bundle webfont files if needed.
+
+2. Assets:
+   - make sure images and textures are in folders included by export.  
+   - avoid absolute paths that won’t exist elsewhere.
+
+3. Test:
+   - open exported HTML in a fresh browser.  
+   - see if the issue reproduces there.  
+
+If it looks fine in a browser but not in a PNG export:
+
+- the issue is in the screenshot step, not in the theme.  
+
+---
+
+## 7. How To Think While You Work
+
+This section is not about which button to push.
+
+It is about **how to think** so you do not freeze.
+
+---
+
+### 7.1 One room at a time
+
+Instead of “design a whole system,” think:
+
+- “make this one room work”.
+
+For each screen, ask:
+
+- What is this room for?  
+- What must be obvious here?  
+- What can be quiet background?
+
+Let that guide:
+
+- what gets big  
+- what gets color  
+- what moves  
+
+Arrival Rails:
+
+- focus: list of incoming loads.  
+- movement: minor.  
+- color: just enough to separate lanes and warnings.
+
+Kill Line:
+
+- focus: current workpiece and stages.  
+- movement: central process and a few signals.  
+- color: harsh statuses.
+
+---
+
+### 7.2 Small rule sets
+
+Make tiny rules you can memorize.
+
+Examples:
+
+- All primary headers use dark strips with light uppercase text.  
+- All warnings use the same yellow and the same sticker shape.  
+- The background is always some combination of concrete + wall + map.  
+- Only one animation is allowed in normal screens, more only in special ones.
+
+Write these rules in a small text panel in your project if you need to.
+
+When in doubt:
+
+- follow your own rules  
+- or adjust the rules consciously  
+- but don’t pick random values each time  
+
+This is how the theme stays coherent.
+
+---
+
+### 7.3 Don’t overdo rare effects
+
+Depth, sound, external machines, and code are powerful.
+
+They are easy to overuse.
+
+Rough guidelines:
+
+- Depth:
+  - one strong depth effect per screen is enough.  
+  - front sharp, back soft.
+
+- Sound:
+  - one or two things respond to sound.  
+  - the rest stay steady for comparison.
+
+- TouchDesigner:
+  - map a couple of channels to a couple of targets.  
+  - treat it like a live data feed, not a full puppet master.
+
+- Code:
+  - one or two code-generated patterns can define the look.  
+  - you do not need to cover the whole screen with generated noise.
+
+---
+
+### 7.4 Use duplication for experiments
+
+When you want to try a wild idea:
+
+1. Duplicate the board or project.  
+2. Work on the **copy**.  
+3. If you like it, update your main rules.  
+4. If you dislike it, discard the copy.
+
+This keeps you from wrecking something you liked.
+
+---
+
+### 7.5 Accept that changes are normal
+
+Early on, your theme is going to shift:
+
+- you will try different backgrounds  
+- you will swap fonts  
+- you will change how much dirt you tolerate  
+
+That is fine.
+
+The goal is not to lock everything forever.  
+The goal is to **notice** what choices feel right for the facility.
+
+Over time you will see patterns:
+
+- “I keep going back to this darker header.”  
+- “I keep liking subtle fog more than big, flashy background FX.”  
+- “I only want motion on hazard signs and critical indicators.”
+
+Those patterns are your theme maturing.
+
+---
+
+## 8. Exporting And The Windows App, In Simple Terms
+
+Last section covers getting things **out** of the builder.
+
+You have two main paths:
+
+- exporting work (pages, images, settings)  
+- packaging the builder (Windows app)  
+
+---
+
+### 8.1 Exporting work
+
+Inside the builder:
+
+- **Save Project**  
+- **Get Web Page Files**  
+- **Get Picture Of This**  
+- **Get Settings Only**
+
+#### Save Project
+
+Keeps everything:
+
+- layout  
+- theme  
+- positions  
+
+Use it when you want to come back and keep tuning.
+
+#### Get Web Page Files
+
+Exports HTML/CSS (and maybe JS) that you can:
+
+- host as a page  
+- hand to a developer  
+- plug into a bigger app  
+
+Use when you want your design to live outside the builder.
+
+#### Get Picture Of This
+
+Flattens the current view into a PNG.
+
+Use for:
+
+- documentation  
+- static mockups  
+- sharing previews  
+
+#### Get Settings Only
+
+Exports your theme settings as JSON:
+
+- color tokens  
+- spacing  
+- fonts  
+- motion defaults  
+- dirt and depth settings  
+
+Use when:
+
+- you want to reuse the same theme on other projects  
+- you want a backup of your visual rules  
+
+---
+
+### 8.2 The Windows app
+
+On top of all that, you set up:
+
+- Electron shell  
+- `electron-main.js`  
+- `make-installer.bat`  
+
+The idea is simple:
+
+- run `make-installer.bat` to create a Windows installer.  
+- install the builder as a desktop app.
+
+This does **not** export a particular page.  
+It packages the **tool** itself.
+
+So you can:
+
+- work on one machine in dev mode,  
+- ship the tool to another box as a normal user app,  
+- open your saved projects or import theme settings there.
+
+Your repo stays text-only for code and config, with binary installers ignored in `dist/`.
+
+---
+
+## 9. Where To Go Next
+
+You now have:
+
+- a clear map of the UI  
+- a step-by-step way to build a first page  
+- an understanding of motion, depth, sound, machines, and code in simple terms  
+- two solid workflows for Arrival Rails and Kill Line  
+- troubleshooting steps  
+- mental rules for growing the theme  
+
+You do not have to use every feature immediately.
+
+Pick one:
+
+- build Arrival Rails until it feels right  
+- then build Kill Line  
+- then maybe build Translation Deck or Pen District screens  
+
+Each new screen is another **room** in the same facility.
+
+The builder is just the set of tools hanging on the wall.  
+This manual is here so those tools stop feeling mysterious and start feeling like actual gear you can reach for.
