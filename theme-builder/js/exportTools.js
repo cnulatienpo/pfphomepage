@@ -88,7 +88,7 @@ function buildHtmlDocument(canvasState) {
 
   const css = `:root{${theme.palette
     .map((color, index) => `--color-${index + 1}: ${color};`)
-    .join('')}--font-heading:${theme.typography.heading};--font-body:${theme.typography.body};`}
+    .join('')}--font-heading:${theme.typography.heading};--font-body:${theme.typography.body};}
 body{margin:0;min-height:100vh;background:${theme.palette[0]};font-family:${theme.typography.body};color:${
     theme.palette[2] || '#ffce00'
   };}
