@@ -71,10 +71,11 @@
     </style>
   </head>
   <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Llama RAG Button & Panel -->
     <button id="llama-rag-button" type="button">Talk To Llama Rag</button>
-    <div id="app"></div>
-    <script type="module" src="js/layoutShell.js"></script>
-    <script>
       (function () {
         const button = document.getElementById("llama-rag-button");
         if (!button) return;

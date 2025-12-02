@@ -27,6 +27,7 @@ type VisitResponse = {
 const toCss = (c?: PixelColor) => `rgb(${c?.r ?? 0}, ${c?.g ?? 0}, ${c?.b ?? 0})`
 
 export default function App() {
+  const [activeView, setActiveView] = useState<'menu' | 'grid' | 'theme-builder' | 'themeplay' | 'canvas' | 'webgl'>('menu')
   const [state, setState] = useState<GridState | null>(null)
   const [personal, setPersonal] = useState<PixelColor | null>(null)
   const [gift, setGift] = useState<PixelColor | null>(null)
@@ -77,9 +78,105 @@ export default function App() {
     })
   }, [state])
 
+  if (activeView === 'menu') {
+    return (
+      <div className="page menu-page">
+        <div className="header">
+          <div className="title">Theme Builder Suite</div>
+        </div>
+        <div className="menu-grid">
+          <button className="menu-item" onClick={() => setActiveView('grid')}>
+            <div className="menu-label">Pattern Grid</div>
+            <div className="menu-desc">Pixel facade interface</div>
+          </button>
+          <button className="menu-item" onClick={() => setActiveView('theme-builder')}>
+            <div className="menu-label">Theme Builder</div>
+            <div className="menu-desc">Create custom themes</div>
+          </button>
+          <button className="menu-item" onClick={() => setActiveView('themeplay')}>
+            <div className="menu-label">ThemePlay</div>
+            <div className="menu-desc">Game engine & interactions</div>
+          </button>
+          <button className="menu-item" onClick={() => setActiveView('canvas')}>
+            <div className="menu-label">Canvas Editor</div>
+            <div className="menu-desc">Multi-layer drawing tool</div>
+          </button>
+          <button className="menu-item" onClick={() => setActiveView('webgl')}>
+            <div className="menu-label">WebGL Background</div>
+            <div className="menu-desc">Live animated background</div>
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (activeView === 'theme-builder') {
+    return (
+      <div className="page">
+        <div className="header">
+          <button className="ghost" onClick={() => setActiveView('menu')} aria-label="back">
+            ← back
+          </button>
+          <div className="title">Theme Builder</div>
+        </div>
+        <iframe src="/theme-builder/index.html" style={{ width: '100%', height: 'calc(100% - 60px)', border: 'none' }} />
+      </div>
+    )
+  }
+
+  if (activeView === 'themeplay') {
+    return (
+      <div className="page">
+        <div className="header">
+          <button className="ghost" onClick={() => setActiveView('menu')} aria-label="back">
+            ← back
+          </button>
+          <div className="title">ThemePlay</div>
+        </div>
+        <iframe src="/themeplay-window.html" style={{ width: '100%', height: 'calc(100% - 60px)', border: 'none' }} />
+      </div>
+    )
+  }
+
+  if (activeView === 'canvas') {
+    return (
+      <div className="page">
+        <div className="header">
+          <button className="ghost" onClick={() => setActiveView('menu')} aria-label="back">
+            ← back
+          </button>
+          <div className="title">Canvas Editor</div>
+        </div>
+        <div style={{ padding: '20px', color: '#999' }}>
+          Canvas editor component would load here
+        </div>
+      </div>
+    )
+  }
+
+  if (activeView === 'webgl') {
+    return (
+      <div className="page">
+        <div className="header">
+          <button className="ghost" onClick={() => setActiveView('menu')} aria-label="back">
+            ← back
+          </button>
+          <div className="title">WebGL Background</div>
+        </div>
+        <div style={{ padding: '20px', color: '#999' }}>
+          WebGL live background would render here
+        </div>
+      </div>
+    )
+  }
+
+  // Default: Pattern Grid view
   return (
     <div className="page">
       <div className="header">
+        <button className="ghost" onClick={() => setActiveView('menu')} aria-label="back">
+          ← back
+        </button>
         <div className="title">pattern</div>
         <button className="ghost" onClick={visit} disabled={loading} aria-label="refresh">
           {loading ? '…' : 'refresh'}
