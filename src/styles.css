@@ -1,3 +1,12 @@
+@font-face {
+  font-family: 'La Nu Tiempo';
+  src: url('../assets/constuction theme/La_Nu_Tiempo.woff2') format('woff2'),
+       url('../assets/constuction theme/La_Nu_Tiempo.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #05060a;
   --fg: #eaeaea;
@@ -5,7 +14,10 @@
   --accent: #9ef1d5;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+  font-family: 'La Nu Tiempo', sans-serif !important;
+}
 
 .page {
   min-height: 100vh;
