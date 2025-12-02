@@ -303,6 +303,7 @@ export function initLayoutShell() {
 
   try {
     app.textContent = "";
+    app.innerHTML = '<div style="padding: 20px; color: #333;">Initializing layout shell...</div>';
 
   const shell = document.createElement("div");
   shell.className = "layout-shell";
@@ -338,7 +339,11 @@ export function initLayoutShell() {
   shell.appendChild(topBarContainer);
   shell.appendChild(workspace);
 
+  console.log('[layoutShell] About to append shell to app, shell has', shell.children.length, 'children');
+  console.log('[layoutShell] App element:', app, 'App children before:', app.children.length);
   app.appendChild(shell);
+  console.log('[layoutShell] Shell appended, app children after:', app.children.length);
+  console.log('[layoutShell] App innerHTML length:', app.innerHTML.length);
 
   document.addEventListener("ui:propertyChanged", handlePropertyChange);
   document.addEventListener("ui:testMotion", () => themeplay.onAction("motion-test"));
@@ -349,9 +354,10 @@ export function initLayoutShell() {
 
   randomizeLayout(document);
   console.log('[layoutShell] Successfully initialized');
+  document.body.style.background = '#d3d6db';
   } catch (error) {
     console.error('[layoutShell] Error during initialization:', error);
-    app.innerHTML = `<pre style="color: red; padding: 20px;">Error: ${error.message}\n${error.stack}</pre>`;
+    app.innerHTML = `<pre style="color: red; padding: 20px; font-family: monospace;">INIT ERROR:\n${error.message}\n\nStack:\n${error.stack}</pre>`;
   }
 }
 
@@ -386,3 +392,13 @@ window.addEventListener("themeplay:export", () => {
 });
 
 window.onload = initLayoutShell;
+
+// If page is already loaded when this module executes, call immediately
+if (document.readyState === 'loading') {
+  // Page is still loading, wait for onload
+  console.log('[layoutShell] Page still loading, will init on load event');
+} else {
+  // Page already loaded, init now
+  console.log('[layoutShell] Page already loaded, initializing immediately');
+  initLayoutShell();
+}
