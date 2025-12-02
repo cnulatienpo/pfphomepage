@@ -73,7 +73,10 @@
   <body>
     <button id="llama-rag-button" type="button">Talk To Llama Rag</button>
     <div id="app"></div>
-    <script type="module" src="js/layoutShell.js"></script>
+    <script type="module">
+      import { initLayoutShell } from './js/layoutShell.js';
+      window.addEventListener('load', initLayoutShell);
+    </script>
     <script>
       (function () {
         const button = document.getElementById("llama-rag-button");
