@@ -7,7 +7,7 @@ import { renderBehaviorBadges } from './js/behaviors.js';
 import { renderSnapControls } from './js/snapEngine.js';
 import { renderComponents } from './js/componentFactory.js';
 import { renderInspector } from './js/inspector.js';
-import { exportCSS, exportHTML, exportJSON, exportPNG, exportWordPress } from './js/exportTools.js';
+import { exportCSS, exportToHTML, exportJSON, exportPNG, exportWordPress } from './js/exportTools.js';
 import { renderSpacingPreview } from './js/spacingBlocks.js';
 import { applyBucketToLayer, colorToRGBA, renderColorBuckets, resolveBucketDrag } from './js/colorBuckets.js';
 import { renderTypeBlocks } from './js/typeBlocks.js';
@@ -454,7 +454,7 @@ function bindToolbar() {
   });
 
   const canvasState = () => layerManager.serialize();
-  document.querySelector('[data-action="export-html"]').addEventListener('click', () => exportHTML(canvasState()));
+  document.querySelector('[data-action="export-html"]').addEventListener('click', () => exportToHTML(canvasState()));
   document.querySelector('[data-action="export-png"]').addEventListener('click', () => exportPNG(canvas));
   document.querySelector('[data-action="export-json"]').addEventListener('click', () => exportJSON(canvasState()));
 

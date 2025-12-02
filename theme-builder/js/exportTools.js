@@ -86,18 +86,10 @@ function buildHtmlDocument(canvasState) {
     .map((layer) => renderLayer(layer))
     .join('');
 
-  const css = `:root{${theme.palette
-    .map((color, index) => `--color-${index + 1}: ${color};`)
-    .join('')}--font-heading:${theme.typography.heading};--font-body:${theme.typography.body};`}
-body{margin:0;min-height:100vh;background:${theme.palette[0]};font-family:${theme.typography.body};color:${
-    theme.palette[2] || '#ffce00'
-  };}
-.design-surface{position:relative;min-height:100vh;overflow:hidden;background:radial-gradient(circle at 20% 20%, ${
-    theme.palette[2] || '#ffce00'
-  }11%, transparent 40%), linear-gradient(135deg, ${theme.palette[0]}, ${theme.palette[1]});}
+  const css = `:root{${theme.palette.map((color, index) => `--color-${index + 1}: ${color};`).join('')}--font-heading:${theme.typography.heading};--font-body:${theme.typography.body};}body{margin:0;min-height:100vh;background:${theme.palette[0]};font-family:${theme.typography.body};color:${theme.palette[2] || '#ffce00'};}
+.design-surface{position:relative;min-height:100vh;overflow:hidden;background:radial-gradient(circle at 20% 20%, ${theme.palette[2] || '#ffce00'}11%, transparent 40%), linear-gradient(135deg, ${theme.palette[0]}, ${theme.palette[1]});}
 .layer{position:absolute;box-shadow:0 20px 50px rgba(0,0,0,0.25);transform-origin:top left;}
-.layer .placeholder{display:grid;place-items:center;height:100%;width:100%;background:linear-gradient(135deg, ${
-    theme.palette[2] || '#ffce00'
+.layer .placeholder{display:grid;place-items:center;height:100%;width:100%;background:linear-gradient(135deg, ${theme.palette[2] || '#ffce00'}
   }, ${theme.palette[3] || '#ff5757'});color:${theme.palette[0]};font-family:${theme.typography.heading};font-weight:800;text-transform:uppercase;letter-spacing:0.08em;}
 `;
 
@@ -111,9 +103,7 @@ function renderLayer(layer) {
   const filters = buildFilterString(layer.filter);
   const opacity = (layer.filter?.opacity ?? 100) / 100;
   const background = layer.src ? `background-image:url(${layer.src});background-size:cover;` : '';
-  return `<div class="layer" style="left:0;top:0;width:${layer.width}px;height:${layer.height}px;transform:${transform};mix-blend-mode:${
-    layer.blendMode || 'source-over'
-  };filter:${filters};opacity:${opacity}"><div class="placeholder" style="${background}">${layer.name || 'Layer'}</div></div>`;
+  return `<div class="layer" style="left:0;top:0;width:${layer.width}px;height:${layer.height}px;transform:${transform};mix-blend-mode:${layer.blendMode || 'source-over'};filter:${filters};opacity:${opacity}"><div class="placeholder" style="${background}">${layer.name || 'Layer'}</div></div>`;
 }
 
 function buildFilterString(filter = {}) {
