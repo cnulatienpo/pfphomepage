@@ -10,7 +10,7 @@ export default function GlyphGrid({ glyphs, onUpdate }) {
 
   function handleChange(char, newShape) {
     const updated = { ...glyphs, [char]: newShape };
-    onUpdate(updated);
+    if (onUpdate) onUpdate(updated, char, newShape);
   }
 
   return (
@@ -19,10 +19,10 @@ export default function GlyphGrid({ glyphs, onUpdate }) {
         display: "grid",
         gridTemplateColumns: "repeat(auto-fill, 70px)",
         gap: "0.5rem",
-        padding: "0.5rem"
+        padding: "0.5rem",
       }}
     >
-      {letters.map(char => (
+      {letters.map((char) => (
         <GlyphTile
           key={char}
           char={char}

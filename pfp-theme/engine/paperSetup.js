@@ -2,7 +2,7 @@
 // Initializes Paper.js once and returns the shared instance.
 // Required by all shape + SVG tools.
 
-import paper from "paper";
+import paper from "./vendor/paper";
 
 export function setupPaper() {
   // If already initialized, reuse it
