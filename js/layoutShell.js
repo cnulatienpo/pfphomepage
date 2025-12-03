@@ -9,19 +9,46 @@ import { attachLlamaRag } from "./llama-rag-ui.js";
 import * as themeplay from "./themeplay.js";
 import { randomizeColors, randomizeLayout, randomizeMotion } from "./randomizers.js";
 import { exportCSS } from "./exportTools.js";
-import MaterialLoader from "./materialLoader.js";
+import { assetRegistry } from "./assetRegistry.js";
+import AssetPanel from "./assetPanel.js";
 
 const placedBlocks = new Map();
 let selectedBlock = null;
+
+/* ============================================================
+   MATERIAL PANEL MOUNTING
+============================================================ */
+
+function mountMaterialPanel() {
+  const slot = document.querySelector("#material-panel-container");
+  if (!slot) {
+    console.warn("[layoutShell] No #material-panel-container slot found.");
+    return;
+  }
+  console.log("[layoutShell] Mounting AssetPanel in sidebar.");
+  const panel = new AssetPanel(slot);
+  panel.render();
+}
+
+window.addEventListener("assets:ready", () => {
+  console.log("[layoutShell] assets:ready fired — mounting panel.");
+  mountMaterialPanel();
+});
+
+/* ============================================================
+   BLOCK + PROPERTY SYSTEM
+============================================================ */
 
 function applyTransforms(block) {
   const props = block._properties?.properties || {};
   const tx = `${props.positionX || 0}px`;
   const ty = `${props.positionY || 0}px`;
   const rot = `${props.rotation || 0}deg`;
+
   block.style.setProperty("--tx", tx);
   block.style.setProperty("--ty", ty);
   block.style.setProperty("--rot", rot);
+
   block.style.transform = `translate(${tx}, ${ty}) rotate(${rot})`;
 }
 
@@ -43,6 +70,7 @@ function buildCenterArea() {
 
   const snapX = document.createElement("div");
   snapX.className = "snap-line snap-line--x";
+
   const snapY = document.createElement("div");
   snapY.className = "snap-line snap-line--y";
 
@@ -65,6 +93,7 @@ function makeBlockDraggable(block, centerArea) {
   let pointerId = null;
   let offsetX = 0;
   let offsetY = 0;
+
   const startDrag = (event) => {
     pointerId = event.pointerId;
     block.setPointerCapture(pointerId);
@@ -76,20 +105,26 @@ function makeBlockDraggable(block, centerArea) {
 
   const moveDrag = (event) => {
     if (pointerId !== event.pointerId) return;
+
     const parentRect = centerArea.getBoundingClientRect();
     const x = event.clientX - parentRect.left - offsetX;
     const y = event.clientY - parentRect.top - offsetY;
+
     positionBlock(block, x, y);
+
     const snapXLine = centerArea.querySelector(".snap-line--x");
     const snapYLine = centerArea.querySelector(".snap-line--y");
+
     const centerX = parentRect.width / 2 - block.offsetWidth / 2;
     const centerY = parentRect.height / 2 - block.offsetHeight / 2;
+
     if (Math.abs(x - centerX) < 16) {
       snapYLine.style.left = `${centerX + block.offsetWidth / 2}px`;
       snapYLine.classList.add("is-visible");
     } else {
       snapYLine.classList.remove("is-visible");
     }
+
     if (Math.abs(y - centerY) < 16) {
       snapXLine.style.top = `${centerY + block.offsetHeight / 2}px`;
       snapXLine.classList.add("is-visible");
@@ -100,8 +135,12 @@ function makeBlockDraggable(block, centerArea) {
 
   const endDrag = (event) => {
     if (pointerId !== event.pointerId) return;
+
     centerArea.classList.remove("show-snaps");
-    centerArea.querySelectorAll(".snap-line").forEach((line) => line.classList.remove("is-visible"));
+    centerArea.querySelectorAll(".snap-line").forEach((line) =>
+      line.classList.remove("is-visible")
+    );
+
     block.releasePointerCapture(pointerId);
     tickPulse(block);
     pointerId = null;
@@ -117,10 +156,13 @@ function createPlacedBlock(type, label) {
   const block = document.createElement("div");
   block.className = "placed-block";
   block.draggable = true;
+
   const id = `block-${Date.now()}-${Math.floor(Math.random() * 9999)}`;
+
   block.dataset.id = id;
   block.dataset.type = type;
   block.textContent = label || type;
+
   block._properties = {
     id,
     properties: {
@@ -134,8 +176,10 @@ function createPlacedBlock(type, label) {
       textColor: "#2c2c38",
     },
   };
+
   block.style.width = `${block._properties.properties.width}px`;
   block.style.height = `${block._properties.properties.height}px`;
+
   applyTransforms(block);
   placedBlocks.set(id, block);
   return block;
@@ -160,7 +204,9 @@ function handlePropertyChange(event) {
   const { id, property, value } = event.detail || {};
   const block = placedBlocks.get(id);
   if (!block) return;
+
   block._properties.properties[property] = value;
+
   if (property === "fillColor") {
     block.style.background = value;
     themeplay.onAction("color-change");
@@ -173,33 +219,33 @@ function handlePropertyChange(event) {
     block.style.color = value;
     themeplay.onAction("color-change");
   }
-  if (property === "width") {
-    block.style.width = `${value}px`;
-  }
-  if (property === "height") {
-    block.style.height = `${value}px`;
-  }
-  if (property === "rotation") {
-    applyTransforms(block);
-  }
-  if (property === "positionX" || property === "positionY") {
-    applyTransforms(block);
-    tickPulse(block);
-  }
+
+  if (property === "width") block.style.width = `${value}px`;
+  if (property === "height") block.style.height = `${value}px`;
+  if (property === "rotation") applyTransforms(block);
+
   if (property.includes("motion")) {
     block.dataset.motion = "custom";
     themeplay.onAction("motion-change");
+  }
+
+  if (property === "positionX" || property === "positionY") {
+    applyTransforms(block);
+    tickPulse(block);
   }
 }
 
 function handleDrop(centerArea, data) {
   const label = data || "Dropped Item";
   const block = createPlacedBlock(data, label.replace(/-/g, " "));
+
   block.style.position = "absolute";
   positionBlock(block, 60 + Math.random() * 120, 120 + Math.random() * 120);
+
   centerArea.appendChild(block);
   tickPulse(block);
   makeBlockDraggable(block, centerArea);
+
   block.addEventListener("click", () => selectBlock(block));
   block.addEventListener("dragstart", () => {
     block.classList.add("dragging-block");
@@ -210,16 +256,14 @@ function handleDrop(centerArea, data) {
     centerArea.classList.remove("show-snaps");
     tickPulse(block);
   });
-  if (data?.includes("header")) {
-    themeplay.onAction("drop-header");
-  }
-  if (data?.includes("title")) {
-    themeplay.onAction("place-title");
-  }
+
+  if (data?.includes("header")) themeplay.onAction("drop-header");
+  if (data?.includes("title")) themeplay.onAction("place-title");
   if (data?.includes("card")) {
     block.classList.add("card-look");
     themeplay.onAction("card-styled");
   }
+
   themeplay.onAction("place-element");
   selectBlock(block);
 }
@@ -229,24 +273,38 @@ function hookDrops(centerArea) {
     event.preventDefault();
     centerArea.classList.add("show-snaps");
   });
+
   centerArea.addEventListener("dragleave", () => {
     centerArea.classList.remove("show-snaps");
   });
+
   centerArea.addEventListener("drop", (event) => {
     event.preventDefault();
     centerArea.classList.remove("show-snaps");
-    const data = event.dataTransfer?.getData("text/plain") || "drop";
+
+    const data =
+      event.dataTransfer?.getData("text/plain") || "drop";
+
     if (data.includes("background")) {
-      centerArea.style.background = "linear-gradient(135deg, #d7e7ff, #fef7e0)";
+      centerArea.style.background =
+        "linear-gradient(135deg, #d7e7ff, #fef7e0)";
       themeplay.onAction("background");
       return;
     }
+
     handleDrop(centerArea, data);
   });
 }
 
+/* ============================================================
+   TOP BAR + BOTTOM BAR
+============================================================ */
+
 function bindTopBarInteractions(topBarContainer) {
-  topBarContainer.addEventListener("ui:openThemePlay", toggleThemePlayPanel);
+  topBarContainer.addEventListener(
+    "ui:openThemePlay",
+    toggleThemePlayPanel
+  );
 }
 
 function createThemePlayButton() {
@@ -262,33 +320,38 @@ function createThemePlayButton() {
 function buildBottomBar() {
   const bottomBar = document.createElement("footer");
   bottomBar.className = "bottom-bar";
-  const bottomHeading = document.createElement("h2");
-  bottomHeading.className = "panel-heading";
-  bottomHeading.textContent = "Stack Of Things";
+
+  const heading = document.createElement("h2");
+  heading.className = "panel-heading";
+  heading.textContent = "Stack Of Things";
+
   const exportButton = document.createElement("button");
-  exportButton.type = "button";
   exportButton.className = "themeplay-btn";
   exportButton.textContent = "Make My Theme";
   exportButton.addEventListener("click", () => {
     document.dispatchEvent(new CustomEvent("ui:exportTheme"));
     themeplay.onAction("export");
   });
+
   const randomRow = document.createElement("div");
   randomRow.className = "bottom-actions";
+
   const randomizeButton = document.createElement("button");
-  randomizeButton.type = "button";
   randomizeButton.className = "themeplay-btn";
   randomizeButton.textContent = "Randomize Something";
-  randomizeButton.addEventListener("click", () => {
-    randomizeColors(document);
-  });
+  randomizeButton.addEventListener("click", () =>
+    randomizeColors(document)
+  );
+
   const motionButton = document.createElement("button");
-  motionButton.type = "button";
   motionButton.className = "themeplay-btn";
   motionButton.textContent = "Randomize Motion";
-  motionButton.addEventListener("click", () => randomizeMotion(document));
+  motionButton.addEventListener("click", () =>
+    randomizeMotion(document)
+  );
+
   randomRow.append(randomizeButton, motionButton);
-  bottomBar.append(bottomHeading, exportButton, randomRow);
+  bottomBar.append(heading, exportButton, randomRow);
   return bottomBar;
 }
 
@@ -298,129 +361,124 @@ function attachExportHandler() {
       palette: ["#ffcc66", "#f5e2ff", "#7cd1ff"],
       spacingScale: [4, 8, 12, 16, 24],
       radiusScale: [8, 12, 16],
-      typography: { heading: "'Arial Rounded MT Bold', sans-serif", body: "'Fredoka', sans-serif" },
+      typography: {
+        heading: "'Arial Rounded MT Bold', sans-serif",
+        body: "'Fredoka', sans-serif",
+      },
     };
     exportCSS(themeState);
   });
 }
 
+/* ============================================================
+   MAIN INIT
+============================================================ */
+
 export function initLayoutShell() {
-  console.log('[layoutShell] Initializing...');
+  console.log("[layoutShell] Initializing…");
+
   const app = document.getElementById("app");
   if (!app) {
-    console.error('[layoutShell] #app element not found!');
+    console.error("[layoutShell] #app not found.");
     return;
   }
 
   try {
-    app.textContent = "";
-    app.innerHTML = '<div style="padding: 20px; color: #333;">Initializing layout shell...</div>';
+    app.innerHTML =
+      '<div style="padding: 20px">Initializing layout shell…</div>';
 
-  const shell = document.createElement("div");
-  shell.className = "layout-shell";
+    const shell = document.createElement("div");
+    shell.className = "layout-shell";
 
-  const topBarContainer = document.createElement("header");
-  topBarContainer.className = "top-bar-container";
-  initTopBar(topBarContainer);
-  bindTopBarInteractions(topBarContainer);
+    const topBarContainer = document.createElement("header");
+    topBarContainer.className = "top-bar-container";
 
-  const topBarActions = document.createElement("div");
-  topBarActions.className = "top-bar-actions";
-  topBarActions.appendChild(createThemePlayButton());
-  topBarContainer.appendChild(topBarActions);
+    initTopBar(topBarContainer);
+    bindTopBarInteractions(topBarContainer);
 
-  const workspace = document.createElement("div");
-  workspace.className = "workspace";
+    const topBarActions = document.createElement("div");
+    topBarActions.className = "top-bar-actions";
+    topBarActions.appendChild(createThemePlayButton());
+    topBarContainer.appendChild(topBarActions);
 
-  const leftSidebar = document.createElement("aside");
-  initLeftSidebar(leftSidebar);
-  const centerArea = buildCenterArea();
-  const rightSidebar = document.createElement("aside");
-  initRightPanel(rightSidebar);
+    /* =============== WORKSPACE =============== */
 
-  hookDrops(centerArea);
+    const workspace = document.createElement("div");
+    workspace.className = "workspace";
 
-  const bottomBar = buildBottomBar();
+    const leftSidebar = document.createElement("aside");
+    initLeftSidebar(leftSidebar);
 
-  workspace.appendChild(leftSidebar);
-  workspace.appendChild(centerArea);
-  workspace.appendChild(rightSidebar);
-  workspace.appendChild(bottomBar);
+    // MATERIAL PANEL SLOT
+    const materialSection = document.createElement("div");
+    materialSection.innerHTML = `
+      <h2 class="sb-section">Materials</h2>
+      <div id="material-panel-container" style="height:auto; min-height:120px;">Loading…</div>
+    `;
+    leftSidebar.appendChild(materialSection);
 
-  shell.appendChild(topBarContainer);
-  shell.appendChild(workspace);
+    const centerArea = buildCenterArea();
+    hookDrops(centerArea);
 
-  console.log('[layoutShell] About to append shell to app, shell has', shell.children.length, 'children');
-  console.log('[layoutShell] App element:', app, 'App children before:', app.children.length);
-  app.appendChild(shell);
-  console.log('[layoutShell] Shell appended, app children after:', app.children.length);
-  console.log('[layoutShell] App innerHTML length:', app.innerHTML.length);
+    const rightSidebar = document.createElement("aside");
+    initRightPanel(rightSidebar);
 
-  document.addEventListener("ui:propertyChanged", handlePropertyChange);
-  document.addEventListener("ui:testMotion", () => themeplay.onAction("motion-test"));
+    const bottomBar = buildBottomBar();
 
-  attachThemePlayUI();
-  attachLlamaRag();
-  attachExportHandler();
+    workspace.appendChild(leftSidebar);
+    workspace.appendChild(centerArea);
+    workspace.appendChild(rightSidebar);
+    workspace.appendChild(bottomBar);
 
-  randomizeLayout(document);
-  console.log('[layoutShell] Successfully initialized');
-  document.body.style.background = '#d3d6db';
-  
-  // Load creative materials asynchronously
-  MaterialLoader.init('creative-material/asset-map.json').then(() => {
-    console.log('[layoutShell] Materials loaded successfully');
-  }).catch(e => {
-    console.warn('[layoutShell] Could not load materials:', e.message);
-  });
-  
+    shell.appendChild(topBarContainer);
+    shell.appendChild(workspace);
+
+    app.innerHTML = "";
+    app.appendChild(shell);
+    document.body.style.background = "#d3d6db";
+
+    document.addEventListener("ui:propertyChanged", handlePropertyChange);
+    document.addEventListener("ui:testMotion", () =>
+      themeplay.onAction("motion-test")
+    );
+
+    attachThemePlayUI();
+    attachLlamaRag();
+    attachExportHandler();
+
+    randomizeLayout(document);
+
+    console.log("[layoutShell] Initialization complete.");
   } catch (error) {
-    console.error('[layoutShell] Error during initialization:', error);
-    app.innerHTML = `<pre style="color: red; padding: 20px; font-family: monospace;">INIT ERROR:\n${error.message}\n\nStack:\n${error.stack}</pre>`;
+    app.innerHTML = `<pre style="color:red">${error.stack}</pre>`;
   }
 }
 
-// Only run in browser environment
-if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-  if (!window.randomizeSomethingInBuilder) {
-    window.randomizeSomethingInBuilder = function () {};
-  }
+/* ============================================================
+   LOAD BEHAVIOR
+============================================================ */
 
-  if (!window.openPreviewMode) {
-    window.openPreviewMode = function () {};
-  }
+if (typeof window !== "undefined") {
+  if (!window.randomizeSomethingInBuilder)
+    window.randomizeSomethingInBuilder = () => {};
+  if (!window.openPreviewMode) window.openPreviewMode = () => {};
+  if (!window.exportCurrentTheme) window.exportCurrentTheme = () => {};
 
-  if (!window.exportCurrentTheme) {
-    window.exportCurrentTheme = function () {};
-  }
-
-  window.addEventListener("themeplay:randomize", () => {
-    if (window.randomizeSomethingInBuilder) {
-      window.randomizeSomethingInBuilder();
-    }
-  });
-
-  window.addEventListener("themeplay:preview", () => {
-    if (window.openPreviewMode) {
-      window.openPreviewMode();
-    }
-  });
-
-  window.addEventListener("themeplay:export", () => {
-    if (window.exportCurrentTheme) {
-      window.exportCurrentTheme();
-    }
-  });
+  window.addEventListener("themeplay:randomize", () =>
+    window.randomizeSomethingInBuilder()
+  );
+  window.addEventListener("themeplay:preview", () =>
+    window.openPreviewMode()
+  );
+  window.addEventListener("themeplay:export", () =>
+    window.exportCurrentTheme()
+  );
 
   window.onload = initLayoutShell;
 
-  // If page is already loaded when this module executes, call immediately
-  if (document.readyState === 'loading') {
-    // Page is still loading, wait for onload
-    console.log('[layoutShell] Page still loading, will init on load event');
-  } else {
-    // Page already loaded, init now
-    console.log('[layoutShell] Page already loaded, initializing immediately');
+  if (document.readyState !== "loading") {
+    console.log("[layoutShell] Document already loaded — booting immediately.");
     initLayoutShell();
   }
 }
+

@@ -1,8 +1,14 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import fs from 'fs'
+import path from 'path'
 
 dotenv.config()
+
+// ---------------------------------------------
+// TYPES (your original types preserved)
+// ---------------------------------------------
 
 type SpaceWeatherMode = 'QUIET' | 'FLR' | 'CME' | 'GST' | 'SEP' | 'HSS' | 'RBE'
 
@@ -33,6 +39,10 @@ type VisitorPixel = {
 }
 
 type EarthConditions = { tempC: number; cloudCover: number; solar: number }
+
+// ---------------------------------------------
+// ORIGINAL CONSTANTS + HELPERS (unchanged)
+// ---------------------------------------------
 
 const GRID_W = parseInt(process.env.GRID_W || '24', 10)
 const GRID_H = parseInt(process.env.GRID_H || '12', 10)
@@ -171,9 +181,55 @@ function todayKey(): string {
   return now.toISOString().slice(0, 10)
 }
 
+// ---------------------------------------------
+// EXPRESS APP
+// ---------------------------------------------
+
 const app = express()
 app.use(cors())
 app.use(express.json())
+
+// ---------------------------------------------------------
+// 📌 NEW: SERVE /assets FOLDER AS STATIC FILES
+// ---------------------------------------------------------
+
+app.use('/assets', express.static('assets'))
+
+// ---------------------------------------------------------
+// 📌 NEW: LIST ALL IMAGE FILES (recursive)
+// ---------------------------------------------------------
+
+function walkAssets(dir: string, baseUrl: string): string[] {
+  let results: string[] = []
+  const list = fs.readdirSync(dir)
+
+  for (const file of list) {
+    const full = path.join(dir, file)
+    const stat = fs.statSync(full)
+
+    if (stat.isDirectory()) {
+      results = results.concat(walkAssets(full, `${baseUrl}/${file}`))
+    } else if (/\.(png|jpg|jpeg|svg)$/i.test(file)) {
+      results.push(`${baseUrl}/${file}`)
+    }
+  }
+  return results
+}
+
+app.get('/api/assets', (_req, res) => {
+  try {
+    const baseDir = path.resolve('assets')
+    const files = walkAssets(baseDir, '/assets')
+    res.json({ assets: files })
+  } catch (err) {
+    console.error('Asset scan error:', err)
+    res.status(500).json({ error: 'failed_to_read_assets' })
+  }
+})
+
+// ---------------------------------------------------------
+// ORIGINAL ENDPOINTS (unchanged)
+// ---------------------------------------------------------
 
 app.get('/api/state', async (_req: any, res: any) => {
   const key = todayKey()
@@ -208,12 +264,17 @@ app.post('/api/visit', async (req: any, res: any) => {
   })
 })
 
+// ---------------------------------------------
+// STATIC CLIENT
+// ---------------------------------------------
+
 app.use(express.static('dist/client'))
+
 app.get('*', (_req: any, res: any) => {
   res.sendFile('index.html', { root: 'dist/client' })
 })
 
 const PORT = parseInt(process.env.PORT || '4173', 10)
 app.listen(PORT, () => {
-  console.log(`[facade] listening on ${PORT}`)
+  console.log(`[themeplay] Server listening on ${PORT}`)
 })
