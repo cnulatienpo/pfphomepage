@@ -123,6 +123,27 @@
         document.getElementById('app').innerHTML = `<p style="color: red;">Import Error: ${e.message}</p><pre>${e.stack}</pre>`;
       }
     </script>
+    
+    <!-- Ensure all modules are loaded and connected -->
+    <script type="module">
+      import './js/themeplay.js';
+      import './js/themeplay-ui.js';
+      import './js/themeplay-goals.js';
+      import './js/llamaRag.js';
+      import './js/llama-rag-ui.js';
+      import './js/canvasEngine.js';
+      import './js/layerManager.js';
+      import './js/filters.js';
+      import './js/transforms.js';
+      import './js/snapEngine.js';
+      import './js/componentFactory.js';
+      import './js/spacingBlocks.js';
+      import './js/typeBlocks.js';
+      import './js/colorBuckets.js';
+      import './js/exportTools.js';
+      import './js/randomizers.js';
+      console.log('[index] All modules loaded');
+    </script>
     <script>
       (function () {
         const button = document.getElementById("llama-rag-button");

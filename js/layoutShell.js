@@ -9,6 +9,7 @@ import { attachLlamaRag } from "./llama-rag-ui.js";
 import * as themeplay from "./themeplay.js";
 import { randomizeColors, randomizeLayout, randomizeMotion } from "./randomizers.js";
 import { exportCSS } from "./exportTools.js";
+import MaterialLoader from "./materialLoader.js";
 
 const placedBlocks = new Map();
 let selectedBlock = null;
@@ -365,6 +366,14 @@ export function initLayoutShell() {
   randomizeLayout(document);
   console.log('[layoutShell] Successfully initialized');
   document.body.style.background = '#d3d6db';
+  
+  // Load creative materials asynchronously
+  MaterialLoader.init('creative-material/asset-map.json').then(() => {
+    console.log('[layoutShell] Materials loaded successfully');
+  }).catch(e => {
+    console.warn('[layoutShell] Could not load materials:', e.message);
+  });
+  
   } catch (error) {
     console.error('[layoutShell] Error during initialization:', error);
     app.innerHTML = `<pre style="color: red; padding: 20px; font-family: monospace;">INIT ERROR:\n${error.message}\n\nStack:\n${error.stack}</pre>`;
