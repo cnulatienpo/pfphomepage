@@ -3,7 +3,6 @@
 // Works with the Paper.js setup function
 
 import { setupPaper } from "./paperSetup";
-import "path-data-polyfill";
 
 export async function loadSvg(svgDataURL) {
   const paper = setupPaper();

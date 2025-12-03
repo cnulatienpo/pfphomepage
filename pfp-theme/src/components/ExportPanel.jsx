@@ -1,2 +1,9 @@
-import React, { useMemo, useState } from 'react';
-// ...existing code from c:\Users\cnula\src_modules_exportpanel_exportpanel.jsx...
+import React from 'react';
+
+export default function ExportPanel() {
+  return (
+    <div>
+      <p>Prepare your theme assets and export them when ready.</p>
+    </div>
+  );
+}

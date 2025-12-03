@@ -5,8 +5,14 @@
 import React, { useRef, useEffect } from "react";
 import { setupPaper } from "@engine/paperSetup";
 
-export default function FontPreviewCanvas({ fontObj, previewText, onUse }) {
-  const canvasRef = useRef(null);
+export default function FontPreviewCanvas({
+  fontObj,
+  previewText,
+  onUse,
+  canvasRef: controlledCanvasRef,
+}) {
+  const internalRef = useRef(null);
+  const canvasRef = controlledCanvasRef || internalRef;
 
   useEffect(() => {
     if (!fontObj) return;
@@ -27,23 +33,27 @@ export default function FontPreviewCanvas({ fontObj, previewText, onUse }) {
     const yBase = 150;
 
     for (const char of previewText) {
-      const glyph = fontObj.glyphs.glyphs.find(g => g.unicode === char.charCodeAt(0));
+      const glyph = fontObj.glyphs.glyphs.find(
+        (g) => g.unicode === char.charCodeAt(0)
+      );
       if (!glyph) {
         x += 40;
         continue;
       }
 
-      // draw glyph path
       const path = new paper.Path();
 
-      glyph.path.commands.forEach(cmd => {
+      glyph.path.commands.forEach((cmd) => {
         if (cmd.type === "M") path.moveTo(cmd.x + x, yBase - cmd.y);
         if (cmd.type === "L") path.lineTo(cmd.x + x, yBase - cmd.y);
         if (cmd.type === "C") {
           path.cubicCurveTo(
-            cmd.x1 + x, yBase - cmd.y1,
-            cmd.x2 + x, yBase - cmd.y2,
-            cmd.x + x, yBase - cmd.y
+            cmd.x1 + x,
+            yBase - cmd.y1,
+            cmd.x2 + x,
+            yBase - cmd.y2,
+            cmd.x + x,
+            yBase - cmd.y
           );
         }
         if (cmd.type === "Z") path.closePath();
@@ -72,7 +82,7 @@ export default function FontPreviewCanvas({ fontObj, previewText, onUse }) {
           width: "100%",
           height: "200px",
           border: "1px solid #ccc",
-          background: "white"
+          background: "white",
         }}
       />
 
@@ -80,9 +90,10 @@ export default function FontPreviewCanvas({ fontObj, previewText, onUse }) {
         style={{
           marginTop: "1rem",
           padding: "0.5rem 1rem",
-          fontWeight: 700
+          fontWeight: 700,
         }}
         onClick={useInTheme}
+        disabled={!fontObj}
       >
         use this in the theme
       </button>

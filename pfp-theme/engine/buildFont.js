@@ -2,7 +2,7 @@
 // Turns processed Paper.js glyphs into a real OpenType .ttf font.
 // Uses opentype.js to assemble glyphs, metrics, and font tables.
 
-import opentype from "opentype.js";
+import opentype from "./vendor/opentype";
 import { setupPaper } from "./paperSetup";
 
 // Convert a Paper.js Path into an OpenType.js path
