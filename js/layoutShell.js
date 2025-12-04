@@ -19,10 +19,34 @@ let selectedBlock = null;
 
 let assetPanelInstance = null;
 
-// Asset panel mounting - disabled for now
-function mountMaterialPanel() {
-  console.log("[layoutShell] Material panel mounting disabled temporarily");
-  return;
+// Asset panel mounting
+async function mountMaterialPanel() {
+  const slot = document.querySelector("#material-panel-container");
+  if (!slot) {
+    console.warn("[layoutShell] No #material-panel-container slot found.");
+    return;
+  }
+  
+  console.log("[layoutShell] Mounting AssetPanel in sidebar.");
+  
+  try {
+    // Lazy load AssetPanel to avoid blocking
+    const { default: AssetPanel } = await import('./assetPanel.js');
+    const { assetRegistry } = await import('./assetRegistry.js');
+    
+    assetPanelInstance = new AssetPanel(slot);
+    
+    // Listen for assets:ready event and render when ready
+    window.addEventListener("assets:ready", () => {
+      console.log("[layoutShell] assets:ready fired - rendering AssetPanel");
+      if (assetPanelInstance) {
+        assetPanelInstance.render();
+      }
+    });
+  } catch (err) {
+    console.error("[layoutShell] Failed to mount AssetPanel:", err);
+    slot.innerHTML = '<p style="color:red">Failed to load materials</p>';
+  }
 }
 
 /* ============================================================
@@ -445,7 +469,25 @@ export function initLayoutShell() {
     attachExportHandler();
     
     // Mount the material panel (asset registry will load after this)
-    mountMaterialPanel();
+    // Don't await it - let it load in the background
+    mountMaterialPanel().catch(err => {
+      console.warn("[layoutShell] AssetPanel failed to mount:", err);
+    });
+    
+    // Also try to mount font maker (lazy loaded)
+    try {
+      import('./fontMakerPanel.js').then(mod => {
+        if (mod.mountFontMakerPanel) {
+          mod.mountFontMakerPanel().catch(err => {
+            console.warn("[layoutShell] FontMaker failed to mount:", err);
+          });
+        }
+      }).catch(err => {
+        console.warn("[layoutShell] FontMaker module failed to load:", err);
+      });
+    } catch (err) {
+      console.warn("[layoutShell] FontMaker import failed:", err);
+    }
 
     randomizeLayout(document);
 
