@@ -14,6 +14,10 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
+      'pfp-theme': projectRoot,
+      'pfp-theme/engine': path.resolve(projectRoot, 'engine'),
+      'pfp-theme/components': path.resolve(projectRoot, 'components'),
+      'pfp-theme/fontmaker': path.resolve(projectRoot, 'fontmaker'),
       '@engine': path.resolve(projectRoot, 'engine'),
       '@components': path.resolve(projectRoot, 'components'),
       '@fontmaker': path.resolve(projectRoot, 'fontmaker'),

@@ -2,7 +2,7 @@
 // Per-letter adjustment panel: nudge, tilt, squeeze, stretch, reset.
 
 import React from "react";
-import { nudge, uniformScale } from "@engine/shapeTools";
+import { nudge, uniformScale } from "pfp-theme/engine/shapeTools";
 
 export default function GlyphNudgePanel({ char, shape, onChange }) {
   function move(x, y) {

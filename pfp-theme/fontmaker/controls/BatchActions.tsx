@@ -8,8 +8,8 @@ import {
   makeThicker,
   makeThinner,
   nudge
-} from "@engine/shapeTools";
-import { setupPaper } from "@engine/paperSetup";
+} from "pfp-theme/engine/shapeTools";
+import { setupPaper } from "pfp-theme/engine/paperSetup";
 
 export default function BatchActions({ glyphs, onChange }) {
   function apply(fn) {

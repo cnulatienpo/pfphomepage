@@ -3,21 +3,23 @@
 // Integrates all editor panels, persistence, and theme hand-off.
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import GlyphGrid from "@components/GlyphGrid";
-import GlyphControls from "@fontmaker/controls/GlyphControls";
-import BatchActions from "@fontmaker/controls/BatchActions";
-import GlyphTagEditor from "@fontmaker/editor/GlyphTagEditor";
-import HistoryPanel from "@fontmaker/editor/HistoryPanel";
-import PaperBackgroundEditor from "@fontmaker/editor/PaperBackgroundEditor";
-import FontPreviewCanvas from "@fontmaker/editor/FontPreviewCanvas";
-import FontMetadataForm from "@components/FontMetadataForm";
-import { loadSvg } from "@engine/loadSvg";
-import { buildFont } from "@engine/buildFont";
-import { loadFontIntoPage } from "@engine/FontLoader";
-import { SettingsStore } from "@engine/SettingsStore";
-import { UndoStack } from "@engine/UndoStack";
-import { buildFontPackage } from "@engine/FontPackager";
-import { setupPaper } from "@engine/paperSetup";
+import GlyphGrid from "pfp-theme/components/GlyphGrid";
+import GlyphControls from "pfp-theme/fontmaker/controls/GlyphControls";
+import BatchActions from "pfp-theme/fontmaker/controls/BatchActions";
+import GlyphTagEditor from "pfp-theme/fontmaker/editor/GlyphTagEditor";
+import HistoryPanel from "pfp-theme/fontmaker/editor/HistoryPanel";
+import PaperBackgroundEditor from "pfp-theme/fontmaker/editor/PaperBackgroundEditor";
+import FontPreviewCanvas from "pfp-theme/fontmaker/editor/FontPreviewCanvas";
+import FontMetadataForm from "pfp-theme/components/FontMetadataForm";
+import UseFontInThemeButton from "pfp-theme/UseFontInThemeButton";
+import { loadSvg } from "pfp-theme/engine/loadSvg";
+import { buildFont } from "pfp-theme/engine/buildFont";
+import { SettingsStore } from "pfp-theme/SettingsStore.js";
+import { UndoStack } from "pfp-theme/engine/UndoStack";
+import { buildFontPackage } from "pfp-theme/engine/FontPackager";
+import { setupPaper } from "pfp-theme/engine/paperSetup";
+import { loadFontIntoTheme } from "pfp-theme/loadFontIntoTheme";
+import { useThemeFont } from "pfp-theme/ThemeFontContext";
 
 const DEFAULT_METADATA = {
   fontName: "NotebookFont",
@@ -27,6 +29,16 @@ const DEFAULT_METADATA = {
   descender: -200,
   padding: 50,
 };
+
+function base64ToArrayBuffer(base64) {
+  const binaryString = atob(base64);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
 
 function serializeGlyphs(glyphs) {
   const out = {};
@@ -60,7 +72,9 @@ export default function FontMaker({ onApplyFont }) {
   const [previewText, setPreviewText] = useState("Type something!");
   const [paperBackground, setPaperBackground] = useState(null);
   const [fontObj, setFontObj] = useState(null);
+  const [fontPackage, setFontPackage] = useState(null);
   const [lastUsedFontName, setLastUsedFontName] = useState("NotebookFont");
+  const themeFont = useThemeFont();
 
   const undoStack = useRef(new UndoStack());
   const fileInputRef = useRef(null);
@@ -77,6 +91,7 @@ export default function FontMaker({ onApplyFont }) {
     if (saved.metadata) setMetadata({ ...DEFAULT_METADATA, ...saved.metadata });
     if (saved.background) setPaperBackground(saved.background);
     if (saved.lastUsedFontName) setLastUsedFontName(saved.lastUsedFontName);
+    if (saved.lastPackage) setFontPackage(saved.lastPackage);
   }, []);
 
   useEffect(() => {
@@ -86,8 +101,9 @@ export default function FontMaker({ onApplyFont }) {
       metadata,
       background: paperBackground,
       lastUsedFontName,
+      lastPackage: fontPackage,
     });
-  }, [glyphs, tags, metadata, paperBackground, lastUsedFontName]);
+  }, [glyphs, tags, metadata, paperBackground, lastUsedFontName, fontPackage]);
 
   useEffect(() => {
     if (Object.keys(glyphs).length === 0) {
@@ -165,13 +181,6 @@ export default function FontMaker({ onApplyFont }) {
     const font = fontObj || buildFont(glyphs, metadata);
     setFontObj(font);
 
-    const fontName =
-      loadFontIntoPage(font, metadata.fontName || lastUsedFontName) ||
-      metadata.fontName;
-
-    setLastUsedFontName(fontName || metadata.fontName);
-    if (onApplyFont) onApplyFont(fontName || metadata.fontName);
-
     const pkg = await buildFontPackage({
       fontObj: font,
       metadata,
@@ -179,7 +188,25 @@ export default function FontMaker({ onApplyFont }) {
       glyphs,
       previewCanvas: previewCanvasRef.current,
     });
-    SettingsStore.save({ lastPackage: pkg, lastUsedFontName: fontName });
+
+    setFontPackage(pkg);
+
+    const resolvedName = pkg.metadata.fontName || pkg.metadata.name || lastUsedFontName;
+    const fontBuffer =
+      typeof pkg.fontBuffer === "string"
+        ? base64ToArrayBuffer(pkg.fontBuffer)
+        : pkg.fontBuffer;
+
+    if (fontBuffer) {
+      loadFontIntoTheme(resolvedName, fontBuffer);
+      setLastUsedFontName(resolvedName || metadata.fontName);
+      if (themeFont?.setActiveFontName) {
+        themeFont.setActiveFontName(resolvedName || metadata.fontName);
+      }
+      if (onApplyFont) onApplyFont(resolvedName || metadata.fontName);
+    }
+
+    SettingsStore.save({ lastPackage: pkg, lastUsedFontName: resolvedName });
   }
 
   return (
@@ -259,6 +286,9 @@ export default function FontMaker({ onApplyFont }) {
             onUse={buildAndUseFont}
             canvasRef={previewCanvasRef}
           />
+          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "0.5rem" }}>
+            <UseFontInThemeButton fontPackage={fontPackage} />
+          </div>
         </div>
       </div>
 

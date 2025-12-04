@@ -2,7 +2,7 @@
 // Per-letter tilt / rotation control.
 
 import React from "react";
-import { setupPaper } from "@engine/paperSetup";
+import { setupPaper } from "pfp-theme/engine/paperSetup";
 
 export default function GlyphRotatePanel({ char, shape, onChange }) {
   function rotate(deg) {
