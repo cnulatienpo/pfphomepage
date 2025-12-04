@@ -2,7 +2,7 @@
 // Simple undo/redo stack system for glyph shape edits.
 // Stores cloned shapes per letter so state always stays consistent.
 
-import { setupPaper } from "@engine/paperSetup";
+import { setupPaper } from "./paperSetup";
 
 export class UndoStack {
   constructor() {

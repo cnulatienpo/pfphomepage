@@ -2,7 +2,7 @@
 // Per-letter scale controls, separate from nudging or rotation.
 
 import React from "react";
-import { uniformScale } from "@engine/shapeTools";
+import { uniformScale } from "pfp-theme/engine/shapeTools";
 
 export default function GlyphScalePanel({ char, shape, onChange }) {
   function scale(factor) {

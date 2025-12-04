@@ -3,8 +3,8 @@
 // Integrates with Paper.js to render the glyph shape.
 
 import React, { useRef, useEffect, useState } from "react";
-import { setupPaper } from "@engine/paperSetup";
-import { nudge } from "@engine/shapeTools";
+import { setupPaper } from "pfp-theme/engine/paperSetup";
+import { nudge } from "pfp-theme/engine/shapeTools";
 
 export default function GlyphTile({ char, shape, onChange }) {
   const canvasRef = useRef(null);

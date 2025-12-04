@@ -3,7 +3,7 @@
 // When user clicks “use this in the theme”, we hand the font object upward.
 
 import React, { useRef, useEffect } from "react";
-import { setupPaper } from "@engine/paperSetup";
+import { setupPaper } from "pfp-theme/engine/paperSetup";
 
 export default function FontPreviewCanvas({
   fontObj,

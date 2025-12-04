@@ -2,8 +2,8 @@
 // Page wrapper so the feature can live inside your theme builder routing.
 
 import React from "react";
-import FontMaker from "./FontMaker";        // your real maker
-import FontPreviewPanel from "./FontPreviewPanel";
+import FontMaker from "pfp-theme/fontmaker/FontMaker";
+import FontPreviewPanel from "pfp-theme/FontPreviewPanel";
 
 export default function FontMakerRoute() {
   return (
