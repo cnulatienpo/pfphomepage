@@ -3,15 +3,23 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import fs from 'fs'
 import path from 'path'
+import { fileURLToPath } from 'url'
 
 dotenv.config()
 
 // ---------------------------------------------
-// TYPES (your original types preserved)
+// ESM FIXES: __dirname + express.static
 // ---------------------------------------------
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
+const serveStatic = (pathToDir: string) => express['static'](pathToDir)
+
+
+// ---------------------------------------------
+// TYPES
+// ---------------------------------------------
 type SpaceWeatherMode = 'QUIET' | 'FLR' | 'CME' | 'GST' | 'SEP' | 'HSS' | 'RBE'
-
 type PixelColor = { r: number; g: number; b: number }
 
 type FacadePixel = {
@@ -41,9 +49,8 @@ type VisitorPixel = {
 type EarthConditions = { tempC: number; cloudCover: number; solar: number }
 
 // ---------------------------------------------
-// ORIGINAL CONSTANTS + HELPERS (unchanged)
+// ORIGINAL CONSTANTS / HELPERS
 // ---------------------------------------------
-
 const GRID_W = parseInt(process.env.GRID_W || '24', 10)
 const GRID_H = parseInt(process.env.GRID_H || '12', 10)
 const BUILD_LAT = parseFloat(process.env.BUILD_LAT || '40.7128')
@@ -62,7 +69,7 @@ const facade: FacadePixel[] = Array.from({ length: GRID_W * GRID_H }, (_, idx) =
 const dayState = new Map<string, DayState>()
 const visitorPixels: VisitorPixel[] = []
 
-function clamp(v: number, min = 0, max = 255): number {
+function clamp(v: number, min = 0, max = 255) {
   return Math.max(min, Math.min(max, v))
 }
 
@@ -90,7 +97,7 @@ function pseudoLocation(ip: string) {
   }
 }
 
-async function getSpaceWeatherForDay(dateKey: string): Promise<{ mode: SpaceWeatherMode; intensity: number }> {
+async function getSpaceWeatherForDay(dateKey: string) {
   const seed = seededNumber(dateKey)
   const buckets: SpaceWeatherMode[] = ['QUIET', 'RBE', 'HSS', 'SEP', 'FLR', 'CME', 'GST']
   const mode = buckets[Math.min(buckets.length - 1, Math.floor(seed * buckets.length))]
@@ -99,7 +106,7 @@ async function getSpaceWeatherForDay(dateKey: string): Promise<{ mode: SpaceWeat
 }
 
 function mapSpaceWeatherToColor(mode: SpaceWeatherMode, intensity: number): PixelColor {
-  const base: Record<SpaceWeatherMode, PixelColor> = {
+  const base = {
     QUIET: { r: 6, g: 10, b: 26 },
     FLR: { r: 255, g: 245, b: 214 },
     CME: { r: 210, g: 80, b: 32 },
@@ -107,8 +114,10 @@ function mapSpaceWeatherToColor(mode: SpaceWeatherMode, intensity: number): Pixe
     SEP: { r: 235, g: 198, b: 60 },
     HSS: { r: 90, g: 180, b: 210 },
     RBE: { r: 180, g: 80, b: 210 }
-  }
+  } satisfies Record<SpaceWeatherMode, PixelColor>
+
   const scale = 0.2 + 0.8 * Math.min(1, Math.max(0, intensity))
+
   return {
     r: clamp(base[mode].r * scale),
     g: clamp(base[mode].g * scale),
@@ -116,7 +125,7 @@ function mapSpaceWeatherToColor(mode: SpaceWeatherMode, intensity: number): Pixe
   }
 }
 
-async function getEarthConditions(lat: number, lon: number, dateKey: string): Promise<EarthConditions> {
+async function getEarthConditions(lat: number, lon: number, dateKey: string) {
   const seed = seededNumber(`${lat}:${lon}:${dateKey}`)
   return {
     tempC: -10 + seed * 45,
@@ -144,16 +153,18 @@ async function ensureDay(dateKey: string) {
   let current = dayState.get(dateKey)
   if (!current) {
     const { mode, intensity } = await getSpaceWeatherForDay(dateKey)
-    const daysSinceStart = Math.floor((new Date(dateKey).getTime() - PROJECT_START.getTime()) / (1000 * 60 * 60 * 24))
+    const daysSinceStart = Math.floor((new Date(dateKey).getTime() - PROJECT_START.getTime()) / 86400000)
     const pixelIndex = ((daysSinceStart % (GRID_W * GRID_H)) + (GRID_W * GRID_H)) % (GRID_W * GRID_H)
     current = { date: dateKey, mode, intensity, pixelIndex, updated: false }
     dayState.set(dateKey, current)
   }
+
   if (!current.updated) {
-    const homeEarth = await getEarthConditions(BUILD_LAT, BUILD_LON, dateKey)
-    const earthColor = mapEarthToColor(homeEarth.tempC, homeEarth.cloudCover, homeEarth.solar)
-    const spaceColor = mapSpaceWeatherToColor(current.mode, current.intensity)
-    const final = mix(earthColor, spaceColor, 0.3)
+    const earth = await getEarthConditions(BUILD_LAT, BUILD_LON, dateKey)
+    const final = mix(mapEarthToColor(earth.tempC, earth.cloudCover, earth.solar),
+                      mapSpaceWeatherToColor(current.mode, current.intensity),
+                      0.3)
+
     const idx = current.pixelIndex
     facade[idx] = {
       x: idx % GRID_W,
@@ -163,44 +174,43 @@ async function ensureDay(dateKey: string) {
       createdAt: new Date().toISOString(),
       mode: current.mode
     }
+
     current.updated = true
   }
+
   return current
 }
 
 async function buildVisitorPixel(dateKey: string, lat: number, lon: number) {
   const day = await ensureDay(dateKey)
   const earth = await getEarthConditions(lat, lon, dateKey)
-  const earthColor = mapEarthToColor(earth.tempC, earth.cloudCover, earth.solar)
-  const spaceColor = mapSpaceWeatherToColor(day.mode, day.intensity)
-  return mix(earthColor, spaceColor, 0.3)
+  return mix(mapEarthToColor(earth.tempC, earth.cloudCover, earth.solar),
+             mapSpaceWeatherToColor(day.mode, day.intensity),
+             0.3)
 }
 
-function todayKey(): string {
-  const now = new Date()
-  return now.toISOString().slice(0, 10)
+function todayKey() {
+  return new Date().toISOString().slice(0, 10)
 }
 
 // ---------------------------------------------
 // EXPRESS APP
 // ---------------------------------------------
-
 const app = express()
 app.use(cors())
 app.use(express.json())
 
-// ---------------------------------------------------------
-// 📌 NEW: SERVE /assets FOLDER AS STATIC FILES
-// ---------------------------------------------------------
+// ---------------------------------------------
+// STATIC ASSET HOSTING (FIXED FOR ESM)
+// ---------------------------------------------
+const assetsDir = path.join(__dirname, '../assets')
+app.use('/assets', serveStatic(assetsDir))
 
-app.use('/assets', express.static('assets'))
-
-// ---------------------------------------------------------
-// 📌 NEW: LIST ALL IMAGE FILES (recursive)
-// ---------------------------------------------------------
-
-function walkAssets(dir: string, baseUrl: string): string[] {
-  let results: string[] = []
+// ---------------------------------------------
+// ASSET SCANNER
+// ---------------------------------------------
+function walk(dir: string, base: string): string[] {
+  let out: string[] = []
   const list = fs.readdirSync(dir)
 
   for (const file of list) {
@@ -208,30 +218,28 @@ function walkAssets(dir: string, baseUrl: string): string[] {
     const stat = fs.statSync(full)
 
     if (stat.isDirectory()) {
-      results = results.concat(walkAssets(full, `${baseUrl}/${file}`))
+      out = out.concat(walk(full, `${base}/${file}`))
     } else if (/\.(png|jpg|jpeg|svg)$/i.test(file)) {
-      results.push(`${baseUrl}/${file}`)
+      out.push(`${base}/${file}`)
     }
   }
-  return results
+  return out
 }
 
 app.get('/api/assets', (_req, res) => {
   try {
-    const baseDir = path.resolve('assets')
-    const files = walkAssets(baseDir, '/assets')
+    const files = walk(assetsDir, '/assets')
     res.json({ assets: files })
-  } catch (err) {
-    console.error('Asset scan error:', err)
-    res.status(500).json({ error: 'failed_to_read_assets' })
+  } catch (e) {
+    console.error('Asset scan error:', e)
+    res.status(500).json({ error: 'asset_scan_failed' })
   }
 })
 
-// ---------------------------------------------------------
-// ORIGINAL ENDPOINTS (unchanged)
-// ---------------------------------------------------------
-
-app.get('/api/state', async (_req: any, res: any) => {
+// ---------------------------------------------
+// ORIGINAL ENDPOINTS
+// ---------------------------------------------
+app.get('/api/state', async (_req, res) => {
   const key = todayKey()
   const current = await ensureDay(key)
   res.json({
@@ -242,39 +250,40 @@ app.get('/api/state', async (_req: any, res: any) => {
   })
 })
 
-app.post('/api/visit', async (req: any, res: any) => {
+app.post('/api/visit', async (req, res) => {
   const key = todayKey()
-  const location = pseudoLocation(req.ip || req.headers['x-forwarded-for'] || '0.0.0.0')
-  const lat = parseFloat(String(location.lat)) || BUILD_LAT
-  const lon = parseFloat(String(location.lon)) || BUILD_LON
-  const visitorColor = await buildVisitorPixel(key, lat, lon)
+  const loc = pseudoLocation(req.ip || '0.0.0.0')
+  const lat = parseFloat(String(loc.lat)) || BUILD_LAT
+  const lon = parseFloat(String(loc.lon)) || BUILD_LON
+  const echo = await buildVisitorPixel(key, lat, lon)
   const day = await ensureDay(key)
-  const idx = day.pixelIndex
-  const gift = facade[idx]?.color || { r: 0, g: 0, b: 0 }
+
   visitorPixels.push({
-    color: visitorColor,
+    color: echo,
     createdAt: new Date().toISOString(),
-    approxCity: location.city,
-    approxCountry: location.country
+    approxCity: loc.city,
+    approxCountry: loc.country
   })
+
   res.json({
-    gift,
-    echo: visitorColor,
-    idx
+    gift: facade[day.pixelIndex]?.color,
+    echo,
+    idx: day.pixelIndex
   })
 })
 
 // ---------------------------------------------
 // STATIC CLIENT
 // ---------------------------------------------
+const clientDir = path.join(__dirname, '../dist/client')
+app.use(serveStatic(clientDir))
 
-app.use(express.static('dist/client'))
-
-app.get('*', (_req: any, res: any) => {
-  res.sendFile('index.html', { root: 'dist/client' })
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(clientDir, 'index.html'))
 })
 
+// ---------------------------------------------
 const PORT = parseInt(process.env.PORT || '4173', 10)
 app.listen(PORT, () => {
-  console.log(`[themeplay] Server listening on ${PORT}`)
+  console.log(`[themeplay] Server running on ${PORT}`)
 })
