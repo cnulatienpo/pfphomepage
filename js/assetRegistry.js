@@ -123,7 +123,15 @@ export {
   BUCKETS,
 };
 
-// Auto-initialize in browser
+// Auto-initialize in browser, but defer to let listeners register first
 if (typeof window !== "undefined") {
-  loadAssets();
+  // Wait until DOMContentLoaded to ensure all event listeners are registered
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      loadAssets();
+    });
+  } else {
+    // DOM already loaded, load immediately
+    loadAssets();
+  }
 }

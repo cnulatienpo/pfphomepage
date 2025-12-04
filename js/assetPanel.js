@@ -8,7 +8,15 @@ import { assetRegistry } from "./assetRegistry.js";
 
 export class AssetPanel {
   constructor(containerSelector = "#asset-panel") {
-    this.container = document.querySelector(containerSelector);
+    // Accept either a selector string or a DOM element
+    this.container = typeof containerSelector === "string" 
+      ? document.querySelector(containerSelector)
+      : containerSelector;
+    
+    if (!this.container) {
+      console.warn("[AssetPanel] Container not found:", containerSelector);
+    }
+    
     this.categories = [
       { name: "Backgrounds", key: "backgrounds" },
       { name: "Textures", key: "textures" },
