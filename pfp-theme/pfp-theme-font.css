@@ -1,0 +1,10 @@
+/* pfp-theme-font.css */
+/* Makes builder components obey the theme font. */
+
+:root {
+  --theme-font: system-ui;
+}
+
+body, input, textarea, button, select {
+  font-family: var(--theme-font);
+}
