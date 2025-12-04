@@ -11,6 +11,7 @@ import { randomizeColors, randomizeLayout, randomizeMotion } from "./randomizers
 import { exportCSS } from "./exportTools.js";
 import { assetRegistry } from "./assetRegistry.js";
 import AssetPanel from "./assetPanel.js";
+import { mountFontMakerPanel } from "./fontMakerPanel.js";
 
 const placedBlocks = new Map();
 let selectedBlock = null;
@@ -19,6 +20,8 @@ let selectedBlock = null;
    MATERIAL PANEL MOUNTING
 ============================================================ */
 
+let assetPanelInstance = null;
+
 function mountMaterialPanel() {
   const slot = document.querySelector("#material-panel-container");
   if (!slot) {
@@ -26,13 +29,17 @@ function mountMaterialPanel() {
     return;
   }
   console.log("[layoutShell] Mounting AssetPanel in sidebar.");
-  const panel = new AssetPanel(slot);
-  panel.render();
+  assetPanelInstance = new AssetPanel(slot);
+  // Panel will auto-render when assets:ready fires (listener is already registered in constructor)
 }
 
 window.addEventListener("assets:ready", () => {
-  console.log("[layoutShell] assets:ready fired — mounting panel.");
-  mountMaterialPanel();
+  console.log("[layoutShell] assets:ready fired");
+  if (assetPanelInstance) {
+    assetPanelInstance.render();
+  } else {
+    console.warn("[layoutShell] AssetPanel instance not created yet");
+  }
 });
 
 /* ============================================================
@@ -417,6 +424,14 @@ export function initLayoutShell() {
     `;
     leftSidebar.appendChild(materialSection);
 
+    // FONT MAKER PANEL SLOT
+    const fontSection = document.createElement("div");
+    fontSection.innerHTML = `
+      <h2 class="sb-section">Fonts</h2>
+      <div id="font-maker-container" style="height:auto; min-height:200px; overflow:auto;">Loading…</div>
+    `;
+    leftSidebar.appendChild(fontSection);
+
     const centerArea = buildCenterArea();
     hookDrops(centerArea);
 
@@ -445,6 +460,12 @@ export function initLayoutShell() {
     attachThemePlayUI();
     attachLlamaRag();
     attachExportHandler();
+    
+    // Mount the material panel (asset registry will load after this)
+    mountMaterialPanel();
+    
+    // Mount the font maker panel
+    mountFontMakerPanel();
 
     randomizeLayout(document);
 
