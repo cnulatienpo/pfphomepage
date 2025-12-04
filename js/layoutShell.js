@@ -9,9 +9,6 @@ import { attachLlamaRag } from "./llama-rag-ui.js";
 import * as themeplay from "./themeplay.js";
 import { randomizeColors, randomizeLayout, randomizeMotion } from "./randomizers.js";
 import { exportCSS } from "./exportTools.js";
-import { assetRegistry } from "./assetRegistry.js";
-import AssetPanel from "./assetPanel.js";
-import { mountFontMakerPanel } from "./fontMakerPanel.js";
 
 const placedBlocks = new Map();
 let selectedBlock = null;
@@ -22,25 +19,11 @@ let selectedBlock = null;
 
 let assetPanelInstance = null;
 
+// Asset panel mounting - disabled for now
 function mountMaterialPanel() {
-  const slot = document.querySelector("#material-panel-container");
-  if (!slot) {
-    console.warn("[layoutShell] No #material-panel-container slot found.");
-    return;
-  }
-  console.log("[layoutShell] Mounting AssetPanel in sidebar.");
-  assetPanelInstance = new AssetPanel(slot);
-  // Panel will auto-render when assets:ready fires (listener is already registered in constructor)
+  console.log("[layoutShell] Material panel mounting disabled temporarily");
+  return;
 }
-
-window.addEventListener("assets:ready", () => {
-  console.log("[layoutShell] assets:ready fired");
-  if (assetPanelInstance) {
-    assetPanelInstance.render();
-  } else {
-    console.warn("[layoutShell] AssetPanel instance not created yet");
-  }
-});
 
 /* ============================================================
    BLOCK + PROPERTY SYSTEM
@@ -463,9 +446,6 @@ export function initLayoutShell() {
     
     // Mount the material panel (asset registry will load after this)
     mountMaterialPanel();
-    
-    // Mount the font maker panel
-    mountFontMakerPanel();
 
     randomizeLayout(document);
 
