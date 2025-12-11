@@ -1,1 +1,0 @@
-La Nu Tiempo font is embedded as a data URI inside `../theme.css` to avoid storing binary font files in git history. If a standalone font file is needed, regenerate it from the source family and update the data URI accordingly.

@@ -1,8 +1,0 @@
-/* Grid-specific helpers that build on the core layout tokens. */
-
-.scaffold {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--gutter);
-}
