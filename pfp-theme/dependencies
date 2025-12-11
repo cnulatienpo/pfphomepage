@@ -1,6 +1,0 @@
-npm install opentype.js paper @types/paper @types/opentype.js \
-browser-fs-access \
-fastestsmallesttextencoderdecoder \
-file-saver \
-es-module-lexer \
-path-data-polyfill
