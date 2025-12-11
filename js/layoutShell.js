@@ -9,8 +9,6 @@ import { attachLlamaRag } from "./llama-rag-ui.js";
 import * as themeplay from "./themeplay.js";
 import { randomizeColors, randomizeLayout, randomizeMotion } from "./randomizers.js";
 import { exportCSS } from "./exportTools.js";
-import { assetRegistry } from "./assetRegistry.js";
-import AssetPanel from "./assetPanel.js";
 
 const placedBlocks = new Map();
 let selectedBlock = null;
@@ -19,21 +17,37 @@ let selectedBlock = null;
    MATERIAL PANEL MOUNTING
 ============================================================ */
 
-function mountMaterialPanel() {
+let assetPanelInstance = null;
+
+// Asset panel mounting
+async function mountMaterialPanel() {
   const slot = document.querySelector("#material-panel-container");
   if (!slot) {
     console.warn("[layoutShell] No #material-panel-container slot found.");
     return;
   }
+  
   console.log("[layoutShell] Mounting AssetPanel in sidebar.");
-  const panel = new AssetPanel(slot);
-  panel.render();
+  
+  try {
+    // Lazy load AssetPanel to avoid blocking
+    const { default: AssetPanel } = await import('./assetPanel.js');
+    const { assetRegistry } = await import('./assetRegistry.js');
+    
+    assetPanelInstance = new AssetPanel(slot);
+    
+    // Listen for assets:ready event and render when ready
+    window.addEventListener("assets:ready", () => {
+      console.log("[layoutShell] assets:ready fired - rendering AssetPanel");
+      if (assetPanelInstance) {
+        assetPanelInstance.render();
+      }
+    });
+  } catch (err) {
+    console.error("[layoutShell] Failed to mount AssetPanel:", err);
+    slot.innerHTML = '<p style="color:red">Failed to load materials</p>';
+  }
 }
-
-window.addEventListener("assets:ready", () => {
-  console.log("[layoutShell] assets:ready fired — mounting panel.");
-  mountMaterialPanel();
-});
 
 /* ============================================================
    BLOCK + PROPERTY SYSTEM
@@ -417,6 +431,14 @@ export function initLayoutShell() {
     `;
     leftSidebar.appendChild(materialSection);
 
+    // FONT MAKER PANEL SLOT
+    const fontSection = document.createElement("div");
+    fontSection.innerHTML = `
+      <h2 class="sb-section">Fonts</h2>
+      <div id="font-maker-container" style="height:auto; min-height:200px; overflow:auto;">Loading…</div>
+    `;
+    leftSidebar.appendChild(fontSection);
+
     const centerArea = buildCenterArea();
     hookDrops(centerArea);
 
@@ -445,6 +467,27 @@ export function initLayoutShell() {
     attachThemePlayUI();
     attachLlamaRag();
     attachExportHandler();
+    
+    // Mount the material panel (asset registry will load after this)
+    // Don't await it - let it load in the background
+    mountMaterialPanel().catch(err => {
+      console.warn("[layoutShell] AssetPanel failed to mount:", err);
+    });
+    
+    // Also try to mount font maker (lazy loaded)
+    try {
+      import('./fontMakerPanel.js').then(mod => {
+        if (mod.mountFontMakerPanel) {
+          mod.mountFontMakerPanel().catch(err => {
+            console.warn("[layoutShell] FontMaker failed to mount:", err);
+          });
+        }
+      }).catch(err => {
+        console.warn("[layoutShell] FontMaker module failed to load:", err);
+      });
+    } catch (err) {
+      console.warn("[layoutShell] FontMaker import failed:", err);
+    }
 
     randomizeLayout(document);
 

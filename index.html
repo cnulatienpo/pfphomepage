@@ -84,7 +84,8 @@
       try {
         console.log('[index] About to import initLayoutShell');
         const mod = await import('./js/layoutShell.js');
-        console.log('[index] Module imported, checking for initLayoutShell');
+        console.log('[index] Module imported:', mod);
+        console.log('[index] Module keys:', Object.keys(mod));
         const { initLayoutShell } = mod;
         console.log('[index] Got initLayoutShell:', typeof initLayoutShell);
         
@@ -120,12 +121,14 @@
         }
       } catch (e) {
         console.error('[index] Error during module import:', e);
-        document.getElementById('app').innerHTML = `<p style="color: red;">Import Error: ${e.message}</p><pre>${e.stack}</pre>`;
+        document.getElementById('app').innerHTML = `<p style="color: red;">Import Error: ${e.message}</p><pre style="color: red; font-size: 10px; overflow-x: auto;">${e.stack}</pre>`;
       }
     </script>
     
     <!-- Ensure all modules are loaded and connected -->
     <script type="module">
+      import './js/assetRegistry.js';
+      import './js/assetPanel.js';
       import './js/themeplay.js';
       import './js/themeplay-ui.js';
       import './js/themeplay-goals.js';
