@@ -1,0 +1,64 @@
+@font-face {
+    font-family: "LaNuTienpo";
+    src: url("./assets/La_Nu_Tienpo-Regular.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* stretch PNG to fill entire homepage */
+.fullscreen-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    background-image: url("./assets/thenotebookpiece2.png");
+    background-size: cover;        /* stretches the PNG to fill */
+    background-position: center;
+    background-repeat: no-repeat;
+
+    z-index: 1;
+}
+
+/* "Projects From The Projects" */
+.page-text {
+    position: absolute;
+    z-index: 2;
+    top: 40px;                   /* distance from top */
+    left: 136px;                 /* distance from left */
+    font-family: "LaNuTienpo", sans-serif;
+    font-size: 50px;
+    line-height: 1.4;
+    color: black;
+    /* customize here: font-size, color, top, left, etc */
+}
+
+/* "Project The first" line */
+.project-line {
+    position: absolute;
+    z-index: 2;
+    top: 150px;                  /* distance from top - adjust this */
+    left: 136px;                 /* distance from left - adjust this */
+    font-family: "LaNuTienpo", sans-serif;
+    font-size: 30px;
+    color: black;
+    /* customize here: font-size, color, top, left, etc */
+}
+
+/* RunnyVision link styling */
+.runnyvision-link {
+    position: absolute;
+    z-index: 2;
+    top: 150px;                  /* distance from top - adjust this */
+    left: 300px;                 /* distance from left - adjust this */
+    color: red;
+    font-size: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    font-family: "LaNuTienpo", sans-serif;
+}
+
+.runnyvision-link:hover {
+    text-decoration: underline;  /* underline on hover */
+}

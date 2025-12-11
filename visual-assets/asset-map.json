@@ -1,0 +1,1474 @@
+{
+  "version": 1,
+  "generatedAt": "2025-12-05T14:49:50.133Z",
+  "sources": [
+    {
+      "path": "assets/construction-theme/theme.css",
+      "selector": ":root",
+      "type": "css-rule",
+      "category": "colors",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/colors/root-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/theme.css",
+      "selector": ":root",
+      "type": "css-rule",
+      "category": "colors",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/colors/root-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/constuction theme/pfpcolors.css",
+      "selector": ":root",
+      "type": "css-rule",
+      "category": "colors",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/colors/root-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/constuction theme/pfpcolors.css",
+      "selector": ":root",
+      "type": "css-rule",
+      "category": "colors",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/colors/root-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/grid.css",
+      "selector": ".scaffold",
+      "type": "css-rule",
+      "category": "components",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/components/scaffold-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": [
+          {
+            "property": "gap",
+            "value": "var(--gutter)"
+          }
+        ]
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/grid.css",
+      "selector": ".scaffold",
+      "type": "css-rule",
+      "category": "components",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/components/scaffold-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": [
+          {
+            "property": "gap",
+            "value": "var(--gutter)"
+          }
+        ]
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".p",
+      "type": "css-rule",
+      "category": "components",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/components/p-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": [
+          {
+            "property": "padding",
+            "value": "var(--_s, 0)"
+          }
+        ]
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".p",
+      "type": "css-rule",
+      "category": "components",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/components/p-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": [
+          {
+            "property": "padding",
+            "value": "var(--_s, 0)"
+          }
+        ]
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".m",
+      "type": "css-rule",
+      "category": "components",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/components/m-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": [
+          {
+            "property": "margin",
+            "value": "var(--_s, 0)"
+          }
+        ]
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".m",
+      "type": "css-rule",
+      "category": "components",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/components/m-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": [
+          {
+            "property": "margin",
+            "value": "var(--_s, 0)"
+          }
+        ]
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".m-neg",
+      "type": "css-rule",
+      "category": "components",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/components/m-neg-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": [
+          {
+            "property": "margin",
+            "value": "calc(var(--_s, 0) * -1)"
+          }
+        ]
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".m-neg",
+      "type": "css-rule",
+      "category": "components",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/components/m-neg-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": [
+          {
+            "property": "margin",
+            "value": "calc(var(--_s, 0) * -1)"
+          }
+        ]
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".gap",
+      "type": "css-rule",
+      "category": "components",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/components/gap-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": [
+          {
+            "property": "gap",
+            "value": "var(--_s, var(--space-3))"
+          }
+        ]
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".gap",
+      "type": "css-rule",
+      "category": "components",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/components/gap-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": [
+          {
+            "property": "gap",
+            "value": "var(--_s, var(--space-3))"
+          }
+        ]
+      }
+    },
+    {
+      "path": "assets/construction-theme/theme.css",
+      "selector": "*::before",
+      "type": "css-rule",
+      "category": "shapes",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/shapes/before-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/theme.css",
+      "selector": "*::before",
+      "type": "css-rule",
+      "category": "shapes",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/shapes/before-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/theme.css",
+      "selector": "*::after",
+      "type": "css-rule",
+      "category": "shapes",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/shapes/after-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/theme.css",
+      "selector": "*::after",
+      "type": "css-rule",
+      "category": "shapes",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/shapes/after-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/ChatGPT Image Nov 28, 2025, 05_58_58 AM.png",
+      "type": "image",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "png",
+          "path": "visual-assets/textures/ChatGPT-Image-Nov-28,-2025,-05_58_58-AM.png"
+        },
+        {
+          "type": "svg",
+          "path": "visual-assets/textures/ChatGPT-Image-Nov-28,-2025,-05_58_58-AM.svg"
+        }
+      ],
+      "meta": {
+        "format": "png",
+        "width": null,
+        "height": null,
+        "hasAlpha": null
+      }
+    },
+    {
+      "path": "assets/construction-theme/ChatGPT Image Nov 28, 2025, 05_58_58 AM.png",
+      "type": "image",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "png",
+          "path": "visual-assets/textures/ChatGPT-Image-Nov-28,-2025,-05_58_58-AM.png"
+        },
+        {
+          "type": "svg",
+          "path": "visual-assets/textures/ChatGPT-Image-Nov-28,-2025,-05_58_58-AM.svg"
+        }
+      ],
+      "meta": {
+        "format": "png",
+        "width": null,
+        "height": null,
+        "hasAlpha": null
+      }
+    },
+    {
+      "path": "assets/construction-theme/ChatGPT Image Nov 28, 2025, 06_13_46 AM.png",
+      "type": "image",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "png",
+          "path": "visual-assets/textures/ChatGPT-Image-Nov-28,-2025,-06_13_46-AM.png"
+        },
+        {
+          "type": "svg",
+          "path": "visual-assets/textures/ChatGPT-Image-Nov-28,-2025,-06_13_46-AM.svg"
+        }
+      ],
+      "meta": {
+        "format": "png",
+        "width": null,
+        "height": null,
+        "hasAlpha": null
+      }
+    },
+    {
+      "path": "assets/construction-theme/ChatGPT Image Nov 28, 2025, 06_13_46 AM.png",
+      "type": "image",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "png",
+          "path": "visual-assets/textures/ChatGPT-Image-Nov-28,-2025,-06_13_46-AM.png"
+        },
+        {
+          "type": "svg",
+          "path": "visual-assets/textures/ChatGPT-Image-Nov-28,-2025,-06_13_46-AM.svg"
+        }
+      ],
+      "meta": {
+        "format": "png",
+        "width": null,
+        "height": null,
+        "hasAlpha": null
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-0",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-0-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-0",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-0-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-1",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-1-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-1",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-1-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-2",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-2-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-2",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-2-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-3",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-3-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-3",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-3-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-4",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-4-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-4",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-4-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-5",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-5-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-5",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-5-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-6",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-6-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-6",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-6-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-7",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-7-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-7",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-7-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-8",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-8-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-8",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-8-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-9",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-9-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".space-9",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/space-9-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".px",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/px-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".px",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/px-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".py",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/py-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".py",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/py-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".pt",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/pt-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".pt",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/pt-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".pr",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/pr-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".pr",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/pr-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".pb",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/pb-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".pb",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/pb-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".pl",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/pl-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".pl",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/pl-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".mx",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/mx-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".mx",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/mx-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".my",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/my-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".my",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/my-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".mt",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/mt-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".mt",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/mt-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".mr",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/mr-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".mr",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/mr-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".mb",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/mb-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".mb",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/mb-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".ml",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/ml-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".ml",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/ml-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".mx-neg",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/mx-neg-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".mx-neg",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/mx-neg-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".my-neg",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/my-neg-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/css/spacing.css",
+      "selector": ".my-neg",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/my-neg-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/extracted_1.png",
+      "type": "image",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "png",
+          "path": "visual-assets/textures/extracted_1.png"
+        },
+        {
+          "type": "svg",
+          "path": "visual-assets/textures/extracted_1.svg"
+        }
+      ],
+      "meta": {
+        "format": "png",
+        "width": null,
+        "height": null,
+        "hasAlpha": null
+      }
+    },
+    {
+      "path": "assets/construction-theme/extracted_1.png",
+      "type": "image",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "png",
+          "path": "visual-assets/textures/extracted_1.png"
+        },
+        {
+          "type": "svg",
+          "path": "visual-assets/textures/extracted_1.svg"
+        }
+      ],
+      "meta": {
+        "format": "png",
+        "width": null,
+        "height": null,
+        "hasAlpha": null
+      }
+    },
+    {
+      "path": "assets/construction-theme/theme.css",
+      "selector": "*",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/Kg-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    },
+    {
+      "path": "assets/construction-theme/theme.css",
+      "selector": "*",
+      "type": "css-rule",
+      "category": "textures",
+      "outputs": [
+        {
+          "type": "preview",
+          "path": "visual-assets/textures/Kg-preview.png"
+        }
+      ],
+      "meta": {
+        "backgrounds": [],
+        "borders": [],
+        "colors": [],
+        "typography": [],
+        "spacing": []
+      }
+    }
+  ]
+}
