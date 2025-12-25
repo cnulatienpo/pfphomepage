@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Dev notes page specific styles */
+        .back-link {
+            position: absolute;
+            z-index: 2;
+            top: 40px;
+            left: 136px;
+            color: blue;
+            font-size: 24px;
+            text-decoration: none;
+            font-family: "LaNuTienpo", sans-serif;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .dev-notes-title {
+            position: absolute;
+            z-index: 2;
+            top: 90px;
+            left: 136px;
+            font-family: "LaNuTienpo", sans-serif;
+            font-size: 50px;
+            color: black;
+        }
+
+        .notes-content {
+            position: absolute;
+            z-index: 2;
+            top: 180px;
+            left: 136px;
+            right: 136px;
+            font-family: "LaNuTienpo", sans-serif;
+            font-size: 20px;
+            color: black;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="fullscreen-bg"></div>
+
+    <a href="index.html" class="back-link">← back to home</a>
+    
+    <div class="dev-notes-title">Dev Notes</div>
+    
+    <div class="notes-content">
+        <p>Your development notes go here...</p>
+    </div>
+
+</body>
+</html>

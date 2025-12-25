@@ -62,3 +62,20 @@
 .runnyvision-link:hover {
     text-decoration: underline;  /* underline on hover */
 }
+
+/* dev notes link styling */
+.dev-notes-link {
+    position: absolute;
+    z-index: 2;
+    top: 200px;                  /* distance from top */
+    left: 136px;                 /* distance from left */
+    color: blue;
+    font-size: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    font-family: "LaNuTienpo", sans-serif;
+}
+
+.dev-notes-link:hover {
+    text-decoration: underline;  /* underline on hover */
+}
