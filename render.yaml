@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: pfphomepage
+    runtime: node
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist/client
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

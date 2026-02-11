@@ -9,7 +9,8 @@
   "private": true,
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder",
+    "build": "vite build",
+    "build:electron": "electron-builder",
     "build:win": "electron-builder --win nsis",
     "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
     "dev:client": "vite",
