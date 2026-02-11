@@ -63,6 +63,36 @@
     text-decoration: underline;  /* underline on hover */
 }
 
+/* Project container for project line */
+.project-container {
+    position: absolute;
+    z-index: 2;
+    top: 150px;
+    left: 136px;
+    font-family: "LaNuTienpo", sans-serif;
+    font-size: 30px;
+    color: black;
+}
+
+/* "Project the first" link styling */
+.project-first-link {
+    color: blue;
+    text-decoration: none;
+    font-family: "LaNuTienpo", sans-serif;
+}
+
+.project-first-link:hover {
+    text-decoration: underline;
+}
+
+/* Project description text */
+.project-description {
+    color: red;
+    font-family: "LaNuTienpo", sans-serif;
+    margin-left: 10px;
+    font-size: 35px;
+}
+
 /* dev notes link styling */
 .dev-notes-link {
     position: absolute;
