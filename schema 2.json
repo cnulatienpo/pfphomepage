@@ -1,0 +1,71 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+
+    {
+      "@type": "WebSite",
+      "@id": "https://pfp.example/#site",
+      "name": "Projects From The Projects",
+      "url": "https://pfp.example",
+      "description": "Experimental software tools, documentation systems, and learning environments.",
+      "hasPart": [
+        {"@id": "https://pfp.example/#wireup"},
+        {"@id": "https://pfp.example/#devnotes"},
+        {"@id": "https://pfp.example/#signalflowblues"}
+      ]
+    },
+
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://pfp.example/#wireup",
+      "name": "Wireup Outpost",
+      "applicationCategory": "DeveloperTool",
+      "description": "A patch-aware assistant for TouchDesigner that reads node graph state, analyzes signal flow, and explains operators during live patch construction.",
+      "operatingSystem": "Web / TouchDesigner",
+      "isPartOf": {"@id": "https://pfp.example/#site"}
+    },
+
+    {
+      "@type": "CreativeWorkSeries",
+      "@id": "https://pfp.example/#devnotes",
+      "name": "Development Notes",
+      "description": "Ephemera-style archival development notes documenting the design of the PFP systems.",
+      "isPartOf": {"@id": "https://pfp.example/#site"}
+    },
+
+    {
+      "@type": "MusicComposition",
+      "@id": "https://pfp.example/#signalflowblues",
+      "name": "Signal Flow Blues",
+      "genre": "Blues",
+      "description": "Mnemonic blues composition explaining TouchDesigner signal flow and operator families.",
+      "composer": {
+        "@type": "Person",
+        "@id": "https://pfp.example/#rayray",
+        "name": "Blind Ray Ray McCoy"
+      }
+    },
+
+    {
+      "@type": "Person",
+      "@id": "https://pfp.example/#rayray",
+      "name": "Blind Ray Ray McCoy",
+      "description": "Fictional blues singer and narrator used to explain TouchDesigner concepts."
+    },
+
+    {
+      "@type": "DefinedTermSet",
+      "@id": "https://pfp.example/#operators",
+      "name": "TouchDesigner Operator Families",
+      "hasDefinedTerm": [
+        {"@type": "DefinedTerm", "name": "TOP", "description": "Texture operators processing pixel and image data."},
+        {"@type": "DefinedTerm", "name": "CHOP", "description": "Channel operators processing time-based numeric signals."},
+        {"@type": "DefinedTerm", "name": "SOP", "description": "Surface operators manipulating geometric structures."},
+        {"@type": "DefinedTerm", "name": "DAT", "description": "Data operators for tables, text, and scripting."},
+        {"@type": "DefinedTerm", "name": "POP", "description": "Particle operators simulating particle systems."},
+        {"@type": "DefinedTerm", "name": "MAT", "description": "Material operators defining shading and render properties."}
+      ]
+    }
+
+  ]
+}
