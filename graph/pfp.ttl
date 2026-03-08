@@ -1,0 +1,18 @@
+@prefix pfp: <https://pfp.example/schema/> .
+@prefix schema: <https://schema.org/> .
+
+pfp:WireupOutpost a schema:SoftwareApplication ;
+    schema:name "Wireup Outpost" ;
+    schema:applicationCategory "DeveloperTool" ;
+    schema:description "Patch-aware assistant for TouchDesigner node graphs." .
+
+pfp:SignalGraph a schema:Intangible ;
+    schema:name "Signal Graph" ;
+    schema:description "Directed network of operators processing signals." .
+
+pfp:Operator a schema:Intangible ;
+    schema:name "Operator" ;
+    schema:description "Processing node transforming signals within a TouchDesigner network." .
+
+pfp:WireupOutpost schema:about pfp:SignalGraph .
+pfp:WireupOutpost schema:about pfp:Operator .
