@@ -1,0 +1,150 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+
+    {
+      "@type": "WebSite",
+      "@id": "https://pfp.example/#site",
+      "name": "Projects From The Projects",
+      "url": "https://pfp.example",
+      "description": "Experimental software tools, documentation systems, and learning environments focused on node-based programming and signal flow.",
+      "hasPart": [
+        {"@id": "https://pfp.example/#wireup"},
+        {"@id": "https://pfp.example/#devnotes"},
+        {"@id": "https://pfp.example/#signalflowblues"},
+        {"@id": "https://pfp.example/#ontology"}
+      ]
+    },
+
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://pfp.example/#wireup",
+      "name": "Wireup Outpost",
+      "applicationCategory": "DeveloperTool",
+      "description": "A patch-aware assistance system for TouchDesigner networks. The system reads patch state through wireup.tox, interprets operator behavior, traces signal flow, and provides layered explanations during live patch construction.",
+      "operatingSystem": "Web / TouchDesigner",
+      "featureList": [
+        "Live patch-state ingestion through wireup.tox",
+        "Signal-flow tracing across node networks",
+        "Operator explanation using TouchDesigner manual",
+        "Parameter surface interpretation",
+        "Failure-mode detection",
+        "Layered explanation system",
+        "Interactive query interface during patch construction"
+      ],
+      "isPartOf": {"@id": "https://pfp.example/#site"}
+    },
+
+    {
+      "@type": "Person",
+      "@id": "https://pfp.example/#rayray",
+      "name": "Blind Ray Ray McCoy",
+      "description": "A fictional Chicago blues narrator used as the voice of explanation in the Wireup Outpost environment."
+    },
+
+    {
+      "@type": "MusicComposition",
+      "@id": "https://pfp.example/#signalflowblues",
+      "name": "Signal Flow Blues",
+      "genre": "Chicago Blues",
+      "description": "Mnemonic blues composition introducing TouchDesigner signal flow, operator families, and node networks.",
+      "composer": {"@id": "https://pfp.example/#rayray"},
+      "about": [
+        {"@id": "https://pfp.example/#signal"},
+        {"@id": "https://pfp.example/#operator"},
+        {"@id": "https://pfp.example/#network"}
+      ]
+    },
+
+    {
+      "@type": "CreativeWorkSeries",
+      "@id": "https://pfp.example/#devnotes",
+      "name": "Development Notes",
+      "description": "A series of archival notes documenting the development of the PFP tools and systems."
+    },
+
+    {
+      "@type": "DefinedTermSet",
+      "@id": "https://pfp.example/#ontology",
+      "name": "TouchDesigner Signal Flow Ontology",
+      "description": "Conceptual model describing node-based visual programming systems used in TouchDesigner."
+    },
+
+    {
+      "@type": "DefinedTerm",
+      "@id": "https://pfp.example/#node",
+      "name": "Node",
+      "description": "A functional unit in a visual programming graph representing an instantiated operator.",
+      "inDefinedTermSet": {"@id": "https://pfp.example/#ontology"}
+    },
+
+    {
+      "@type": "DefinedTerm",
+      "@id": "https://pfp.example/#operator",
+      "name": "Operator",
+      "description": "A computational component that processes signals within a TouchDesigner network.",
+      "inDefinedTermSet": {"@id": "https://pfp.example/#ontology"}
+    },
+
+    {
+      "@type": "DefinedTerm",
+      "@id": "https://pfp.example/#signal",
+      "name": "Signal",
+      "description": "Data transmitted between operators in a TouchDesigner network.",
+      "inDefinedTermSet": {"@id": "https://pfp.example/#ontology"}
+    },
+
+    {
+      "@type": "DefinedTerm",
+      "@id": "https://pfp.example/#network",
+      "name": "Network",
+      "description": "A directed graph of interconnected operators forming a signal-processing pipeline.",
+      "inDefinedTermSet": {"@id": "https://pfp.example/#ontology"}
+    },
+
+    {
+      "@type": "DefinedTermSet",
+      "@id": "https://pfp.example/#operatorfamilies",
+      "name": "TouchDesigner Operator Families",
+      "hasDefinedTerm": [
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://pfp.example/#top",
+          "name": "TOP",
+          "description": "Texture Operators processing pixel and image data."
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://pfp.example/#chop",
+          "name": "CHOP",
+          "description": "Channel Operators processing time-based numeric signals."
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://pfp.example/#sop",
+          "name": "SOP",
+          "description": "Surface Operators manipulating geometry."
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://pfp.example/#dat",
+          "name": "DAT",
+          "description": "Data Operators handling tables, text, and scripting."
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://pfp.example/#pop",
+          "name": "POP",
+          "description": "Particle Operators managing particle simulations."
+        },
+        {
+          "@type": "DefinedTerm",
+          "@id": "https://pfp.example/#mat",
+          "name": "MAT",
+          "description": "Material Operators defining shading and surface appearance."
+        }
+      ]
+    }
+
+  ]
+}
